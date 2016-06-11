@@ -31,6 +31,4 @@ function love.conf(t)
 	t.modules.timer = true             -- Enable the timer module (boolean)
 	t.modules.window = true            -- Enable the window module (boolean)
 	t.modules.thread = true            -- Enable the thread module (boolean)
-
-	io.stdout:setvbuf("no") -- for printing in zerobrane
 end

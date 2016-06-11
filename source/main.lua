@@ -5,14 +5,21 @@ assets = require "assets"
 input = require "input"
 local limitFrameRate = require "limitframerate"
 local Scene = require "Scene"
+local Player = require "Player"
 
 local animSpeed = 1
 debug = false -- global debug flag (toggle: F1). Use as you wish
 
+player1 = nil
+player2 = nil
+
 function love.load(arg)
 	
     -- allows debugging (specifically breakpoints) in ZeroBrane
-    if arg[#arg] == '-debug' then require('mobdebug').start() end
+    --if arg[#arg] == '-debug' then require('mobdebug').start() end
+	
+	-- for printing in zerobrane
+	io.stdout:setvbuf("no")
 	
 	lf = love.filesystem
 	ls = love.sound
@@ -25,6 +32,7 @@ function love.load(arg)
 	lj = love.joystick
 	
 	assets.load()
+	
 	-- lg.setFont(assets.font)
 	
 	globalTimer = 0
@@ -33,7 +41,11 @@ function love.load(arg)
 	
 	scene = Scene.new()
 	
+	player1 = Player.new()
+	scene:add(player1)
+	
 	cam:zoomTo(2) -- set render scale
+	cam:lookAt(1,1)
 end
 
 
