@@ -56,7 +56,7 @@ function love.update(dt)
 	flux.update(dt*animSpeed) -- update tweening system
 	globalTimer = globalTimer + dt
 	scene:update(dt)
-
+  cam:lookAt(player1.body:getPosition())
     -- no love.blah function for joystick axis change
 	input.checkJoystickAxes()
 
@@ -72,9 +72,10 @@ function love.draw()
 
 	lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 	lg.draw(assets.fft,-512,-512,0,1,1,0,0,0,0)
-	lg.draw(assets.ffb,-512,-512,0,1,1,0,0,0,0)
-
+	
 	scene:draw()
+  lg.draw(assets.ffb,-512,-512,0,1,1,0,0,0,0)
+
 	cam:detach()
 end
 
