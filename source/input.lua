@@ -23,6 +23,10 @@ input.joy2 = nil
 input.mousex = 0
 input.mousey = 0
 
+-- the last device used to aim player 1
+-- 'mouse' | 'joy'
+input.lastAim = 'mouse'
+
 -- record whether the axes used for walking are in the dead zone
 input.joy1dead = true
 input.joy2dead = true
@@ -161,6 +165,13 @@ function input.checkJoystickAxes()
         local axes = {input.joy1:getAxes()}
         local dead = isDead(axes)
 
+        -- aiming
+        if not dead[3] or not dead[4] then
+            player1.angle = math.atan2(axes[4], axes[3])
+            input.lastAim = 'joy'
+        end
+
+        -- movement
         if not dead[1] or not dead[2] then
             player1:move(math.atan2(axes[2], axes[1]))
             input.joy1dead = false
@@ -266,6 +277,7 @@ end
 function love.mousemoved(x, y, dx, dy)
     input.mousex = x
     input.mousey = y
+    input.lastAim = 'mouse'
     -- game state dependent handler
     return input.currentState.mouseMove(x, y, dx, dy)
 end

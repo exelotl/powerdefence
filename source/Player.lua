@@ -18,6 +18,7 @@ function Player:init(scene)
 	self.speed = 70
 	self.moveDirection = 0
 	self.moving = false
+	self.angle = 0
 end
 
 function Player:added()
@@ -33,15 +34,19 @@ function Player:update(dt)
     else
         self.body:setLinearVelocity(0, 0)
     end
+
+    -- only look at the mouse if the mouse was the last thing to be touched out
+    -- of mouse/gamepad. The gamepad updates the aim as soon as the message
+    -- comes in rather than here
+    if input.lastAim == 'mouse' then
+        player1:pointAtMouse()
+    end
 end
 
 function Player:draw()
 	local x, y = self.body:getPosition()
 
-    local mx, my = cam:worldCoords(input.mousex, input.mousey)
-	local dx = mx - x
-	local dy = my - y
-	local angle = math.atan2(dy, dx)
+    local angle = self.angle
     local scalex = 1
     if math.abs(angle) > math.pi / 2 then
         scalex =  -1
@@ -65,6 +70,16 @@ function Player:move(angle)
     self.moveDirection = angle
     self.moving = true
     printf('walking in angle: %f', angle)
+end
+
+
+function Player:pointAtMouse()
+	local x, y = self.body:getPosition()
+    local mx, my = cam:worldCoords(input.mousex, input.mousey)
+	local dx = mx - x
+	local dy = my - y
+	self.angle = math.atan2(dy, dx)
+	print(dy)
 end
 
 -- when the gamepad axis goes from not in the dead zone to inside the dead zone.
