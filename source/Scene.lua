@@ -1,6 +1,8 @@
 local Scene = oo.class()
+local debugWorldDraw = require "debugworlddraw"
 
 function Scene:init()
+	self.world = lp.newWorld(0, 0, true)
 	self.entities = {}
 	self.addlist = {}
 	self.removelist = {}
@@ -29,11 +31,16 @@ function Scene:update(dt)
 	for _,e in ipairs(self.entities) do
 		e:update(dt)
 	end
+	
+	self.world:update(dt)
 end
 
 function Scene:draw()
 	for _,e in ipairs(self.entities) do
 		e:draw()
+	end
+	if debug then
+		debugWorldDraw(self.world, -1024, -1024, 2048, 2048)
 	end
 end
 
