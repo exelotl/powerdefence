@@ -190,7 +190,7 @@ function checkKeyboardAxis()
     if left then x = x - 1 end
 
 
-    if x ~= 0 and y ~= 0 then
+    if x ~= 0 or y ~= 0 then
         -- Note: using atan is a waste of resources here
         player1:walk(math.atan2(y, x))
     else

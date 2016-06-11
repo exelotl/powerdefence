@@ -17,10 +17,10 @@ function love.load(arg)
 
     -- allows debugging (specifically breakpoints) in ZeroBrane
     --if arg[#arg] == '-debug' then require('mobdebug').start() end
-	
+
 	-- for printing in zerobrane
 	io.stdout:setvbuf("no")
-	
+
 	lf = love.filesystem
 	ls = love.sound
 	la = love.audio
@@ -32,7 +32,7 @@ function love.load(arg)
 	lj = love.joystick
 
 	assets.load()
-	
+
 	-- lg.setFont(assets.font)
 
 	globalTimer = 0
@@ -41,10 +41,10 @@ function love.load(arg)
 
 	scene = Scene.new()
 
-	
+
 	player1 = Player.new()
 	scene:add(player1)
-	
+
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
 end
@@ -67,13 +67,13 @@ end
 function love.draw()
 	lg.setBackgroundColor(255,255,255)
 	lg.setColor(255,255,255)
-	
+
 	cam:attach()
-	
+
 	lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 	lg.draw(assets.fft,-512,-512,0,1,1,0,0,0,0)
 	lg.draw(assets.ffb,-512,-512,0,1,1,0,0,0,0)
-	
+
 	scene:draw()
 	cam:detach()
 end
