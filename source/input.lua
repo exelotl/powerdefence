@@ -19,6 +19,14 @@ input.deadZoneTolerance = 0.2
 input.joy1 = nil
 input.joy2 = nil
 
+-- cache mouse position
+input.mousex = 0
+input.mousey = 0
+
+-- record whether the axes used for walking are in the dead zone
+input.joy1dead = true
+input.joy2dead = true
+
 
 input.states.day = {
     -- whether input should move the characters in this state
@@ -154,9 +162,15 @@ function input.checkJoystickAxes()
         local dead = isDead(axes)
 
         if not dead[1] or not dead[2] then
-            player1:walk(math.atan2(axes[2], axes[1]))
+            player1:move(math.atan2(axes[2], axes[1]))
+            input.joy1dead = false
         else
-            player1:stopWalking()
+            -- only send one stop walking signal. This is so it does not
+            -- interfere with the keyboard input
+            if not input.joy1dead then
+                player1:stopMoving()
+                input.joy1dead = true
+            end
         end
 
     end
@@ -166,9 +180,15 @@ function input.checkJoystickAxes()
         local dead = isDead(j2axes)
 
         if not dead[1] or not dead[2] then
-            player2:walk(math.atan2(axes[2], axes[1]))
+            player2:move(math.atan2(axes[2], axes[1]))
+            input.joy2dead = false
         else
-            player2:stopWalking()
+            -- only send one stop walking signal. This is so it does not
+            -- interfere with the keyboard input
+            if not input.joy2dead then
+                player2:stopMoving()
+                input.joy2dead = true
+            end
         end
     end
 end
@@ -182,8 +202,8 @@ function checkKeyboardAxis()
     local right = love.keyboard.isDown('d', 'right')
 
     local y = 0
-    if up then y = y + 1 end
-    if down then y = y - 1 end
+    if up then y = y - 1 end
+    if down then y = y + 1 end
 
     local x = 0
     if right then x = x + 1 end
@@ -192,9 +212,9 @@ function checkKeyboardAxis()
 
     if x ~= 0 or y ~= 0 then
         -- Note: using atan is a waste of resources here
-        player1:walk(math.atan2(y, x))
+        player1:move(math.atan2(y, x))
     else
-        player1:stopWalking()
+        player1:stopMoving()
     end
 
 end
@@ -244,6 +264,8 @@ end
 
 
 function love.mousemoved(x, y, dx, dy)
+    input.mousex = x
+    input.mousey = y
     -- game state dependent handler
     return input.currentState.mouseMove(x, y, dx, dy)
 end
