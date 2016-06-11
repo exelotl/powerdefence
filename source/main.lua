@@ -61,15 +61,16 @@ function love.update(dt)
     -- no love.blah function for joystick axis change
 	input.checkJoystickAxes()
 
-	limitFrameRate(60)
+	limitFrameRate(999999999)
 end
 
 
 function love.draw()
-	lg.setBackgroundColor(255,255,255)
-	lg.setColor(255,255,255)
+    lg.setBackgroundColor(255,255,255)
+    lg.setColor(255,255,255)
 
-	cam:attach()
+
+    cam:attach()
 
 	lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
   
@@ -77,7 +78,11 @@ function love.draw()
 	
 	scene:draw()
   ForceField:drawBottom()
+    cam:detach()
 
-	cam:detach()
+    if debug then
+        love.graphics.print('debug on', 20, 20)
+        love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
+    end
 end
 

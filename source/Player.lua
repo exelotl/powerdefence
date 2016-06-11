@@ -15,7 +15,7 @@ local ANIM_WALK_L = {5, 6, 7, 8, rate = 15}
 function Player:init(scene)
 	self.color = Player.COLOR_BLUE
 	self.anim = Anim.new(ANIM_WALK)
-	self.speed = 70
+	self.speed = 100
 	self.moveDirection = 0
 	self.moving = false
 	self.angle = 0
@@ -57,10 +57,10 @@ function Player:draw()
 	else
 		self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
 	end
-	
+
 	local offsetx, offsety = -7, 8
 	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, 0, 1, 1, 8, 8)
-	
+
 	lg.draw(assets.weapons.pistol, x, y, angle, scalex, 1, offsetx, offsety)
 end
 
@@ -69,7 +69,7 @@ end
 function Player:move(angle)
     self.moveDirection = angle
     self.moving = true
-    printf('walking in angle: %f', angle)
+    --printf('walking in angle: %f', angle)
 end
 
 
@@ -79,14 +79,13 @@ function Player:pointAtMouse()
 	local dx = mx - x
 	local dy = my - y
 	self.angle = math.atan2(dy, dx)
-	print(dy)
 end
 
 -- when the gamepad axis goes from not in the dead zone to inside the dead zone.
 -- or when the keyboard keys are released
 function Player:stopMoving()
     self.moving = false
-    print('stopped walking')
+    --print('stopped walking')
 end
 
 return Player
