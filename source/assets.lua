@@ -16,6 +16,10 @@ function assets.load()
 		lg.newQuad(0, 0, 16, 16, assets.player[1]:getDimensions()),
 		lg.newQuad(16, 0, 16, 16, assets.player[1]:getDimensions()),
 	}
+	
+	assets.background = love.graphics.newImage("assets/placeholders/floor.png")
+	assets.fft = love.graphics.newImage("assets/placeholders/forcefieldtop.png")
+	assets.ffb = love.graphics.newImage("assets/placeholders/forcefieldbottom.png")
 end
 
 return assets

@@ -22,11 +22,10 @@ input.joy2 = nil
 
 input.states.day = {
     -- whether input should move the characters in this state
-    playerControl = true
+    playerControl = true,
 
     actions = {
     },
-
 
 
     kbdPress = {

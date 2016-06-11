@@ -45,7 +45,7 @@ function love.load(arg)
 	scene:add(player1)
 	
 	cam:zoomTo(2) -- set render scale
-	cam:lookAt(1,1)
+	cam:lookAt(0,0)
 end
 
 
@@ -66,8 +66,13 @@ end
 function love.draw()
 	lg.setBackgroundColor(255,255,255)
 	lg.setColor(255,255,255)
-
+	
 	cam:attach()
+	
+	lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
+	lg.draw(assets.fft,-512,-512,0,1,1,0,0,0,0)
+	lg.draw(assets.ffb,-512,-512,0,1,1,0,0,0,0)
+	
 	scene:draw()
 	cam:detach()
 end
