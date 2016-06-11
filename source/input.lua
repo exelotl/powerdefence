@@ -22,7 +22,7 @@ input.joy2 = nil
 
 input.states.day = {
     -- whether input should move the characters in this state
-    playerControl = true
+    playerControl = true,
 
     actions = {
     },
@@ -55,6 +55,9 @@ input.states.day = {
 }
 
 input.states.testing = {
+    -- whether input should move the characters in this state
+    playerControl = true,
+
     actions = {
         -- to test two different functions
         printApress = function() print('A press') end,
