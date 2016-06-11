@@ -8,6 +8,7 @@ place tower)
 --]]
 
 require 'external/utils'
+require 'axisConfig'
 local Bullet = require "Bullet"
 
 local input = {}
@@ -174,14 +175,14 @@ function input.checkJoystickAxes()
         local dead = isDead(axes)
 
         -- aiming
-        if not dead[3] or not dead[4] then
-            player1.angle = math.atan2(axes[4], axes[3])
+        if not dead[axisConfig1.lookX] or not dead[axisConfig1.lookY] then
+            player1.angle = math.atan2(axes[axisConfig1.lookY], axes[axisConfig1.lookX])
             input.lastAim = 'joy'
         end
 
         -- movement
-        if not dead[1] or not dead[2] then
-            player1:move(math.atan2(axes[2], axes[1]))
+        if not dead[axisConfig1.moveX] or not dead[axisConfig1.moveY] then
+            player1:move(math.atan2(axes[axisConfig1.moveY], axes[axisConfig1.moveX]))
             input.joy1dead = false
         else
             -- only send one stop walking signal. This is so it does not
@@ -198,8 +199,8 @@ function input.checkJoystickAxes()
         local axes = {input.joy2:getAxes()}
         local dead = isDead(j2axes)
 
-        if not dead[1] or not dead[2] then
-            player2:move(math.atan2(axes[2], axes[1]))
+        if not dead[axisConfig2.moveX] or not dead[axisConfig2.moveY] then
+            player2:move(math.atan2(axes[axisConfig2.moveY], axes[axisConfig2.moveX]))
             input.joy2dead = false
         else
             -- only send one stop walking signal. This is so it does not
