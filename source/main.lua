@@ -51,16 +51,15 @@ end
 
 
 function love.update(dt)
-	limitFrameRate(60)
+    limitFrameRate(60)
 
-	flux.update(dt*animSpeed) -- update tweening system
-	globalTimer = globalTimer + dt
-	scene:update(dt)
-  cam:lookAt(player1.body:getPosition())
+    flux.update(dt*animSpeed) -- update tweening system
+    globalTimer = globalTimer + dt
+    scene:update(dt)
+    cam:lookAt(player1.body:getPosition())
     -- no love.blah function for joystick axis change
-	input.checkJoystickAxes()
+    input.checkJoystickAxes()
 
-	limitFrameRate(999999999)
 end
 
 
