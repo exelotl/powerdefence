@@ -14,13 +14,13 @@ player1 = nil
 player2 = nil
 
 function love.load(arg)
-	
+
     -- allows debugging (specifically breakpoints) in ZeroBrane
     --if arg[#arg] == '-debug' then require('mobdebug').start() end
-	
+
 	-- for printing in zerobrane
 	io.stdout:setvbuf("no")
-	
+
 	lf = love.filesystem
 	ls = love.sound
 	la = love.audio
@@ -30,20 +30,21 @@ function love.load(arg)
 	lg = love.graphics
 	lm = love.mouse
 	lj = love.joystick
-	
+
 	assets.load()
-	
+
 	-- lg.setFont(assets.font)
-	
+
 	globalTimer = 0
-	
+
 	math.randomseed(os.time())
-	
+
 	scene = Scene.new()
-	
+
+
 	player1 = Player.new()
 	scene:add(player1)
-	
+
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
 end
@@ -51,14 +52,14 @@ end
 
 function love.update(dt)
 	limitFrameRate(60)
-	
+
 	flux.update(dt*animSpeed) -- update tweening system
 	globalTimer = globalTimer + dt
 	scene:update(dt)
-	
+
     -- no love.blah function for joystick axis change
 	input.checkJoystickAxes()
-	
+
 	limitFrameRate(60)
 end
 
@@ -66,13 +67,13 @@ end
 function love.draw()
 	lg.setBackgroundColor(255,255,255)
 	lg.setColor(255,255,255)
-	
+
 	cam:attach()
-	
+
 	lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 	lg.draw(assets.fft,-512,-512,0,1,1,0,0,0,0)
 	lg.draw(assets.ffb,-512,-512,0,1,1,0,0,0,0)
-	
+
 	scene:draw()
 	cam:detach()
 end
