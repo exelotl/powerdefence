@@ -21,8 +21,10 @@ input.joy2 = nil
 
 
 input.states.day = {
-    actions = {
+    -- whether input should move the characters in this state
+    playerControl = true
 
+    actions = {
     },
 
 
@@ -44,14 +46,11 @@ input.states.day = {
 
     },
     joy1Release = {},
-    joy1Axis = function(axisNum, val) end,
-
 
     joy2Press = {
 
     },
     joy2Release = {},
-    joy2Axis = function(axisNum, val) end,
 
 }
 
@@ -99,9 +98,6 @@ input.states.testing = {
         a = 'printArelease',
         b = 'printBrelease'
     },
-    joy1Axes = function(axisValues)
-        printf('joy1 axes move: ' .. table.tostring(axisValues))
-    end,
 
     joy2Press = {
         a = 'printApress',
@@ -111,9 +107,6 @@ input.states.testing = {
         a = 'printArelease',
         b = 'printCrelease'
     },
-    joy2Axes = function(axisValues)
-        printf('joy2 axes move: ' .. table.tostring(axisValues))
-    end,
 }
 
 
@@ -140,34 +133,69 @@ function input.resetJoysticks()
     input.joy2 = nil
 end
 
+-- given an array of axes, get an array of which axes are inside dead zones
+function isDead(axes)
+    local dead = {}
+    for i = 1, #axes do
+        dead[i] = math.abs(axes[i]-input.deadZones[i]) <= input.deadZoneTolerance
+    end
+    return dead
+end
+
 -- there is no love.blah function for handling joystick axis change, so instead
 -- calling this function from the update function
 function input.checkJoystickAxes()
+    if not input.currentState.playerControl then return end
+
     if input.joy1 then
-        local j1axes = {input.joy1:getAxes()}
-        local alldead = true
-        for i = 1,#input.deadZones do
-            if math.abs(input.deadZones[i] - j1axes[i]) > input.deadZoneTolerance then
-                alldead = false
-                break
-            end
+        local axes = {input.joy1:getAxes()}
+        local dead = isDead(axes)
+
+        if not dead[1] or not dead[2] then
+            player1:walk(math.atan2(axes[2], axes[1]))
+        else
+            player1:stopWalking()
         end
-        if not alldead then input.currentState.joy1Axes(j1axes) end
+
     end
 
     if input.joy2 then
-        local j2axes = {input.joy2:getAxes()}
-        local alldead = true
-        for i = 1,#input.deadZones do
-            if math.abs(input.deadZones[i] - j2axes[i]) > input.deadZoneTolerance then
-                alldead = false
-                break
-            end
+        local axes = {input.joy2:getAxes()}
+        local dead = isDead(j2axes)
+
+        if not dead[1] or not dead[2] then
+            player2:walk(math.atan2(axes[2], axes[1]))
+        else
+            player2:stopWalking()
         end
-        if not alldead then input.currentState.joy2Axes(j2axes) end
     end
 end
 
+function checkKeyboardAxis()
+    if not input.currentState.playerControl then return end
+
+    local up = love.keyboard.isDown('w', 'up')
+    local down = love.keyboard.isDown('s', 'down')
+    local left = love.keyboard.isDown('a', 'left')
+    local right = love.keyboard.isDown('d', 'right')
+
+    local y = 0
+    if up then y = y + 1 end
+    if down then y = y - 1 end
+
+    local x = 0
+    if right then x = x + 1 end
+    if left then x = x - 1 end
+
+
+    if x ~= 0 and y ~= 0 then
+        -- Note: using atan is a waste of resources here
+        player1:walk(math.atan2(y, x))
+    else
+        player1:stopWalking()
+    end
+
+end
 
 
 
@@ -186,11 +214,16 @@ function love.keypressed(key, unicode)
     end
 
 
+    checkKeyboardAxis()
+
     -- game state dependent actions
     return doAction(input.currentState.kbdPress[key])
 end
 
 function love.keyreleased(key, unicode)
+
+    checkKeyboardAxis()
+
     -- game state dependent actions
     return doAction(input.currentState.kbdRelease[key])
 end
