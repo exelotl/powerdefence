@@ -16,6 +16,7 @@ function love.load()
 	li = love.image
 	lg = love.graphics
 	lm = love.mouse
+	lj = love.joystick
 	
 	assets.load()
 	-- lg.setFont(assets.font)
@@ -32,11 +33,11 @@ end
 
 
 function love.update(dt)
+	limitFrameRate(60)
+	
 	flux.update(dt*animSpeed) -- update tweening system
 	globalTimer = globalTimer + dt
 	scene:update(dt)
-	
-	limitFrameRate(60)
 end
 
 
