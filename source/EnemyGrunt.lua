@@ -3,6 +3,7 @@ local Anim = require "Anim"
 local EnemyGrunt = oo.class()
 
 local ANIM_WALK = {1,2,3,4,5,6, rate = 15}
+local ANIM_DIE = {7,8,9,10,11,12,13,14,15,16, rate = 15, loop=false}
 
 function EnemyGrunt:init(scene, x, y)
 	scene:add(self)

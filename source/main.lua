@@ -87,7 +87,7 @@ function love.update(dt)
 	if player2 then
 		p2x, p2y = player2.body:getPosition()
 	end
-	local ratio = 0.2
+	local ratio = 0.25
     cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
     
 	-- no love.blah function for joystick axis change
@@ -103,9 +103,9 @@ function love.draw()
     cam:attach()
 		lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 
-    ForceField:drawTop()
-    scene:draw()
-    ForceField:drawBottom()
+		ForceField:drawTop()
+		scene:draw()
+		ForceField:drawBottom()
         
     cam:detach()
     
