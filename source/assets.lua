@@ -31,6 +31,7 @@ function assets.load()
     }
     assets.bullet = lg.newImage("assets/bullet.png")
 
+  assets.grunt = love.graphics.newImage("assets/grunt.png")
 	assets.background = love.graphics.newImage("assets/placeholders/floor.png")
 	assets.fft = love.graphics.newImage("assets/placeholders/forcefieldtop.png")
 	assets.ffb = love.graphics.newImage("assets/placeholders/forcefieldbottom.png")
