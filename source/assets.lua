@@ -22,12 +22,12 @@ function assets.load()
 		lg.newImage("assets/player_yellow.png")
 	}
 
-  assets.hearts = lg.newImage("assets/heart.png")
+	assets.hearts = lg.newImage("assets/heart.png")
   
   
 	assets.playerq = makeQuads(assets.player[1], 16, 16)
   
-  assets.heartq = makeQuads(assets.hearts,32,32)
+	assets.heartq = makeQuads(assets.hearts,32,32)
 
 	assets.reticule = lg.newImage('assets/reticule.png')
 
