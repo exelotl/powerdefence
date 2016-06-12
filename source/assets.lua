@@ -11,6 +11,17 @@ local function makeQuads(img, quadw, quadh)
 	return t
 end
 
+local function makeMask(img)
+	local srcPixels = img:getData()
+	local w,h = srcPixels:getDimensions()
+	local maskPixels = li.newImageData(w,h)
+	maskPixels:mapPixel(function(x,y,r,g,b,a)
+		r,g,b,a = srcPixels:getPixel(x,y)
+		return 255, 255, 255, (a>0 and 255 or 0)
+	end)
+	return lg.newImage(maskPixels)
+end
+
 function assets.load()
 
 	lg.setDefaultFilter("nearest", "nearest") -- for sharp pixel zooming
@@ -21,14 +32,15 @@ function assets.load()
 		lg.newImage("assets/player_pink.png"),
 		lg.newImage("assets/player_yellow.png")
 	}
-
-    assets.hearts = lg.newImage("assets/heart.png")
-
-
+	-- generate quads and masks:
 	assets.playerq = makeQuads(assets.player[1], 16, 16)
+	assets.playerm = {}
+	for i,v in ipairs(assets.player) do
+		assets.playerm[i] = makeMask(v)
+	end
 
-    assets.heartq = makeQuads(assets.hearts,32,32)
-
+	assets.hearts = lg.newImage("assets/heart.png")
+	assets.heartq = makeQuads(assets.hearts,32,32)
 	assets.reticule = lg.newImage('assets/reticule.png')
 
 	assets.weapons = {
