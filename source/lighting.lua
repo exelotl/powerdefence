@@ -27,15 +27,15 @@ function lighting.renderLights()
 
 
             local angle = player1.angle
-            local x = player1.body:getX()+20*math.cos(angle)
-            local y = player1.body:getY()+20*math.sin(angle)
+            local x = player1.body:getX()+10*math.cos(angle)
+            local y = player1.body:getY()+10*math.sin(angle)
             lg.draw(assets.lights.torch, x, y, angle, 0.4, 0.4, originx, originy)
 
 
             if player2 then
                 angle = player2.angle
-                x = player2.body:getX()+20*math.cos(angle)
-                y = player2.body:getY()+20*math.sin(angle)
+                x = player2.body:getX()+10*math.cos(angle)
+                y = player2.body:getY()+10*math.sin(angle)
                 lg.draw(assets.lights.torch, x, y, angle, 0.4, 0.4, originx, originy)
             end
         cam:detach()

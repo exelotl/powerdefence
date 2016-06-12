@@ -21,20 +21,14 @@ local collisionCallbacks = {
             enemy:takeDamage()
         end
     },
-
-
-
-    bulletCleanup = {
-        test = function(aType, bType) return aType == 'bullet' end,
-        callback = function(bulletFix, _, coll)
-            -- set to not collide?
-            -- destroy the bullet
-        end
-    },
 }
 
 
 
+local function bulletCleanup(bulletFix)
+    local bullet = bulletFix:getUserData().data
+    bullet.scene:remove(bullet)
+end
 
 
 
@@ -48,6 +42,9 @@ function beginContact(a, b, coll)
         elseif cb.test(bType, aType) then cb.callback(b, a)
         end
     end
+
+    if aType == 'bullet' then bulletCleanup(a) end
+    if bType == 'bullet' then bulletCleanup(b) end
 end
 
 
