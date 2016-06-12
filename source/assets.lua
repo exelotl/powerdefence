@@ -32,7 +32,8 @@ function assets.load()
     assets.bullet = lg.newImage("assets/bullet.png")
 
     assets.lights = {
-        surround = lg.newImage('assets/glow_black.png')
+        surround = lg.newImage('assets/glow_white.png'),
+        torch = lg.newImage('assets/torch_white.png')
     }
 
 	assets.background = love.graphics.newImage("assets/placeholders/floor.png")

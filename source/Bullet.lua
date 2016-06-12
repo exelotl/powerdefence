@@ -10,7 +10,7 @@ end
 function Bullet:added()
     self.body = lp.newBody(self.scene.world, self.initx, self.inity, 'dynamic')
     self.body:setBullet(true)
-    self.shape = lp.newCircleShape(8)
+    self.shape = lp.newCircleShape(4)
     self.fixture = lp.newFixture(self.body, self.shape)
 
     self.body:setAngle(self.angle)
@@ -24,7 +24,7 @@ function Bullet:update(dt)
 end
 
 function Bullet:draw()
-    lg.draw(assets.bullet, self.body:getX(), self.body:getY(), self.body:getAngle())
+    lg.draw(assets.bullet, self.body:getX(), self.body:getY(), self.body:getAngle(), 1, 1, 4, 2)
 end
 
 

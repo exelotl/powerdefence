@@ -17,7 +17,11 @@ function lighting.renderLights()
             --level = 50
             --lg.setColor(level, level, level)
             --lg.circle('fill', 0, 0, 50)
-            lg.draw(assets.lights.surround, player1.body:getX(), player1.body:getY(), player1.angle, 0.25, 0.25, 256, 256)
+            lg.setColor(0, 50, 0)
+            local originx, originy = 10, 128
+            local x = player1.body:getX()+10*math.cos(player1.angle)
+            local y = player1.body:getY()+10*math.sin(player1.angle)
+            lg.draw(assets.lights.torch, x, y, player1.angle, 0.4, 0.4, originx, originy)
         cam:detach()
     love.graphics.setCanvas()
 

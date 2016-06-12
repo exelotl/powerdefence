@@ -11,6 +11,7 @@ require 'external/utils'
 require 'axisConfig'
 local Bullet = require "Bullet"
 local Orb = require "Orb"
+local lighting = require "lighting"
 
 local input = {}
 
@@ -51,10 +52,10 @@ input.states.day = {
           print('orb')
           local x, y = player1.body:getPosition()
           local b = Orb.new(x + 32,y)
-          
+
           scene:add(b)
         end
-        
+
     },
 
 
@@ -267,6 +268,10 @@ function love.keypressed(key, unicode)
 	end
     if key == "escape" then
         love.event.quit()
+    end
+    if key == "f3" then
+        lighting.canvas:newImageData():encode('png', 'lighting-pass.png')
+        print('exporting lighting pass to file')
     end
 
 
