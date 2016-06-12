@@ -3,7 +3,7 @@ local lighting = {}
 
 -- 0 => no lighting calculation (day)
 -- 255 => full night time
-lighting.amount = 0
+lighting.amount = 255
 
 function lighting.init()
     lighting.canvas = lg.newCanvas()
@@ -17,6 +17,12 @@ function lighting.renderLights()
         lg.setColor(level, level, level)
         lg.rectangle('fill', 0, 0, lg.getDimensions())
         cam:attach()
+
+
+            lg.setColor(150, 150, 0)
+            lg.draw(assets.lights.surround, 0, 0, 0, 0.3, 0.3, 256, 256)
+
+
             --level = 50
             --lg.setColor(level, level, level)
             --lg.circle('fill', 0, 0, 50)
@@ -30,10 +36,12 @@ function lighting.renderLights()
             lg.draw(assets.lights.torch, x, y, angle, 0.4, 0.4, originx, originy)
 
 
-            angle = player2.angle
-            x = player2.body:getX()+20*math.cos(angle)
-            y = player2.body:getY()+20*math.sin(angle)
-            lg.draw(assets.lights.torch, x, y, angle, 0.4, 0.4, originx, originy)
+            if player2 then
+                angle = player2.angle
+                x = player2.body:getX()+20*math.cos(angle)
+                y = player2.body:getY()+20*math.sin(angle)
+                lg.draw(assets.lights.torch, x, y, angle, 0.4, 0.4, originx, originy)
+            end
         cam:detach()
     love.graphics.setCanvas()
 

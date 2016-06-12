@@ -62,9 +62,6 @@ function love.load(arg)
 	player1 = Player.new(1)
 	scene:add(player1)
 
-	player2 = Player.new(2)
-	scene:add(player2)
-
 	EnemyGrunt.new(scene, 50, 50)
 	EnemyGrunt.new(scene, -50, -50)
 	EnemyGrunt.new(scene, -100, 100)
