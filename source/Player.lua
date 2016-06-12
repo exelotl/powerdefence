@@ -13,6 +13,7 @@ local ANIM_WALK_R = {1, 2, 3, 4, rate = 15}
 local ANIM_WALK_L = {5, 6, 7, 8, rate = 15}
 
 function Player:init(playerNum)
+	self.type = "player"
 	self.color = playerNum == 1 and Player.COLOR_BLUE or Player.COLOR_PINK
 	self.anim = Anim.new(ANIM_WALK)
 	self.speed = 150
@@ -20,7 +21,7 @@ function Player:init(playerNum)
 	self.moving = false
 	self.angle = 0
 	self.playerNum = playerNum -- 1 or 2
-  self.hp = 5
+	self.hp = 5
 end
 
 function Player:added()
