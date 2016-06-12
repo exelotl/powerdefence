@@ -85,8 +85,6 @@ function love.draw()
     lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 
     ForceField:drawTop()
-
-	lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 	scene:draw()
     ForceField:drawBottom()
 	
