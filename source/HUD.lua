@@ -1,4 +1,4 @@
-hud = {}
+local hud = {}
 
 function hud.draw()
   
