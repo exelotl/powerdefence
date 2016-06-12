@@ -12,10 +12,12 @@ function EnemyGrunt:init(scene, x, y)
 	--self.shape = lp.newCircleShape(10)
 	self.shape = lp.newRectangleShape(13,26)
 	self.fixture = lp.newFixture(self.body, self.shape)
+    self.fixture:setUserData({dataType='enemy', data=self})
 	self.anim = Anim.new(ANIM_WALK)
 	self.angle = 0
 	self.speed = 20
 	self.target = nil
+	self.hp = 2
 end
 
 function EnemyGrunt:update(dt)

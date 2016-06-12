@@ -27,6 +27,7 @@ function Player:added()
 	self.body = lp.newBody(self.scene.world, x, 0, "dynamic")
 	self.shape = lp.newCircleShape(8)
 	self.fixture = lp.newFixture(self.body, self.shape)
+	self.fixture:setUserData({dataType='player', data=self})
 end
 
 function Player:update(dt)
@@ -88,6 +89,11 @@ end
 function Player:stopMoving()
     self.moving = false
     --print('stopped walking')
+end
+
+function Player:takeDamage()
+    self.hp = self.hp - 1
+    printf('player %d: OW!', self.playerNum)
 end
 
 return Player

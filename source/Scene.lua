@@ -1,8 +1,13 @@
 local Scene = oo.class()
 local debugWorldDraw = require "debugworlddraw"
+require "physics"
+
 
 function Scene:init()
 	self.world = lp.newWorld(0, 0, true)
+
+    self.world:setCallbacks(beginContact, endContact, preSolve, postSolve)
+
 	self.entities = {}
 	self.addlist = {}
 	self.removelist = {}
@@ -24,14 +29,14 @@ function Scene:update(dt)
 		table.insert(self.entities, e)
 		if e.added then e:added() end
 	end
-	
+
 	self.addlist = {}
 	self.removelist = {}
-	
+
 	for _,e in ipairs(self.entities) do
 		e:update(dt)
 	end
-	
+
 	self.world:update(dt)
 end
 
@@ -63,7 +68,7 @@ function Scene:getNearest(e1, ...)
 	local x1, y1 = e1.body:getPosition()
 	local nearest = nil
 	local lowestMag = math.huge
-	
+
 	for _,e2 in ipairs(self.entities) do
 		if e2.body and e2.type then
 			local matchedType = false

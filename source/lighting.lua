@@ -22,10 +22,6 @@ function lighting.renderLights()
             lg.setColor(150, 150, 0)
             lg.draw(assets.lights.surround, 0, 0, 0, 0.3, 0.3, 256, 256)
 
-
-            --level = 50
-            --lg.setColor(level, level, level)
-            --lg.circle('fill', 0, 0, 50)
             lg.setColor(0, 50, 100)
             local originx, originy = 10, 128
 
