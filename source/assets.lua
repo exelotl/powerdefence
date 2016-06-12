@@ -29,15 +29,21 @@ function assets.load()
 	assets.weapons = {
         pistol = lg.newImage("assets/pistol.png")
     }
-    assets.bullet = lg.newImage("assets/bullet.png")
+  assets.bullet = lg.newImage("assets/bullet.png")
 
   assets.grunt = love.graphics.newImage("assets/grunt.png")
+  
+  assets.lights = {
+  surround = lg.newImage('assets/glow_white.png'),
+  torch = lg.newImage('assets/torch_white.png')
+    }
+
 	assets.background = love.graphics.newImage("assets/placeholders/floor.png")
 	assets.fft = love.graphics.newImage("assets/placeholders/forcefieldtop.png")
 	assets.ffb = love.graphics.newImage("assets/placeholders/forcefieldbottom.png")
-  assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
+    assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
 	assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
-  assets.orb = love.graphics.newImage("assets/orb.png")
+    assets.orb = love.graphics.newImage("assets/orb.png")
 
 end
 
