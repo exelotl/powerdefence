@@ -10,7 +10,6 @@ place tower)
 require 'external/utils'
 require 'axisConfig'
 local Bullet = require "Bullet"
-local Orb = require "Orb"
 local lighting = require "lighting"
 local mode = require "mode"
 
@@ -43,20 +42,17 @@ input.states.day = {
 
     actions = {
         player1Fire = function()
-            print('pew')
             local x, y = player1.body:getPosition()
             local b = Bullet.new(x, y, player1.angle)
 
             scene:add(b)
         end,
-        makeBox = function()
-          print('orb')
-          local x, y = player1.body:getPosition()
-          local b = Orb.new(x + 32,y)
+        player2Fire = function()
+            local x, y = player2.body:getPosition()
+            local b = Bullet.new(x, y, player2.angle)
 
-          scene:add(b)
-        end
-
+            scene:add(b)
+        end,
     },
 
 
@@ -68,7 +64,6 @@ input.states.day = {
 
     mousePress = {
         [1] = 'player1Fire',
-        [2] = 'makeBox'
     },
     mouseRelease = {},
 
@@ -80,7 +75,7 @@ input.states.day = {
     joy1Release = {},
 
     joy2Press = {
-
+        rightshoulder = 'player2Fire'
     },
     joy2Release = {},
 
@@ -184,6 +179,7 @@ end
 -- there is no love.blah function for handling joystick axis change, so instead
 -- calling this function from the update function
 function input.checkJoystickAxes()
+    -- short circuit if player control isn't currently enabled (eg for the menu)
     if not input.currentState.playerControl then return end
 
     if input.joy1 then
@@ -213,7 +209,13 @@ function input.checkJoystickAxes()
 
     if input.joy2 then
         local axes = {input.joy2:getAxes()}
-        local dead = isDead(j2axes)
+        local dead = isDead(axes)
+
+
+        -- aiming
+        if not dead[axisConfig2.lookX] or not dead[axisConfig2.lookY] then
+            player2.angle = math.atan2(axes[axisConfig2.lookY], axes[axisConfig2.lookX])
+        end
 
         if not dead[axisConfig2.moveX] or not dead[axisConfig2.moveY] then
             player2:move(math.atan2(axes[axisConfig2.moveY], axes[axisConfig2.moveX]))
