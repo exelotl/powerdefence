@@ -12,6 +12,7 @@ require 'axisConfig'
 local Bullet = require "Bullet"
 local Orb = require "Orb"
 local lighting = require "lighting"
+local mode = require "mode"
 
 local input = {}
 
@@ -270,10 +271,11 @@ function love.keypressed(key, unicode)
         love.event.quit()
     end
     if key == "f3" then
-        lighting.canvas:newImageData():encode('png', 'lighting-pass.png')
-        print('exporting lighting pass to file')
+        mode.toggle()
     end
 
+    -- debug
+    -- lighting.canvas:newImageData():encode('png', 'lighting-pass.png')
 
     checkKeyboardAxis()
 
