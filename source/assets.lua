@@ -36,6 +36,8 @@ function assets.load()
 	assets.ffb = love.graphics.newImage("assets/placeholders/forcefieldbottom.png")
   assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
 	assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
+  assets.orb = love.graphics.newImage("assets/orb.png")
+
 end
 
 return assets

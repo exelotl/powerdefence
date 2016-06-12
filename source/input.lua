@@ -10,6 +10,7 @@ place tower)
 require 'external/utils'
 require 'axisConfig'
 local Bullet = require "Bullet"
+local Orb = require "Orb"
 
 local input = {}
 
@@ -46,6 +47,14 @@ input.states.day = {
 
             scene:add(b)
         end,
+        makeBox = function()
+          print('orb')
+          local x, y = player1.body:getPosition()
+          local b = Orb.new(x + 32,y)
+          
+          scene:add(b)
+        end
+        
     },
 
 
@@ -56,7 +65,8 @@ input.states.day = {
 
 
     mousePress = {
-        [1] = 'player1Fire'
+        [1] = 'player1Fire',
+        [2] = 'makeBox'
     },
     mouseRelease = {},
 
