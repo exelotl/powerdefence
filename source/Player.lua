@@ -1,4 +1,5 @@
 local Anim = require "Anim"
+local weapons = require "weapons"
 
 local Player = oo.class()
 
@@ -22,6 +23,9 @@ function Player:init(playerNum)
 	self.angle = 0
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
+    self.weapons = {weapons.Pistol.new(), weapons.MachineGun.new(),
+                    weapons.RocketLauncher.new()}
+	self.currentWeapon = 1
 end
 
 function Player:added()
@@ -63,10 +67,19 @@ function Player:draw()
 		self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
 	end
 
-	local offsetx, offsety = -8, 1
+	local gun = self.weapons[self.currentWeapon]
+	local inFront = true
+	if gun then
+        if gun.alwaysBehind
+        then inFront = false
+        else inFront = 0 <= self.angle and self.angle <= math.pi end
+    end
+
+	if gun and not inFront then gun:draw(x, y, self.angle) end
+
 	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, 0, 1, 1, 8, 8)
 
-	lg.draw(assets.weapons.pistol, x, y, angle, scalex, 1, offsetx, offsety)
+	if gun and inFront then gun:draw(x, y, self.angle) end
 end
 
 -- given input from the keyboard or gamepad: this method is called to change the
@@ -95,6 +108,32 @@ end
 
 function Player:takeDamage()
     self.hp = self.hp - 1
+end
+
+function Player:nextWeapon()
+    if self.currentWeapon == #self.weapons then
+        self.currentWeapon = 1
+    else
+        self.currentWeapon = self.currentWeapon + 1
+    end
+end
+
+function Player:prevWeapon()
+    if self.currentWeapon == 1 then
+        self.currentWeapon = #self.weapons
+    else
+        self.currentWeapon = self.currentWeapon - 1
+    end
+end
+
+function Player:startShooting()
+    local gun = self.weapons[self.currentWeapon]
+    if gun then gun:startShooting() end
+end
+
+function Player:stopShooting()
+    local gun = self.weapons[self.currentWeapon]
+    if gun then gun:stopShooting() end
 end
 
 return Player

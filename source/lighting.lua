@@ -13,14 +13,15 @@ end
 function lighting.renderLights()
     local r, g, b, a = lg.getColor()
     love.graphics.setCanvas(lighting.canvas)
-        local level = 180
+        local level = 255
         lg.setColor(level, level, level)
         lg.rectangle('fill', 0, 0, lg.getDimensions())
         cam:attach()
 
 
             lg.setColor(150, 150, 0)
-            lg.draw(assets.lights.surround, 0, 0, 0, 0.3, 0.3, 256, 256)
+            local scale = 1 + math.sin(globalTimer*3)*0.2
+            lg.draw(assets.lights.surround, 0, 0, 0, scale, scale, 256, 256)
 
             lg.setColor(0, 50, 100)
             local originx, originy = 10, 128
@@ -45,10 +46,12 @@ function lighting.renderLights()
 end
 
 function lighting.applyLights()
+    local r, g, b, a = lg.getColor()
     lg.setBlendMode('subtract')
         lg.setColor(255, 255, 255, lighting.amount)
         lg.draw(lighting.canvas)
     lg.setBlendMode('alpha')
+    lg.setColor(r, g, b, a)
 end
 
 
