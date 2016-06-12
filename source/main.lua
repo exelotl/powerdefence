@@ -6,10 +6,10 @@ input = require "input"
 local limitFrameRate = require "limitframerate"
 local Scene = require "Scene"
 local Player = require "Player"
-local ForceField = require "ForceField"
 local EnemyGrunt = require "EnemyGrunt"
 local lighting = require "lighting"
 local mode = require "mode"
+local ForceField = require "ForceField"
 local Orb = require "Orb"
 local HUD = require "HUD"
 
@@ -100,13 +100,13 @@ function love.draw()
     ForceField:drawBottom()
         
     cam:detach()
-    HUD.draw()
+    
 
     -- doesn't affect the output during the day
     lighting.renderLights()
     lighting.applyLights()
     
-  
+    HUD.draw()
 
     if debug then
         lg.setColor(255,0,0)

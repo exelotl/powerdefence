@@ -1,8 +1,10 @@
 
 local ForceField = {}
+local mode = require "mode"
 
 local count = 0
 local changeval = 1
+
 
 --updates the count value
 local function changeCount()
@@ -18,24 +20,28 @@ end
 
 --draws the force field
 function ForceField.drawTop()
-  draw1 = 255 * (count/100)
-  draw2 = 255 - draw1
-  lg.setColor(255,255,255,draw1)
-  lg.draw(assets.fft,-512,-512,0)
-  lg.setColor(255,255,255,draw2)
-  lg.draw(assets.fft2,-512,-512,0)
-  lg.setColor(255,255,255,255)
+  if mode.current == 'day' then
+    draw1 = 255 * (count/100)
+    draw2 = 255 - draw1
+    lg.setColor(255,255,255,draw1)
+    lg.draw(assets.fft,-512,-512,0)
+    lg.setColor(255,255,255,draw2)
+    lg.draw(assets.fft2,-512,-512,0)
+    lg.setColor(255,255,255,255)
+  end
 end
 
 function ForceField.drawBottom()
-  draw1 = 255 * (count/100)
-  draw2 = 255 - draw1
-  lg.setColor(255,255,255,draw1)
-  lg.draw(assets.ffb,-512,-512,0)
-  lg.setColor(255,255,255,draw2)
-  lg.draw(assets.ffb2,-512,-512,0)
-  lg.setColor(255,255,255,255)
-  changeCount()
+  if mode.current == 'day' then
+    draw1 = 255 * (count/100)
+    draw2 = 255 - draw1
+    lg.setColor(255,255,255,draw1)
+    lg.draw(assets.ffb,-512,-512,0)
+    lg.setColor(255,255,255,draw2)
+    lg.draw(assets.ffb2,-512,-512,0)
+    lg.setColor(255,255,255,255)
+    changeCount()
+  end
 end
 
 return ForceField
