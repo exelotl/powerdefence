@@ -88,7 +88,7 @@ end
 
 
 function love.draw()
-    lg.setBackgroundColor(255,255,255)
+    lg.setBackgroundColor(253,233,173)
     lg.setColor(255,255,255)
 
 
