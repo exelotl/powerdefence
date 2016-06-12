@@ -14,7 +14,13 @@ debug = false -- global debug flag (toggle: F1). Use as you wish
 player1 = nil
 player2 = nil
 
+-- for scaling the window
+BASE_WIDTH = 400
+BASE_HEIGHT = 240
 reticuleCursor = nil
+
+-- 'day' | 'night'
+currentMode = 'night'
 
 function love.load(arg)
 
@@ -33,6 +39,7 @@ function love.load(arg)
 	lg = love.graphics
 	lm = love.mouse
 	lj = love.joystick
+	lw = love.window
 
 	assets.load()
 
@@ -46,7 +53,6 @@ function love.load(arg)
 	math.randomseed(os.time())
 
 	scene = Scene.new()
-
 
 	player1 = Player.new()
 	scene:add(player1)
@@ -65,12 +71,12 @@ function love.update(dt)
     cam:lookAt(player1.body:getPosition())
     -- no love.blah function for joystick axis change
     input.checkJoystickAxes()
-
 end
 
 
 function love.draw()
     lg.setBackgroundColor(255,255,255)
+    lg.setBlendMode('alpha')
     lg.setColor(255,255,255)
 
 
@@ -80,13 +86,30 @@ function love.draw()
 
     ForceField:drawTop()
 
-    scene:draw()
+	lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
+	scene:draw()
     ForceField:drawBottom()
+	
     cam:detach()
+
+
+    if currentMode == 'night' then
+        lg.setBlendMode('subtract')
+        local level = 180
+        lg.setColor(level, level, level)
+        lg.rectangle('fill', 0, 0, lg.getDimensions())
+
+    end
 
     if debug then
         love.graphics.print('debug on', 20, 20)
         love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
     end
+
 end
 
+function love.resize(w, h)
+	local ratiox = w / BASE_WIDTH
+	local ratioy = h / BASE_HEIGHT
+	flux.to(cam, 1, {scale = math.max(ratiox, ratioy)})
+end
