@@ -16,6 +16,9 @@ player2 = nil
 
 reticuleCursor = nil
 
+-- 'day' | 'night'
+currentMode = 'night'
+
 function love.load(arg)
 
     -- allows debugging (specifically breakpoints) in ZeroBrane
@@ -71,6 +74,7 @@ end
 
 function love.draw()
     lg.setBackgroundColor(255,255,255)
+    lg.setBlendMode('alpha')
     lg.setColor(255,255,255)
 
 
@@ -84,9 +88,19 @@ function love.draw()
     ForceField:drawBottom()
     cam:detach()
 
+
+    if currentMode == 'night' then
+        lg.setBlendMode('subtract')
+        local level = 180
+        lg.setColor(level, level, level)
+        lg.rectangle('fill', 0, 0, lg.getDimensions())
+
+    end
+
     if debug then
         love.graphics.print('debug on', 20, 20)
         love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
     end
+
 end
 
