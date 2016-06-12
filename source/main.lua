@@ -15,6 +15,9 @@ debug = false -- global debug flag (toggle: F1). Use as you wish
 player1 = nil
 player2 = nil
 
+-- for scaling the window
+BASE_WIDTH = 400
+BASE_HEIGHT = 240
 reticuleCursor = nil
 
 -- 'day' | 'night'
@@ -37,6 +40,7 @@ function love.load(arg)
 	lg = love.graphics
 	lm = love.mouse
 	lj = love.joystick
+	lw = love.window
 
 	assets.load()
 
@@ -70,7 +74,6 @@ function love.update(dt)
     cam:lookAt(player1.body:getPosition())
     -- no love.blah function for joystick axis change
     input.checkJoystickAxes()
-
 end
 
 
@@ -83,7 +86,6 @@ function love.draw()
         lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 
         ForceField:drawTop()
-
         scene:draw()
         ForceField:drawBottom()
     cam:detach()
@@ -101,3 +103,8 @@ function love.draw()
 
 end
 
+function love.resize(w, h)
+	local ratiox = w / BASE_WIDTH
+	local ratioy = h / BASE_HEIGHT
+	flux.to(cam, 1, {scale = math.max(ratiox, ratioy)})
+end

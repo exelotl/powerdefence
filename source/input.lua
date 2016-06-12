@@ -96,13 +96,17 @@ input.states.testing = {
         printBrelease = function() print('B release') end,
         printCpress = function() print('C press') end,
         printCrelease = function() print('C release') end,
+		toggleFullscreen = function()
+			lw.setFullscreen(not lw.getFullscreen())
+		end
     },
 
 
 
     kbdPress = {
         a = 'printApress',
-        b = 'printBpress'
+        b = 'printBpress',
+		f = 'toggleFullscreen'
     },
     kbdRelease = {
         a = 'printArelease',
