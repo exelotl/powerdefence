@@ -7,6 +7,8 @@ Player.COLOR_GREEN  = 2
 Player.COLOR_PINK   = 3
 Player.COLOR_YELLOW = 4
 
+
+
 local ANIM_IDLE_R = {1}
 local ANIM_IDLE_L = {5}
 local ANIM_WALK_R = {1, 2, 3, 4, rate = 15}
@@ -15,7 +17,7 @@ local ANIM_WALK_L = {5, 6, 7, 8, rate = 15}
 function Player:init(scene)
 	self.color = Player.COLOR_BLUE
 	self.anim = Anim.new(ANIM_WALK)
-	self.speed = 100
+	self.speed = 150
 	self.moveDirection = 0
 	self.moving = false
 	self.angle = 0
@@ -58,7 +60,7 @@ function Player:draw()
 		self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
 	end
 
-	local offsetx, offsety = -7, 8
+	local offsetx, offsety = -7, 0
 	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, 0, 1, 1, 8, 8)
 
 	lg.draw(assets.weapons.pistol, x, y, angle, scalex, 1, offsetx, offsety)

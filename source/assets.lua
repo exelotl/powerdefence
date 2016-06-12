@@ -24,6 +24,8 @@ function assets.load()
 
 	assets.playerq = makeQuads(assets.player[1], 16, 16)
 
+	assets.reticule = lg.newImage('assets/reticule.png')
+
 	assets.weapons = {
         pistol = lg.newImage("assets/pistol.png")
     }
@@ -32,6 +34,10 @@ function assets.load()
 	assets.background = love.graphics.newImage("assets/placeholders/floor.png")
 	assets.fft = love.graphics.newImage("assets/placeholders/forcefieldtop.png")
 	assets.ffb = love.graphics.newImage("assets/placeholders/forcefieldbottom.png")
+  assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
+	assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
+  assets.orb = love.graphics.newImage("assets/orb.png")
+
 end
 
 return assets
