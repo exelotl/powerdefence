@@ -19,6 +19,7 @@ function EnemyGrunt:init(scene, x, y)
 	self.speed = 20
 	self.target = nil
 	self.hp = 2
+	self.depthOffset = 8
 end
 
 function EnemyGrunt:update(dt)

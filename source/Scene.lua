@@ -48,7 +48,20 @@ function Scene:update(dt)
 	self.world:update(dt)
 end
 
+local function compareEntities(e1, e2)
+	local b1,b2 = e1.body, e2.body
+	if (not b1) and b2 then return true end
+	if not b2 then return true end
+	local x1,y1 = b1:getPosition()
+	local x2,y2 = b2:getPosition()
+	if e1.depthOffset then y1 = y1 + e1.depthOffset end
+	if e2.depthOffset then y2 = y2 + e2.depthOffset end
+	return y1 < y2
+end
+
 function Scene:draw()
+	table.sort(self.entities, compareEntities)
+	
 	for _,e in ipairs(self.entities) do
 		e:draw()
 	end
