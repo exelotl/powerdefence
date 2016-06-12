@@ -60,7 +60,7 @@ function Player:draw()
 		self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
 	end
 
-	local offsetx, offsety = -7, 0
+	local offsetx, offsety = -7, 3
 	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, 0, 1, 1, 8, 8)
 
 	lg.draw(assets.weapons.pistol, x, y, angle, scalex, 1, offsetx, offsety)
