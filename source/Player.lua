@@ -20,6 +20,7 @@ function Player:init(playerNum)
 	self.moving = false
 	self.angle = 0
 	self.playerNum = playerNum -- 1 or 2
+  self.hp = 5
 end
 
 function Player:added()

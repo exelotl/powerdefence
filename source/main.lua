@@ -11,6 +11,7 @@ local EnemyGrunt = require "EnemyGrunt"
 local lighting = require "lighting"
 local mode = require "mode"
 local Orb = require "Orb"
+local HUD = require "HUD"
 
 local animSpeed = 1
 debug = false -- global debug flag (toggle: F1). Use as you wish
@@ -97,15 +98,18 @@ function love.draw()
     cam:attach()
 		lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 
-        ForceField:drawTop()
-        scene:draw()
-        ForceField:drawBottom()
+    ForceField:drawTop()
+    scene:draw()
+    ForceField:drawBottom()
+        
     cam:detach()
-
+    HUD.draw()
 
     -- doesn't affect the output during the day
     lighting.renderLights()
     lighting.applyLights()
+    
+  
 
     if debug then
         lg.setColor(255,0,0)
