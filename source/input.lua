@@ -19,8 +19,6 @@ local input = {}
 input.states = {}
 
 -- ordering depends on the order that a button is pressed on them
-input.deadZones = {0, 0, 0, 0, -1, -1}
-input.deadZoneTolerance = 0.2
 input.joy1 = nil
 input.joy2 = nil
 
@@ -37,7 +35,7 @@ input.joy1dead = true
 input.joy2dead = true
 
 
-input.states.day = {
+input.states.night = {
     -- whether input should move the characters in this state
     playerControl = true,
 
@@ -48,11 +46,25 @@ input.states.day = {
 
             scene:add(b)
         end,
+        player1NextWeapon = function()
+            player1:nextWeapon()
+        end,
+        player1PrevWeapon = function()
+            player1:prevWeapon()
+        end,
+
+
         player2Fire = function()
             local x, y = player2.body:getPosition()
             local b = Bullet.new(x, y, player2.angle)
 
             scene:add(b)
+        end,
+        player2NextWeapon = function()
+            player2:nextWeapon()
+        end,
+        player2PrevWeapon = function()
+            player2:prevWeapon()
         end,
     },
 
@@ -69,14 +81,25 @@ input.states.day = {
     mouseRelease = {},
 
     mouseMove = function(x, y, dx, dy) end,
+    wheelMove = function(x, y)
+        if y >= 0 then
+            player1:nextWeapon()
+        else
+            player1:prevWeapon()
+        end
+    end,
 
     joy1Press = {
-        rightshoulder = 'player1Fire'
+        rightshoulder = 'player1Fire',
+        y = 'player1NextWeapon',
+        x = 'player1PrevWeapon',
     },
     joy1Release = {},
 
     joy2Press = {
-        rightshoulder = 'player2Fire'
+        rightshoulder = 'player2Fire',
+        y = 'player2NextWeapon',
+        x = 'player2PrevWeapon',
     },
     joy2Release = {},
 
@@ -124,6 +147,9 @@ input.states.testing = {
     mouseMove = function(x, y, dx, dy)
         printf('mouse move(%d, %d, %d, %d)', x, y, dx, dy)
     end,
+    wheelMove = function(x, y)
+        printf('wheel move(%d, %d)', x, y)
+    end,
 
     joy1Press = {
         a = 'printApress',
@@ -145,7 +171,7 @@ input.states.testing = {
 }
 
 
-input.currentState = input.states.day
+input.currentState = input.states.night
 
 
 
@@ -169,10 +195,10 @@ function input.resetJoysticks()
 end
 
 -- given an array of axes, get an array of which axes are inside dead zones
-function isDead(axes)
+function isDead(axes, config)
     local dead = {}
     for i = 1, #axes do
-        dead[i] = math.abs(axes[i]-input.deadZones[i]) <= input.deadZoneTolerance
+        dead[i] = math.abs(axes[i]-config.deadZones[i]) <= config.deadZoneTolerance
     end
     return dead
 end
@@ -185,7 +211,7 @@ function input.checkJoystickAxes()
 
     if input.joy1 then
         local axes = {input.joy1:getAxes()}
-        local dead = isDead(axes)
+        local dead = isDead(axes, axisConfig1)
 
         -- aiming
         if not dead[axisConfig1.lookX] or not dead[axisConfig1.lookY] then
@@ -210,7 +236,7 @@ function input.checkJoystickAxes()
 
     if input.joy2 then
         local axes = {input.joy2:getAxes()}
-        local dead = isDead(axes)
+        local dead = isDead(axes, axisConfig2)
 
 
         -- aiming
@@ -321,6 +347,10 @@ function love.mousemoved(x, y, dx, dy)
     input.lastAim = 'mouse'
     -- game state dependent handler
     return input.currentState.mouseMove(x, y, dx, dy)
+end
+
+function love.wheelmoved(x, y)
+    return input.currentState.wheelMove(x, y)
 end
 
 
