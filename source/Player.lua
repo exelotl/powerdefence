@@ -94,7 +94,6 @@ end
 
 function Player:takeDamage()
     self.hp = self.hp - 1
-    printf('player %d: OW!', self.playerNum)
 end
 
 return Player

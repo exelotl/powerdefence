@@ -14,6 +14,14 @@ local collisionCallbacks = {
         end
     },
 
+    bulletEnemy = {
+        test = function(aType, bType) return aType == 'bullet' and bType == 'enemy' end,
+        callback = function(bulletFix, enemyFix, coll)
+            local enemy = enemyFix:getUserData().data
+            enemy:takeDamage()
+        end
+    },
+
 
 
     bulletCleanup = {

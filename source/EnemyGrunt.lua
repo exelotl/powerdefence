@@ -40,4 +40,12 @@ function EnemyGrunt:draw()
 	lg.draw(assets.grunt, assets.gruntq[self.anim.frame], x, y, 0, dir, 1, 15, 16)
 end
 
+
+function EnemyGrunt:takeDamage()
+    self.hp = self.hp - 1
+    if self.hp <= 0 then
+        --TODO
+    end
+end
+
 return EnemyGrunt
