@@ -7,6 +7,7 @@ local limitFrameRate = require "limitframerate"
 local Scene = require "Scene"
 local Player = require "Player"
 local ForceField = require "ForceField"
+local EnemyGrunt = require "EnemyGrunt"
 local lighting = require "lighting"
 local mode = require "mode"
 local Orb = require "Orb"
@@ -62,6 +63,10 @@ function love.load(arg)
 
 	player2 = Player.new(2)
 	scene:add(player2)
+
+	EnemyGrunt.new(scene, 50, 50)
+	EnemyGrunt.new(scene, -50, -50)
+	EnemyGrunt.new(scene, -100, 100)
 
 
     orb = Orb.new(0,0)
