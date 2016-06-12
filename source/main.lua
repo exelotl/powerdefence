@@ -14,6 +14,8 @@ debug = false -- global debug flag (toggle: F1). Use as you wish
 player1 = nil
 player2 = nil
 
+cursor = nil
+
 function love.load(arg)
 
     -- allows debugging (specifically breakpoints) in ZeroBrane
@@ -33,6 +35,8 @@ function love.load(arg)
 	lj = love.joystick
 
 	assets.load()
+
+	cursor = love.mouse.newCursor(assets.reticule, , )
 
 	-- lg.setFont(assets.font)
 
@@ -71,12 +75,12 @@ function love.draw()
 
     cam:attach()
 
-	lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
-  
-  ForceField:drawTop()
-	
-	scene:draw()
-  ForceField:drawBottom()
+    lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
+
+    ForceField:drawTop()
+
+    scene:draw()
+    ForceField:drawBottom()
     cam:detach()
 
     if debug then

@@ -24,6 +24,8 @@ function assets.load()
 
 	assets.playerq = makeQuads(assets.player[1], 16, 16)
 
+	assets.cursor = lg.newImage('assets/reticule.png')
+
 	assets.weapons = {
         pistol = lg.newImage("assets/pistol.png")
     }
