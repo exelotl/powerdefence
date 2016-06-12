@@ -18,16 +18,22 @@ function Scene:update(dt)
 		-- activate removal callback
 		if e.removed then e:removed() end
 		e.scene = nil
+		
+		print("removing entity from the list:", e)
+		
 		-- remove from the entity list
 		for i, e2 in ipairs(self.entities) do
 			if e == e2 then
 				table.remove(self.entities, i)
+				print("entity removed", e, e.body)
 				break
-			end
+			end 
 		end
+		
 		-- remove from the physics world
 		if e.body then
 			e.body:destroy()
+			print("body destroyed", e, e.body)
 		end
 	end
 	for _,e in ipairs(self.addlist) do
@@ -62,6 +68,11 @@ end
 
 -- schedule entity to be removed on the next frame
 function Scene:remove(e)
+	for i,v in ipairs(self.removelist) do
+		if e == v then
+			return
+		end
+	end
 	table.insert(self.removelist, e)
 end
 
