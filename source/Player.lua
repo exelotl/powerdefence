@@ -17,7 +17,7 @@ local ANIM_WALK_L = {5, 6, 7, 8, rate = 15}
 function Player:init(scene)
 	self.color = Player.COLOR_BLUE
 	self.anim = Anim.new(ANIM_WALK)
-	self.speed = 100
+	self.speed = 150
 	self.moveDirection = 0
 	self.moving = false
 	self.angle = 0

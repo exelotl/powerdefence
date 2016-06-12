@@ -4,7 +4,7 @@ function Bullet:init(x, y, angle)
     self.initx = x + 16*math.cos(angle)
     self.inity = y + 16*math.sin(angle)
     self.angle = angle
-    self.speed = 400
+    self.speed = 800
 end
 
 function Bullet:added()
@@ -18,8 +18,11 @@ function Bullet:added()
                                 self.speed*math.sin(self.angle))
 
 end
-function Bullet:update(dt) 
-  end
+
+function Bullet:update(dt)
+
+end
+
 function Bullet:draw()
     lg.draw(assets.bullet, self.body:getX(), self.body:getY(), self.body:getAngle())
 end

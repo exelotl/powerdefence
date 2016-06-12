@@ -14,7 +14,7 @@ debug = false -- global debug flag (toggle: F1). Use as you wish
 player1 = nil
 player2 = nil
 
-cursor = nil
+reticuleCursor = nil
 
 function love.load(arg)
 
@@ -36,7 +36,8 @@ function love.load(arg)
 
 	assets.load()
 
-	cursor = love.mouse.newCursor(assets.reticule, , )
+	reticuleCursor = love.mouse.newCursor(assets.reticule:getData(), 7, 7)
+	love.mouse.setCursor(reticuleCursor)
 
 	-- lg.setFont(assets.font)
 
