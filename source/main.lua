@@ -76,8 +76,16 @@ function love.update(dt)
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
     scene:update(dt)
-    cam:lookAt(player1.body:getPosition())
-    -- no love.blah function for joystick axis change
+	
+	local p1x, p1y = player1.body:getPosition()
+	local p2x, p2y = p1x, p1y
+	if player2 then
+		p2x, p2y = player2.body:getPosition()
+	end
+	local ratio = 0.2
+    cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
+    
+	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
 end
 
