@@ -65,7 +65,7 @@ function Scene:getNearest(e1, ...)
 	local lowestMag = math.huge
 	
 	for _,e2 in ipairs(self.entities) do
-		if e2.body and e2.type then
+		if e2.body and e2.type and e2 ~= e1 then
 			local matchedType = false
 			for _,t in ipairs(types) do
 				if e2.type == t then
@@ -85,6 +85,8 @@ function Scene:getNearest(e1, ...)
 			end
 		end
 	end
+	
+	return nearest
 end
 
 return Scene
