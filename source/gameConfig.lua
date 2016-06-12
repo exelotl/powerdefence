@@ -1,5 +1,9 @@
 
 
+-- 0-255
+ambientDarkness = 180
+
+
 axisConfig1 = {
     deadZones = {0, 0, 0, 0, -1, -1},
     deadZoneTolerance = 0.2,

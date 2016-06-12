@@ -8,7 +8,7 @@ place tower)
 --]]
 
 require 'external/utils'
-require 'axisConfig'
+require 'gameConfig'
 local lighting = require "lighting"
 local mode = require "mode"
 local Player = require "Player"
