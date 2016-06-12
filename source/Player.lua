@@ -7,8 +7,6 @@ Player.COLOR_GREEN  = 2
 Player.COLOR_PINK   = 3
 Player.COLOR_YELLOW = 4
 
-
-
 local ANIM_IDLE_R = {1}
 local ANIM_IDLE_L = {5}
 local ANIM_WALK_R = {1, 2, 3, 4, rate = 15}

@@ -7,6 +7,7 @@ local limitFrameRate = require "limitframerate"
 local Scene = require "Scene"
 local Player = require "Player"
 local ForceField = require "ForceField"
+local EnemyGrunt = require "EnemyGrunt"
 local lighting = require "lighting"
 
 local animSpeed = 1
@@ -59,7 +60,11 @@ function love.load(arg)
 
 	player1 = Player.new()
 	scene:add(player1)
-
+	
+	EnemyGrunt.new(scene, 50, 50)
+	EnemyGrunt.new(scene, -50, -50)
+	EnemyGrunt.new(scene, -100, 100)
+	
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
 end

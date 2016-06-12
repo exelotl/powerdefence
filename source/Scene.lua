@@ -10,7 +10,7 @@ end
 
 function Scene:update(dt)
 	for _,e in ipairs(self.removelist) do
-		e:removed()
+		if e.added then e:removed() end
 		e.scene = nil
 		for i, e2 in ipairs(self.entities) do
 			if e == e2 then
@@ -22,7 +22,7 @@ function Scene:update(dt)
 	for _,e in ipairs(self.addlist) do
 		e.scene = self
 		table.insert(self.entities, e)
-		e:added()
+		if e.added then e:added() end
 	end
 	
 	self.addlist = {}
@@ -52,6 +52,39 @@ end
 -- schedule entity to be removed on the next frame
 function Scene:remove(e)
 	table.insert(self.removelist, e)
+end
+
+
+function Scene:getNearest(e1, ...)
+	if not e1.body then
+		return
+	end
+	local types = {...}
+	local x1, y1 = e1.body:getPosition()
+	local nearest = nil
+	local lowestMag = math.huge
+	
+	for _,e2 in ipairs(self.entities) do
+		if e2.body and e2.type then
+			local matchedType = false
+			for _,t in ipairs(types) do
+				if e2.type == t then
+					matchedType = true
+					break
+				end
+			end
+			if matchedType then
+				local x2, y2 = e2.body:getPosition()
+				local dx = x2 - x1
+				local dy = y2 - y1
+				local mag = dx*dx + dy*dy
+				if mag < lowestMag then
+					lowestMag = mag
+					nearest = e2
+				end
+			end
+		end
+	end
 end
 
 return Scene
