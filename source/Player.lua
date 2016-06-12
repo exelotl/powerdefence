@@ -127,8 +127,9 @@ function Player:prevWeapon()
 end
 
 function Player:startShooting()
+    local x, y = self.body:getPosition()
     local gun = self.weapons[self.currentWeapon]
-    if gun then gun:startShooting() end
+    if gun then gun:startShooting(x, y, self.angle) end
 end
 
 function Player:stopShooting()

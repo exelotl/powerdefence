@@ -76,12 +76,12 @@ end
 
 
 function love.update(dt)
-    limitFrameRate(60)
+    --limitFrameRate(60)
 
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
     scene:update(dt)
-	
+
 	local p1x, p1y = player1.body:getPosition()
 	local p2x, p2y = p1x, p1y
 	if player2 then
@@ -89,7 +89,7 @@ function love.update(dt)
 	end
 	local ratio = 0.25
     cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
-    
+
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
 end
@@ -106,14 +106,14 @@ function love.draw()
 		ForceField:drawTop()
 		scene:draw()
 		ForceField:drawBottom()
-        
+
     cam:detach()
-    
+
 
     -- doesn't affect the output during the day
     lighting.renderLights()
     lighting.applyLights()
-    
+
     HUD.draw()
 
     if debug then

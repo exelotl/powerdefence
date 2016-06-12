@@ -9,7 +9,6 @@ place tower)
 
 require 'external/utils'
 require 'axisConfig'
-local Bullet = require "Bullet"
 local lighting = require "lighting"
 local mode = require "mode"
 local Player = require "Player"
@@ -30,6 +29,12 @@ input.mousey = 0
 -- 'mouse' | 'joy'
 input.lastAim = 'mouse'
 
+-- record the last value of the firing trigger axis to determine whether this
+-- update the value crosses the trigger point
+input.lastjoy1Trigger = axisConfig1.deadZones[axisConfig1.trigger]
+input.lastjoy2Trigger = axisConfig2.deadZones[axisConfig2.trigger]
+
+
 -- record whether the axes used for walking are in the dead zone
 input.joy1dead = true
 input.joy2dead = true
@@ -40,12 +45,13 @@ input.states.night = {
     playerControl = true,
 
     actions = {
-        player1Fire = function()
-            local x, y = player1.body:getPosition()
-            local b = Bullet.new(x, y, player1.angle)
-
-            scene:add(b)
+        player1StartShooting = function()
+            player1:startShooting()
         end,
+        player1StopShooting = function()
+            player1:stopShooting()
+        end,
+
         player1NextWeapon = function()
             player1:nextWeapon()
         end,
@@ -54,12 +60,6 @@ input.states.night = {
         end,
 
 
-        player2Fire = function()
-            local x, y = player2.body:getPosition()
-            local b = Bullet.new(x, y, player2.angle)
-
-            scene:add(b)
-        end,
         player2NextWeapon = function()
             player2:nextWeapon()
         end,
@@ -76,9 +76,11 @@ input.states.night = {
 
 
     mousePress = {
-        [1] = 'player1Fire',
+        [1] = 'player1StartShooting',
     },
-    mouseRelease = {},
+    mouseRelease = {
+        [1] = 'player1StopShooting',
+    },
 
     mouseMove = function(x, y, dx, dy) end,
     wheelMove = function(x, y)
@@ -90,14 +92,12 @@ input.states.night = {
     end,
 
     joy1Press = {
-        rightshoulder = 'player1Fire',
         y = 'player1NextWeapon',
         x = 'player1PrevWeapon',
     },
     joy1Release = {},
 
     joy2Press = {
-        rightshoulder = 'player2Fire',
         y = 'player2NextWeapon',
         x = 'player2PrevWeapon',
     },
@@ -232,18 +232,29 @@ function input.checkJoystickAxes()
             end
         end
 
+        -- trigger
+        print(axes[axisConfig1.trigger])
+        local wasPressed = input.lastjoy1Trigger > axisConfig1.triggerActivationPoint
+        local isPressed = axes[axisConfig1.trigger] > axisConfig1.triggerActivationPoint
+        if not wasPressed and isPressed then
+            player1:startShooting()
+        elseif wasPressed and not isPressed then
+            player1:stopShooting()
+        end
+        input.lastjoy1Trigger = axes[axisConfig1.trigger]
+
     end
 
     if input.joy2 then
         local axes = {input.joy2:getAxes()}
         local dead = isDead(axes, axisConfig2)
 
-
         -- aiming
         if not dead[axisConfig2.lookX] or not dead[axisConfig2.lookY] then
             player2.angle = math.atan2(axes[axisConfig2.lookY], axes[axisConfig2.lookX])
         end
 
+        -- movement
         if not dead[axisConfig2.moveX] or not dead[axisConfig2.moveY] then
             player2:move(math.atan2(axes[axisConfig2.moveY], axes[axisConfig2.moveX]))
             input.joy2dead = false
@@ -255,6 +266,16 @@ function input.checkJoystickAxes()
                 input.joy2dead = true
             end
         end
+
+        -- trigger
+        local wasPressed = input.lastjoy2Trigger > axisConfig2.triggerActivationPoint
+        local isPressed = axes[axisConfig2.trigger] > axisConfig2.triggerActivationPoint
+        if not wasPressed and isPressed then
+            player2:startShooting()
+        elseif wasPressed and not isPressed then
+            player2:stopShooting()
+        end
+        input.lastjoy2Trigger = axes[axisConfig2.trigger]
     end
 end
 
