@@ -83,8 +83,8 @@ function love.draw()
 
 
     cam:attach()
-        lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
-
+		lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
+		
         ForceField:drawTop()
         scene:draw()
         ForceField:drawBottom()
