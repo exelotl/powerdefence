@@ -12,17 +12,19 @@ local ANIM_IDLE_L = {5}
 local ANIM_WALK_R = {1, 2, 3, 4, rate = 15}
 local ANIM_WALK_L = {5, 6, 7, 8, rate = 15}
 
-function Player:init(scene)
-	self.color = Player.COLOR_BLUE
+function Player:init(playerNum)
+	self.color = playerNum == 1 and Player.COLOR_BLUE or Player.COLOR_PINK
 	self.anim = Anim.new(ANIM_WALK)
 	self.speed = 150
 	self.moveDirection = 0
 	self.moving = false
 	self.angle = 0
+	self.playerNum = playerNum -- 1 or 2
 end
 
 function Player:added()
-	self.body = lp.newBody(self.scene.world, 0, 0, "dynamic")
+	local x = self.playerNum == 1 and -32 or 32
+	self.body = lp.newBody(self.scene.world, x, 0, "dynamic")
 	self.shape = lp.newCircleShape(8)
 	self.fixture = lp.newFixture(self.body, self.shape)
 end

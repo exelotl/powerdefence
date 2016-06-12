@@ -10,12 +10,15 @@ local ForceField = require "ForceField"
 local EnemyGrunt = require "EnemyGrunt"
 local lighting = require "lighting"
 local mode = require "mode"
+local Orb = require "Orb"
 
 local animSpeed = 1
 debug = false -- global debug flag (toggle: F1). Use as you wish
 
 player1 = nil
 player2 = nil
+
+orb = nil
 
 -- for scaling the window
 BASE_WIDTH = 400
@@ -55,15 +58,19 @@ function love.load(arg)
 
     lighting.init()
 
-	player1 = Player.new()
+	player1 = Player.new(1)
 	scene:add(player1)
-	
+
+	player2 = Player.new(2)
+	scene:add(player2)
+
 	EnemyGrunt.new(scene, 50, 50)
 	EnemyGrunt.new(scene, -50, -50)
 	EnemyGrunt.new(scene, -100, 100)
-	
-	player2 = Player.new()
-	scene:add(player2)
+
+
+    orb = Orb.new(0,0)
+    scene:add(orb)
 
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
