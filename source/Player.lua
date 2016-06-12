@@ -1,4 +1,5 @@
 local Anim = require "Anim"
+local weapons = require "weapons"
 
 local Player = oo.class()
 
@@ -22,6 +23,8 @@ function Player:init(playerNum)
 	self.angle = 0
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
+	self.guns = {}
+	self.currentGun = weapons.Pistol.new()
 end
 
 function Player:added()
@@ -63,10 +66,9 @@ function Player:draw()
 		self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
 	end
 
-	local offsetx, offsety = -8, 1
 	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, 0, 1, 1, 8, 8)
 
-	lg.draw(assets.weapons.pistol, x, y, angle, scalex, 1, offsetx, offsety)
+	if self.currentGun then self.currentGun:draw(x, y, self.angle) end
 end
 
 -- given input from the keyboard or gamepad: this method is called to change the

@@ -45,10 +45,12 @@ function lighting.renderLights()
 end
 
 function lighting.applyLights()
+    local r, g, b, a = lg.getColor()
     lg.setBlendMode('subtract')
         lg.setColor(255, 255, 255, lighting.amount)
         lg.draw(lighting.canvas)
     lg.setBlendMode('alpha')
+    lg.setColor(r, g, b, a)
 end
 
 
