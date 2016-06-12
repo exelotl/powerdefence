@@ -10,13 +10,19 @@ end
 
 function Scene:update(dt)
 	for _,e in ipairs(self.removelist) do
-		if e.added then e:removed() end
+		-- activate removal callback
+		if e.removed then e:removed() end
 		e.scene = nil
+		-- remove from the entity list
 		for i, e2 in ipairs(self.entities) do
 			if e == e2 then
 				table.remove(self.entities, i)
 				break
 			end
+		end
+		-- remove from the physics world
+		if e.body then
+			e.body:destroy()
 		end
 	end
 	for _,e in ipairs(self.addlist) do
