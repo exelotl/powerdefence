@@ -13,6 +13,7 @@ local ANIM_WALK_R = {1, 2, 3, 4, rate = 15}
 local ANIM_WALK_L = {5, 6, 7, 8, rate = 15}
 
 function Player:init(playerNum)
+	self.type = "player"
 	self.color = playerNum == 1 and Player.COLOR_BLUE or Player.COLOR_PINK
 	self.anim = Anim.new(ANIM_WALK)
 	self.speed = 150
@@ -20,7 +21,7 @@ function Player:init(playerNum)
 	self.moving = false
 	self.angle = 0
 	self.playerNum = playerNum -- 1 or 2
-  self.hp = 5
+	self.hp = 5
 end
 
 function Player:added()
@@ -28,6 +29,7 @@ function Player:added()
 	self.body = lp.newBody(self.scene.world, x, 0, "dynamic")
 	self.shape = lp.newCircleShape(8)
 	self.fixture = lp.newFixture(self.body, self.shape)
+	self.fixture:setUserData({dataType='player', data=self})
 end
 
 function Player:update(dt)
@@ -61,7 +63,7 @@ function Player:draw()
 		self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
 	end
 
-	local offsetx, offsety = -7, 3
+	local offsetx, offsety = -8, 1
 	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, 0, 1, 1, 8, 8)
 
 	lg.draw(assets.weapons.pistol, x, y, angle, scalex, 1, offsetx, offsety)
@@ -89,6 +91,10 @@ end
 function Player:stopMoving()
     self.moving = false
     --print('stopped walking')
+end
+
+function Player:takeDamage()
+    self.hp = self.hp - 1
 end
 
 return Player

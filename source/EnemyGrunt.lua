@@ -12,15 +12,16 @@ function EnemyGrunt:init(scene, x, y)
 	--self.shape = lp.newCircleShape(10)
 	self.shape = lp.newRectangleShape(13,26)
 	self.fixture = lp.newFixture(self.body, self.shape)
+    self.fixture:setUserData({dataType='enemy', data=self})
 	self.anim = Anim.new(ANIM_WALK)
 	self.angle = 0
 	self.speed = 20
 	self.target = nil
+	self.hp = 2
 end
 
 function EnemyGrunt:update(dt)
-	self.target = self.scene:getNearest("player", self.body:getPosition())
-	self.target = player1
+	self.target = self.scene:getNearest(self, "player")
 	if self.target then
 		local x1, y1 = self.body:getPosition()
 		local x2, y2 = self.target.body:getPosition()
@@ -36,6 +37,14 @@ function EnemyGrunt:draw()
 	local x, y = self.body:getPosition()
 	local dir = math.abs(self.angle) > math.pi/2 and 1 or -1
 	lg.draw(assets.grunt, assets.gruntq[self.anim.frame], x, y, 0, dir, 1, 15, 16)
+end
+
+
+function EnemyGrunt:takeDamage()
+    self.hp = self.hp - 1
+    if self.hp <= 0 then
+        --TODO
+    end
 end
 
 return EnemyGrunt

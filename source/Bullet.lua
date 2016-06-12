@@ -12,6 +12,7 @@ function Bullet:added()
     self.body:setBullet(true)
     self.shape = lp.newCircleShape(4)
     self.fixture = lp.newFixture(self.body, self.shape)
+	self.fixture:setUserData({dataType='bullet', data=self})
 
     self.body:setAngle(self.angle)
     self.body:setLinearVelocity(self.speed*math.cos(self.angle),

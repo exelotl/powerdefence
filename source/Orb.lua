@@ -9,6 +9,7 @@ function Orb:added()
     self.body = lp.newBody(self.scene.world, self.initx, self.inity, 'static')
     self.shape = lp.newCircleShape(16)
     self.fixture = lp.newFixture(self.body, self.shape)
+	self.fixture:setUserData({dataType='orb', data=self})
 
 end
 function Orb:update(dt) end
