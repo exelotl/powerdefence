@@ -3,7 +3,8 @@ local lighting = require "lighting"
 local mode = {}
 
 -- 'day' | 'night'
-mode.current = 'day'
+-- must also set lighting.amount to sync with this
+mode.current = 'night'
 
 
 function mode.toggle()

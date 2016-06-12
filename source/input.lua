@@ -12,6 +12,7 @@ require 'axisConfig'
 local Bullet = require "Bullet"
 local lighting = require "lighting"
 local mode = require "mode"
+local Player = require "Player"
 
 local input = {}
 
@@ -276,8 +277,16 @@ function love.keypressed(key, unicode)
         mode.toggle()
     end
 
-    -- debug
+    if key == "f4" then
+        lighting.canvas:newImageData():encode('png', 'lighting-pass.png')
+    end
+
+
+
+    -- debug stuff
     -- lighting.canvas:newImageData():encode('png', 'lighting-pass.png')
+
+
 
     checkKeyboardAxis()
 
@@ -323,6 +332,9 @@ function love.gamepadpressed(j, button)
         input.joy1 = j
     elseif not input.joy2 and j ~= input.joy1 then
         input.joy2 = j
+
+        player2 = Player.new(2)
+        scene:add(player2)
     end
 
     -- game state dependent actions
