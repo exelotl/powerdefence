@@ -19,7 +19,6 @@ player2 = nil
 -- for scaling the window
 BASE_WIDTH = 400
 BASE_HEIGHT = 240
-reticuleCursor = nil
 
 
 function love.load(arg)
@@ -43,8 +42,7 @@ function love.load(arg)
 
 	assets.load()
 
-	reticuleCursor = love.mouse.newCursor(assets.reticule:getData(), 7, 7)
-	love.mouse.setCursor(reticuleCursor)
+	love.mouse.setVisible(false)
 
 	-- lg.setFont(assets.font)
 
@@ -58,6 +56,9 @@ function love.load(arg)
 
 	player1 = Player.new()
 	scene:add(player1)
+
+	player2 = Player.new()
+	scene:add(player2)
 
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
@@ -95,8 +96,14 @@ function love.draw()
     lighting.applyLights()
 
     if debug then
+        lg.setColor(255,0,0)
         love.graphics.print('debug on', 20, 20)
         love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
+    end
+
+    if input.lastAim == 'mouse' then
+        lg.setColor(255,255,255)
+        lg.draw(assets.reticule, input.mousex, input.mousey, 0, cam.scale*0.6, cam.scale*0.6, 7, 7)
     end
 
 end
