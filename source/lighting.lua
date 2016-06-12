@@ -14,9 +14,10 @@ function lighting.renderLights()
         lg.setColor(level, level, level)
         lg.rectangle('fill', 0, 0, lg.getDimensions())
         cam:attach()
-            level = 50
-            lg.setColor(level, level, level)
-            lg.circle('fill', 0, 0, 50)
+            --level = 50
+            --lg.setColor(level, level, level)
+            --lg.circle('fill', 0, 0, 50)
+            lg.draw(assets.lights.surround, player1.body:getX(), player1.body:getY(), player1.angle, 0.25, 0.25, 256, 256)
         cam:detach()
     love.graphics.setCanvas()
 

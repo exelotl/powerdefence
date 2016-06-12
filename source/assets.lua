@@ -31,12 +31,16 @@ function assets.load()
     }
     assets.bullet = lg.newImage("assets/bullet.png")
 
+    assets.lights = {
+        surround = lg.newImage('assets/glow_black.png')
+    }
+
 	assets.background = love.graphics.newImage("assets/placeholders/floor.png")
 	assets.fft = love.graphics.newImage("assets/placeholders/forcefieldtop.png")
 	assets.ffb = love.graphics.newImage("assets/placeholders/forcefieldbottom.png")
-  assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
+    assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
 	assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
-  assets.orb = love.graphics.newImage("assets/orb.png")
+    assets.orb = love.graphics.newImage("assets/orb.png")
 
 end
 
