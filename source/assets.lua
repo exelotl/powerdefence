@@ -21,12 +21,13 @@ function assets.load()
 		lg.newImage("assets/player_pink.png"),
 		lg.newImage("assets/player_yellow.png")
 	}
-	
+
 	assets.playerq = makeQuads(assets.player[1], 16, 16)
-	
+
 	assets.weapons = {
         pistol = lg.newImage("assets/pistol.png")
     }
+    assets.bullet = lg.newImage("assets/bullet.png")
 
 	assets.background = love.graphics.newImage("assets/placeholders/floor.png")
 	assets.fft = love.graphics.newImage("assets/placeholders/forcefieldtop.png")

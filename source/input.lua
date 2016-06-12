@@ -8,6 +8,7 @@ place tower)
 --]]
 
 require 'external/utils'
+local Bullet = require "Bullet"
 
 local input = {}
 
@@ -37,6 +38,13 @@ input.states.day = {
     playerControl = true,
 
     actions = {
+        player1Fire = function()
+            print('pew')
+            local x, y = player1.body:getPosition()
+            local b = Bullet.new(x, y, player1.angle)
+
+            scene:add(b)
+        end,
     },
 
 
@@ -47,14 +55,14 @@ input.states.day = {
 
 
     mousePress = {
-
+        [1] = 'player1Fire'
     },
     mouseRelease = {},
 
     mouseMove = function(x, y, dx, dy) end,
 
     joy1Press = {
-
+        rightshoulder = 'player1Fire'
     },
     joy1Release = {},
 
@@ -128,7 +136,7 @@ input.states.testing = {
 }
 
 
-input.currentState = input.states.testing
+input.currentState = input.states.day
 
 
 
