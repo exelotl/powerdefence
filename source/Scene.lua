@@ -136,7 +136,6 @@ function Scene:getNearest(type, e1)
 	local lowestMag = math.huge
 	
 	for _,e2 in ipairs(self.typelist[type]) do
-		print("getNearest", e1, e1.type, e2, e2.type)
 		if e2.body and e2 ~= e1 then
 			local x2, y2 = e2.body:getPosition()
 			local dx = x2 - x1
