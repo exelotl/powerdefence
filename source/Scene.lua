@@ -77,10 +77,22 @@ function Scene:update(dt)
 	self.world:update(dt)
 end
 
+local nextsortid = 0
+local sortids = {}
+
 local function compareEntities(e1, e2)
 	local b1,b2 = e1.body, e2.body
-	if (not b1) and b2 then return true end
-	if not b2 then return true end
+	if not (b1 and b2) then
+      if not sortids[e1] then
+          sortids[e1] = nextsortid
+          nextsortid = nextsortid+1
+      end
+      if not sortids[e2] then
+          sortids[e2] = nextsortid
+          nextsortid = nextsortid+1
+      end
+      return sortids[e1] < sortids[e2]
+  end
 	local x1,y1 = b1:getPosition()
 	local x2,y2 = b2:getPosition()
 	if e1.depthOffset then y1 = y1 + e1.depthOffset end

@@ -23,8 +23,9 @@ function Player:init(playerNum)
 	self.angle = 0
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
-    self.weapons = {weapons.Pistol.new(), weapons.MachineGun.new(),
-                    weapons.RocketLauncher.new()}
+    self.weapons = {weapons.Pistol.new(self), weapons.MachineGun.new(self),
+                    weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
+                    weapons.Minigun.new(self)}
 	self.currentWeapon = 1
 end
 
@@ -39,7 +40,8 @@ end
 function Player:update(dt)
 	self.anim:update(dt)
     if self.moving then
-        self.body:setLinearVelocity(self.speed*math.cos(self.moveDirection), self.speed*math.sin(self.moveDirection))
+        self.body:setLinearVelocity(self.speed*math.cos(self.moveDirection),
+                                    self.speed*math.sin(self.moveDirection))
     else
         self.body:setLinearVelocity(0, 0)
     end
@@ -49,6 +51,10 @@ function Player:update(dt)
     -- comes in rather than here
     if input.lastAim == 'mouse' then
         player1:pointAtMouse()
+    end
+
+    if self.weapons[self.currentWeapon] then
+        self.weapons[self.currentWeapon]:update(dt)
     end
 end
 
@@ -75,11 +81,11 @@ function Player:draw()
         else inFront = 0 <= self.angle and self.angle <= math.pi end
     end
 
-	if gun and not inFront then gun:draw(x, y, self.angle) end
+	if gun and not inFront then gun:draw() end
 
 	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, 0, 1, 1, 8, 8)
 
-	if gun and inFront then gun:draw(x, y, self.angle) end
+	if gun and inFront then gun:draw() end
 end
 
 -- given input from the keyboard or gamepad: this method is called to change the
@@ -127,9 +133,10 @@ function Player:prevWeapon()
 end
 
 function Player:startShooting()
-    local x, y = self.body:getPosition()
     local gun = self.weapons[self.currentWeapon]
-    if gun then gun:startShooting(x, y, self.angle) end
+    if gun then
+        gun:startShooting()
+    end
 end
 
 function Player:stopShooting()
