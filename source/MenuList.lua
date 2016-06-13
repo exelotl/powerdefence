@@ -38,10 +38,7 @@ end
 
 function MenuList:draw()
 	love.graphics.setBackgroundColor(30, 0, 0)
-    
-    local xscale = lg.getWidth()/1920
-    local yscale = lg.getHeight()/1080
-    lg.draw(assets.title, 0, 0, 0, xscale,yscale)
+
 
 	if self.hoverPos > 0 then
 		love.graphics.setColor(255,255,255,80)

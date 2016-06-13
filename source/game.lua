@@ -1,6 +1,6 @@
 
 local MenuList = require "MenuList"
-local Level = require "level"
+local level = require "level"
 local ForceField = require "ForceField"
 local lighting = require "lighting"
 local HUD = require "HUD"
@@ -79,6 +79,10 @@ game.menu = {
         lg.setBackgroundColor(50,50,50)
         lg.setColor(255,255,255)
 
+        local xscale = lg.getWidth()/1920
+        local yscale = lg.getHeight()/1080
+        lg.draw(assets.title, 0, 0, 0, xscale,yscale)
+
         menuList:draw()
 
         local width, height = lg.getDimensions()
@@ -127,15 +131,9 @@ game.menu = {
 -- mode module holds day/night status
 
 
-local currentLevel = 1
-local levels = {
-    {
-        Level.new()
-    },
-}
-
 local redSpawner = nil
 local greenSpawner = nil
+local currentLevel = nil
 
 
 function drawMessage(string)
@@ -179,10 +177,12 @@ game.playing = {
     update = function(dt)
         if mode.isSunset() then
             mode.toggle()
-            wavey = wave.new(scene, 0, 50, 500, EnemySoldier)
+            wavey = wave.new(scene, 0, 25, 500, EnemySoldier)
+            wavez = wave.new(scene, 0, 75, 500, EnemyGrunt)
         end
 
         -- end of the wave
+
         --[[
         if mode.current == 'night' and not scene.typelist.enemy or #scene.typelist.enemy == 0 then
             for _, e = ipairs(scene.typelist.deadEnemy) do
@@ -190,6 +190,12 @@ game.playing = {
             end
         end
         --]]
+
+        -- game over
+        if (not player1:isAlive() and (not player2 or not player2:isAlive())) or orb.hp <= 0 then
+            game.state = 'gameOver'
+            game.load()
+        end
 
         scene:update(dt)
 
@@ -290,7 +296,12 @@ game.gameOver = {
     end,
 
     draw = function()
+        lg.setBackgroundColor(50,50,50)
+        lg.setColor(255,255,255)
 
+        local xscale = lg.getWidth()/1920
+        local yscale = lg.getHeight()/1080
+        lg.draw(assets.gameOver, 0, 0, 0, xscale,yscale)
     end,
 }
 
