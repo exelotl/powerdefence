@@ -1,5 +1,6 @@
 
 local Bullet = require "Bullet"
+local Rocket = require "Rocket"
 local Anim = require "Anim"
 
 
@@ -14,6 +15,7 @@ Weapon.animated = false
 Weapon.singleShot = true
 Weapon.rate = 0 -- delay between firing another bullet
 Weapon.holder = nil -- entity holding the weapon, needs body,angle fields
+Weapon.ammoType = Bullet
 Weapon.maxAmmo = math.huge
 Weapon.ammo = math.huge
 Weapon.shake = 0
@@ -62,13 +64,19 @@ function Weapon:update(dt)
             x = x + self.offset.shoot*math.cos(norm)
             y = y + self.offset.shoot*math.sin(norm)
 
-            local b = Bullet.new(scene, x, y, a)
+            local b = self.ammoType.new(scene, x, y, a)
             self.lastShotTime = globalTimer
 			self.ammo = self.ammo - 1
 			screenShake = screenShake + self.shake
 			if self.ammo <= 0 then
 				self.ammo = 0
-				-- TODO: discard weapon from inventory
+                -- remove the weapon from the holder
+                for i = 1,#self.holder.weapons do
+                    if self.holder.weapons[i] == self then
+                        table.remove(self.holder.weapons, i)
+                        break
+                    end
+                end
 			end
         end
     end
@@ -119,6 +127,7 @@ function RocketLauncher:init(holder)
     self.image = assets.weapons.rocketLauncher
     self.offset = {x=28, y=16, shoot=5}
     self.alwaysBehind = true
+    self.ammoType = Rocket
 	self.maxAmmo = 16
 	self.ammo = 16
 end

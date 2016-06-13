@@ -28,7 +28,7 @@ function Player:init(scene, playerNum)
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
                     weapons.Minigun.new(self)}
 	self.currentWeapon = 1
-	
+
 	local x = self.playerNum == 1 and -32 or 32
 	local y = 0
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
@@ -37,68 +37,84 @@ function Player:init(scene, playerNum)
 	self.fixture:setUserData({dataType='player', data=self})
 end
 
+function Player:isAlive()
+    return self.hp > 0
+end
+
 function Player:update(dt)
-	self.anim:update(dt)
-    if self.moving then
-        self.body:setLinearVelocity(self.speed*math.cos(self.moveDirection),
-                                    self.speed*math.sin(self.moveDirection))
+    if self:isAlive() then
+        self.anim:update(dt)
+        if self.moving then
+            self.body:setLinearVelocity(self.speed*math.cos(self.moveDirection),
+                                        self.speed*math.sin(self.moveDirection))
+        else
+            self.body:setLinearVelocity(0, 0)
+        end
+
+        -- only look at the mouse if the mouse was the last thing to be touched out
+        -- of mouse/gamepad. The gamepad updates the aim as soon as the message
+        -- comes in rather than here
+        if input.lastAim == 'mouse' then
+            player1:pointAtMouse()
+        end
+
+        if self.weapons[self.currentWeapon] then
+            self.weapons[self.currentWeapon]:update(dt)
+        end
+
+        local x, y = self.body:getPosition()
+        local force = 50
+        if x > 512 then
+            self.body:applyLinearImpulse(-force, 0)
+        elseif x < -512 then
+            self.body:applyLinearImpulse(force, 0)
+        end
+        if y > 512 then
+            self.body:applyLinearImpulse(0, -force)
+        elseif y < -512 then
+            self.body:applyLinearImpulse(0, force)
+        end
+
     else
         self.body:setLinearVelocity(0, 0)
-    end
-
-    -- only look at the mouse if the mouse was the last thing to be touched out
-    -- of mouse/gamepad. The gamepad updates the aim as soon as the message
-    -- comes in rather than here
-    if input.lastAim == 'mouse' then
-        player1:pointAtMouse()
-    end
-
-    if self.weapons[self.currentWeapon] then
-        self.weapons[self.currentWeapon]:update(dt)
-    end
-    
-    local x, y = self.body:getPosition()
-    local force = 50
-    if x > 512 then
-        self.body:applyLinearImpulse(-force, 0)
-    elseif x < -512 then
-        self.body:applyLinearImpulse(force, 0)
-    end
-    if y > 512 then
-        self.body:applyLinearImpulse(0, -force)
-    elseif y < -512 then
-        self.body:applyLinearImpulse(0, force)
     end
 end
 
 function Player:draw()
 	local x, y = self.body:getPosition()
+    local gunInFront = true
+    local gun = self.weapons[self.currentWeapon]
 
-    local angle = self.angle
-    local scalex = 1
-    if math.abs(angle) > math.pi / 2 then
-        scalex =  -1
-        angle = angle + math.pi
-	end
-	if self.moving then
-		self.anim:play(scalex == 1 and ANIM_WALK_R or ANIM_WALK_L)
-	else
-		self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
-	end
+    if self:isAlive() then
+        local angle = self.angle
+        local scalex = 1
+        if math.abs(angle) > math.pi / 2 then
+            scalex =  -1
+            angle = angle + math.pi
+        end
+        if self.moving then
+            self.anim:play(scalex == 1 and ANIM_WALK_R or ANIM_WALK_L)
+        else
+            self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
+        end
 
-	local gun = self.weapons[self.currentWeapon]
-	local inFront = true
-	if gun then
-        if gun.alwaysBehind
-        then inFront = false
-        else inFront = 0 <= self.angle and self.angle <= math.pi end
+        if gun then
+            if gun.alwaysBehind
+            then gunInFront = false
+            else gunInFront = 0 <= self.angle and self.angle <= math.pi end
+        end
+
+        if gun and not gunInFront then gun:draw() end
+    else
+        self.anim:play(ANIM_IDLE_R)
     end
 
-	if gun and not inFront then gun:draw() end
+	local rotation = self:isAlive() and 0 or math.pi/2
+	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, rotation, 1, 1, 8, 8)
 
-	lg.draw(assets.player[self.color], assets.playerq[self.anim.frame], x, y, 0, 1, 1, 8, 8)
-
-	if gun and inFront then gun:draw() end
+    if self:isAlive() and gun and gunInFront then
+        gun:draw()
+    end
 end
 
 -- given input from the keyboard or gamepad: this method is called to change the
@@ -127,6 +143,10 @@ end
 
 function Player:takeDamage()
     self.hp = self.hp - 1
+    if not self:isAlive() then
+		self.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+		self.type = 'deadPlayer'
+    end
 end
 
 function Player:nextWeapon()
