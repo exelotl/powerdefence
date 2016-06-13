@@ -1,4 +1,8 @@
 
+function clamp(val, lower, upper)
+    return math.min(math.max(val, lower), upper)
+end
+
 function printf(fmt, ...)
     return print(fmt:format(...))
 end

@@ -34,10 +34,10 @@ function EnemyGrunt:update(dt)
 	else
 		local vx,vy = self.body:getLinearVelocity()
 		if vx < 0.1 and vy < 0.1 then
-			self.body:setLinearVelocity(0, 0)			
+			self.body:setLinearVelocity(0, 0)
 		else
 			self.angle = math.atan2(vy,vx)
-			self.body:setLinearVelocity(vx*0.9, vy*0.9)			
+			self.body:setLinearVelocity(vx*0.9, vy*0.9)
 		end
 	end
 	self.anim:update(dt)

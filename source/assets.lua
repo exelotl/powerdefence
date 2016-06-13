@@ -117,6 +117,7 @@ function assets.load()
     assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
 	assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
     assets.orb = love.graphics.newImage("assets/orb.png")
+    assets.orbq = makeQuads(assets.orb, 32, 32)
 
 end
 
