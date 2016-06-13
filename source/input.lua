@@ -34,6 +34,9 @@ input.lastAim = 'mouse'
 input.lastjoy1Trigger = axisConfig1.deadZones[axisConfig1.trigger]
 input.lastjoy2Trigger = axisConfig2.deadZones[axisConfig2.trigger]
 
+input.joy1LookMag = 0
+input.joy2LookMag = 0
+
 
 -- record whether the axes used for walking are in the dead zone
 input.joy1dead = true
@@ -215,7 +218,9 @@ function input.checkJoystickAxes()
 
         -- aiming
         if not dead[axisConfig1.lookX] or not dead[axisConfig1.lookY] then
-            player1.angle = math.atan2(axes[axisConfig1.lookY], axes[axisConfig1.lookX])
+            local lookx, looky = axes[axisConfig1.lookY], axes[axisConfig1.lookX]
+            player1.angle = math.atan2(lookx, looky)
+            input.joy1LookMag = lookx^2+looky^2
             input.lastAim = 'joy'
         end
 
@@ -251,7 +256,9 @@ function input.checkJoystickAxes()
 
         -- aiming
         if not dead[axisConfig2.lookX] or not dead[axisConfig2.lookY] then
-            player2.angle = math.atan2(axes[axisConfig2.lookY], axes[axisConfig2.lookX])
+            local lookx, looky = axes[axisConfig2.lookY], axes[axisConfig2.lookX]
+            player2.angle = math.atan2(lookx, looky)
+            input.joy2LookMag = lookx^2+looky^2
         end
 
         -- movement

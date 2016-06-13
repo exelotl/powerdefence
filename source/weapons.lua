@@ -70,11 +70,13 @@ end
 function Weapon:startShooting()
     self.isShooting = true
     self.lastShotTime = nil
+    if self.firingAnim then self.anim:play(self.firingAnim) end
 end
 
 function Weapon:stopShooting()
     self.isShooting = false
     self.lastShotTime = nil
+    if self.restingAnim then self.anim:play(self.restingAnim) end
 end
 
 
@@ -121,6 +123,7 @@ function LaserRifle:init(holder)
     self.rate = 0.1
 end
 
+
 local Minigun = oo.class(Weapon)
 function Minigun:init(holder)
     Weapon.init(self, holder)
@@ -128,7 +131,9 @@ function Minigun:init(holder)
     self.image = assets.weapons.minigun
     self.offset = {x=3, y=8, shoot=0}
     self.animated = true
-    self.anim = Anim.new({1, 2, 3, 4, 5, 6, 7, 8, rate=15})
+    self.restingAnim = {1}
+    self.firingAnim = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, rate=25}
+    self.anim = Anim.new(restingAnim)
     self.singleShot = false
     self.rate = 0.03
 end

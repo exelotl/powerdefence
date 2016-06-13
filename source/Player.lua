@@ -16,7 +16,7 @@ local ANIM_WALK_L = {5, 6, 7, 8, rate = 15}
 function Player:init(playerNum)
 	self.type = "player"
 	self.color = playerNum == 1 and Player.COLOR_BLUE or Player.COLOR_PINK
-	self.anim = Anim.new(ANIM_WALK)
+	self.anim = Anim.new()
 	self.speed = 150
 	self.moveDirection = 0
 	self.moving = false
