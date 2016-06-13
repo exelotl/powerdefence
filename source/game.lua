@@ -83,7 +83,7 @@ game.playing = {
 		if input.lastAim == 'joy' then dist1 = dist1*input.joy1LookMag end
 		p1x = p1x + math.cos(player1.angle) * dist1
 		p1y = p1y + math.sin(player1.angle) * dist1
-		
+
 		local dist2 = 75*input.joy2LookMag
 		local p2x, p2y = p1x, p1y
 		if player2 then
@@ -100,8 +100,8 @@ game.playing = {
 		currentCamX = lerp(cam.x, targetx, lerpAmount)
 		currentCamY = lerp(cam.y, targety, lerpAmount)
 		cam.x = currentCamX + math.random(-screenShake, screenShake)
-		cam.y = currentCamY + math.random(-screenShake, screenShake)	
-			
+		cam.y = currentCamY + math.random(-screenShake, screenShake)
+
 		screenShake = screenShake - dt*screenShake*10
 		if screenShake < 0.1 then
 			screenShake = 0
