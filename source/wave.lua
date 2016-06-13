@@ -12,7 +12,7 @@ function wave:init(scene, delay, ammo, distance, EnemyType)
     self.ammo = ammo
     self.distance = distance
     self.EnemyType = EnemyType
-    self.active = false
+    self.active = true
 end
 
 function wave:update(dt)
