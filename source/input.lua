@@ -287,9 +287,10 @@ end
 
 
 function love.keypressed(key, unicode)
+	pie:keypressed(key,unicode)
     -- global key bindings
     if key == "f1" then
-        debug = not debug
+        debugMode = not debugMode
     end
 	if key == "f2" then
 		local fs = love.window.getFullscreen()
@@ -307,6 +308,9 @@ function love.keypressed(key, unicode)
         lighting.canvas:newImageData():encode('png', 'lighting-pass.png')
     end
 
+	if key == "f5" then
+		profilerEnabled = not profilerEnabled
+	end
 
 
     -- debug stuff
@@ -331,6 +335,7 @@ end
 
 
 function love.mousepressed(x, y, button)
+	pie:mousepressed(x,y,button)
     -- game state dependent actions
     return doAction(input.currentState.mousePress[button])
 end

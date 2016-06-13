@@ -13,8 +13,11 @@ local ForceField = require "ForceField"
 local Orb = require "Orb"
 local HUD = require "HUD"
 
+local piefiller = require "external.piefiller"
+
 local animSpeed = 1
-debug = false -- global debug flag (toggle: F1). Use as you wish
+debugMode = false -- global debug flag (toggle: F1). Use as you wish
+profilerEnabled = false
 
 player1 = nil
 player2 = nil
@@ -27,7 +30,7 @@ BASE_HEIGHT = 240
 
 
 function love.load(arg)
-
+	
     -- allows debugging (specifically breakpoints) in ZeroBrane
     --if arg[#arg] == '-debug' then require('mobdebug').start() end
 
@@ -72,12 +75,15 @@ function love.load(arg)
 
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
+	
+	pie = piefiller:new()
 end
 
 
 function love.update(dt)
-    limitFrameRate(60)
-
+--    limitFrameRate(60)
+	
+	if profilerEnabled then pie:attach() end
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
     scene:update(dt)
@@ -87,11 +93,12 @@ function love.update(dt)
 	if player2 then
 		p2x, p2y = player2.body:getPosition()
 	end
-	local ratio = 0.25
+	local ratio = 0.5
     cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
     
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
+	if profilerEnabled then pie:detach() end
 end
 
 
@@ -108,15 +115,15 @@ function love.draw()
 		ForceField:drawBottom()
         
     cam:detach()
-    
+
 
     -- doesn't affect the output during the day
     lighting.renderLights()
     lighting.applyLights()
-    
+
     HUD.draw()
 
-    if debug then
+    if debugMode then
         lg.setColor(255,0,0)
         love.graphics.print('debug on', 20, 20)
         love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
@@ -126,7 +133,8 @@ function love.draw()
         lg.setColor(255,255,255)
         lg.draw(assets.reticule, input.mousex, input.mousey, 0, cam.scale*0.6, cam.scale*0.6, 7, 7)
     end
-
+    lg.setColor(255,255,255)
+	if profilerEnabled then pie:draw() end
 end
 
 function love.resize(w, h)

@@ -13,11 +13,37 @@ end
 
 local function makeMask(img)
 	local srcPixels = img:getData()
-	local w,h = srcPixels:getDimensions()
-	local maskPixels = li.newImageData(w,h)
+	local maskPixels = li.newImageData(srcPixels:getDimensions())
 	maskPixels:mapPixel(function(x,y,r,g,b,a)
 		r,g,b,a = srcPixels:getPixel(x,y)
 		return 255, 255, 255, (a>0 and 255 or 0)
+	end)
+	return lg.newImage(maskPixels)
+end
+
+local function makeOutline(img)
+	local srcPixels = img:getData()
+	local w,h = srcPixels:getDimensions()
+	local maskPixels = li.newImageData(w+2,h+2)
+	local function tryGetPixel(x,y)
+		if x < 0 or x >= w or y < 0 or y >= h then
+			return 0
+		end
+		local r,g,b,a = srcPixels:getPixel(x, y)
+		return a>0 and 1 or 0
+	end
+	maskPixels:mapPixel(function(x,y,r,g,b,a)
+		x = x-1
+		y = y-1
+		local neighbours = tryGetPixel(x+1, y+1)
+		                 + tryGetPixel(x,   y+1)
+		                 + tryGetPixel(x-1, y+1)
+		                 + tryGetPixel(x+1, y)
+		                 + tryGetPixel(x-1, y)
+		                 + tryGetPixel(x+1, y-1)
+		                 + tryGetPixel(x,   y-1)
+		                 + tryGetPixel(x-1, y-1)
+		return 255, 255, 255, ((neighbours>0 and neighbours<8) and 255 or 0)
 	end)
 	return lg.newImage(maskPixels)
 end

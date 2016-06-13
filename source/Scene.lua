@@ -65,7 +65,7 @@ function Scene:draw()
 	for _,e in ipairs(self.entities) do
 		e:draw()
 	end
-	if debug then
+	if debugMode then
 		debugWorldDraw(self.world, -1024, -1024, 2048, 2048)
 	end
 end
