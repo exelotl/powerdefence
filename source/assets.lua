@@ -129,6 +129,8 @@ function assets.load()
 
 	assets.gamefont = lg.newFont("assets/Skullboy.ttf", 16)
 	assets.menufont = lg.newFont("assets/Little-League.ttf", 30)
+    
+    assets.title = lg.newImage("assets/title.png")
 end
 
 return assets
