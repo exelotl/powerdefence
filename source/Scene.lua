@@ -106,7 +106,7 @@ function Scene:draw()
 	table.sort(self.entities, compareEntities)
 
 	for _,e in ipairs(self.entities) do
-		e:draw()
+		if e.draw then e:draw() end
 	end
 	if debugMode then
 		debugWorldDraw(self.world, -1024, -1024, 2048, 2048)

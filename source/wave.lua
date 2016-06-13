@@ -12,17 +12,20 @@ function wave:init(scene, delay, ammo, distance, EnemyType)
     self.ammo = ammo
     self.distance = distance
     self.EnemyType = EnemyType
+    self.active = false
 end
 
 function wave:update(dt)
-  if globalTimer - self.lastSpawn > self.delay and self.ammo > 0 then
-    self.lastSpawn = globalTimer
-    local rand = math.random() * 2 * math.pi
-    local x = self.x + math.cos(rand) * self.distance
-    local y = self.x - math.sin(rand) * self.distance
-    self.EnemyType.new(self.scene, x, y)
-    self.ammo = self.ammo - 1
-  end
+    if self.active then
+      if globalTimer - self.lastSpawn > self.delay and self.ammo > 0 then
+        self.lastSpawn = globalTimer
+        local rand = math.random() * 2 * math.pi
+        local x = self.x + math.cos(rand) * self.distance
+        local y = self.x - math.sin(rand) * self.distance
+        self.EnemyType.new(self.scene, x, y)
+        self.ammo = self.ammo - 1
+      end
+    end
 end
 
 
