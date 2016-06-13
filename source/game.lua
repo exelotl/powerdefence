@@ -133,6 +133,20 @@ local levels = {
     },
 }
 
+local redSpawner = nil
+local greenSpawner = nil
+
+
+function drawMessage(string)
+    lg.setColor(255,255,255)
+    local sw, sh = lg.getDimensions()
+    local scalex = sw/BASE_WIDTH
+    lg.push()
+    lg.scale(scalex)
+    lg.printf(string, 0, 20, BASE_WIDTH-5, 8)
+    lg.pop()
+end
+
 
 game.playing = {
     load = function()
@@ -165,6 +179,13 @@ game.playing = {
         if mode.isSunset() then
             mode.toggle()
             wavey = wave.new(scene, 0, 1000, 500)
+        end
+
+        -- end of the wave
+        if mode.current == 'night' and not scene.typelist.enemy or #scene.typelist.enemy == 0 then
+            for _, e = ipairs(scene.typelist.deadEnemy) do
+                scene:remove(e)
+            end
         end
 
         scene:update(dt)
@@ -240,17 +261,9 @@ game.playing = {
 
 
         if mode.current == 'day' then
-            lg.setColor(255,255,255)
-            local width, _ = lg.getDimensions()
-            lg.setPointSize(200)
-            --lg.printf(('time until sunset: %.1f'):format(mode.timeUntilSunset()), 0, 20, width-20, 'right')
-			local sw, sh = lg.getDimensions()
-			--local scalex = math.ceil(sw/BASE_WIDTH)
-			local scalex = sw/BASE_WIDTH
-			lg.push()
-			lg.scale(scalex)
-            lg.print(('time until sunset: %.1f'):format(mode.timeUntilSunset()), BASE_WIDTH-110, 8)
-			lg.pop()
+            drawMessage(('time until sunset: %.1f'):format(mode.timeUntilSunset()))
+        else
+            drawMessage(('%d enemies remaining'):format(scene.typelist.enemy and #scene.typelist.enemy or 0))
         end
 
 

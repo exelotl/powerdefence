@@ -24,6 +24,5 @@ function wave:update(dt)
   end
 end
 
-function wave:draw() end
 
 return wave
