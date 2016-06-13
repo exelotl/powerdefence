@@ -47,7 +47,7 @@ game.menu = {
         love.mouse.setVisible(true)
         input.currentState = input.states.menu
 
-        menuList = MenuList.new(300, 100)
+        menuList = MenuList.new(0, 300)
         menuList:add('Start Game', function()
             game.state = 'playing'
             game.load()
@@ -67,6 +67,7 @@ game.menu = {
     end,
     update = function(dt)
 
+        menuList:centerH()
         menuList:update(dt)
 
     end,

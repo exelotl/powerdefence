@@ -124,7 +124,7 @@ function assets.load()
     assets.orbq = makeQuads(assets.orb, 32, 32)
 
 	assets.gamefont = lg.newFont("assets/Skullboy.ttf", 16)
-	assets.menufont = lg.newFont("assets/Little-League.ttf", 20)
+	assets.menufont = lg.newFont("assets/Little-League.ttf", 30)
 end
 
 return assets
