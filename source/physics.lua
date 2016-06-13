@@ -51,6 +51,50 @@ local collisionCallbacks = {
             enemy:takeDamage()
         end
     },
+    explosionOrb = {
+        test = function(aType, bType) return aType == 'explosion' and bType == 'orb' end,
+        callback = function(explodeFix, orbFix, coll)
+            local orb = orbFix:getUserData().data
+            orb:takeDamage()
+        end
+    },
+    explosionPlayer = {
+        test = function(aType, bType) return aType == 'explosion' and bType == 'player' end,
+        callback = function(explodeFix, playerFix, coll)
+            local explosion = explodeFix:getUserData().data
+            local player = playerFix:getUserData().data
+            local fpp = 10
+            player:takeDamage()
+            px,py = player.body:getPosition()
+            ex,ey = explosion.body:getPosition()
+            player.body:applyLinearImpulse(fpp * (px-ex), fpp * (py-ey))
+            
+        end
+    },
+    explosionEnemy = {
+        test = function(aType, bType) return aType == 'explosion' and bType == 'enemy' end,
+        callback = function(explodeFix, enemyFix, coll)
+            local explosion = explodeFix:getUserData().data
+            local enemy = enemyFix:getUserData().data
+            local fpp = 10
+            enemy:takeDamage()
+            px,py = enemy.body:getPosition()
+            ex,ey = explosion.body:getPosition()
+            enemy.body:applyLinearImpulse(fpp * (px-ex), fpp * (py-ey))
+            
+        end
+    },
+    rocketEnemy = {
+        test = function(aType, bType) return aType == 'rocket' and bType == 'enemy' end,
+        callback = function(rocketFix, enemyFix, coll)
+            local rocket = rocketFix:getUserData().data
+            local enemy = enemyFix:getUserData().data
+            enemy:takeDamage()
+            rocket:explode()
+            
+        end
+    },
+    
 }
 
 
@@ -73,6 +117,8 @@ function beginContact(a, b, coll)
 
     if aType == 'bullet' then bulletCleanup(a) end
     if bType == 'bullet' then bulletCleanup(b) end
+    if aType == 'rocket' then bulletCleanup(a) end
+    if bType == 'rocket' then bulletCleanup(b) end
 end
 
 
