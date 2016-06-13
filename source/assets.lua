@@ -48,6 +48,24 @@ local function makeOutline(img)
 	return lg.newImage(maskPixels)
 end
 
+local function makeSfx(str, count)
+	local t = {}
+	for i=1, count do
+		t[i] = la.newSource(str)
+	end
+	return t
+end
+
+local sfxIndices = {}
+
+function assets.playSfx(t)
+	local n = sfxIndices[t]
+	if not n or n > #t then n = 1 end
+	t[n]:stop()
+	t[n]:play()
+	sfxIndices[t] = n + 1
+end
+
 function assets.load()
 
 	lg.setDefaultFilter("nearest", "nearest") -- for sharp pixel zooming
@@ -125,6 +143,10 @@ function assets.load()
 
 	assets.gamefont = lg.newFont("assets/Skullboy.ttf", 16)
 	assets.menufont = lg.newFont("assets/Little-League.ttf", 20)
+	
+	assets.sfxPistol = makeSfx("assets/sfx/pistol.wav", 3)
+	assets.sfxMachineGun = makeSfx("assets/sfx/machine_gun.wav", 3)
+	assets.sfxMinigun = makeSfx("assets/sfx/minigun.wav", 3)
 end
 
 return assets

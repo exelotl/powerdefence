@@ -93,7 +93,6 @@ input.states.playing = {
         player2PrevWeapon = function()
             player2:prevWeapon()
         end,
-        
     },
 
 
