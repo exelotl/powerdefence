@@ -18,7 +18,7 @@ function EnemySoldier:init(scene, x, y)
 	self.angle = 0
 	self.speed = 20
 	self.target = nil
-	self.hp = 2
+	self.hp = 4
 	self.depthOffset = 8
 end
 
