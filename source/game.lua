@@ -66,10 +66,10 @@ game.menu = {
 
     end,
     update = function(dt)
-
         menuList:centerH()
+        local _, h = lg.getDimensions()
+        menuList.y = h * 0.40
         menuList:update(dt)
-
     end,
 
     draw = function()
@@ -82,15 +82,45 @@ game.menu = {
         local playerIndent = 300
         local sf = 20
 
+        lg.setColor(50,50,50)
+        lg.draw(assets.playero[player1Color], assets.playerq[1],
+            playerIndent, height/2, 0, sf, sf, 9, 9)
+        lg.setColor(255,255,255)
         lg.draw(assets.player[player1Color], assets.playerq[1],
             playerIndent, height/2, 0, sf, sf, 8, 8)
+
+
+        lg.setColor(50,50,50)
+        lg.draw(assets.playerm[player2Color], assets.playerq[5],
+            width-playerIndent, height/2, 0, sf+5, sf+5, 8, 8)
+        lg.setColor(255,255,255)
         lg.draw(assets.player[player2Color], assets.playerq[5],
-            width-playerIndent, height/2, 0, 20, 20, 8, 8)
+            width-playerIndent, height/2, 0, sf, sf, 8, 8)
     end,
 }
 
 
--- mode holds day/night status
+
+
+
+
+
+
+
+
+
+-- mode module holds day/night status
+
+
+local currentLevel = 1
+local levels = {
+    {
+        numRed = 10,
+        numGreen = 10,
+        rate = 1,
+    },
+}
+
 
 game.playing = {
     load = function()
@@ -111,18 +141,18 @@ game.playing = {
         orb = Orb.new(scene, 0, 0)
 
         mode.lastSunrise = globalTimer
-        wavey = wave.new(scene, 0, 1000, 500)
 
         love.resize(love.graphics.getDimensions())
 
         cam:zoomTo(2) -- set render scale
         cam:lookAt(0,0)
-		
+
 		lg.setFont(assets.gamefont)
     end,
     update = function(dt)
         if mode.isSunset() then
-            --mode.toggle()
+            mode.toggle()
+            wavey = wave.new(scene, 0, 1000, 500)
         end
 
         scene:update(dt)

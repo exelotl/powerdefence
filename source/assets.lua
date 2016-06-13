@@ -65,6 +65,11 @@ function assets.load()
 		assets.playerm[i] = makeMask(v)
 	end
 
+	assets.playero = {}
+	for i,v in ipairs(assets.player) do
+		assets.playero[i] = makeOutline(v)
+	end
+
 	assets.hearts = lg.newImage("assets/heart.png")
 	assets.heartq = makeQuads(assets.hearts,32,32)
 	assets.reticule = lg.newImage('assets/reticule.png')
