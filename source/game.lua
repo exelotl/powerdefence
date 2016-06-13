@@ -6,6 +6,7 @@ local Scene = require "Scene"
 local Player = require "Player"
 local Orb = require "Orb"
 local wave = require "wave"
+local mode = require "mode"
 
 
 
@@ -17,10 +18,6 @@ player1 = nil
 player2 = nil
 
 orb = nil
-
-
-
-
 
 
 
@@ -50,16 +47,16 @@ game.menu = {
     draw = function()
         lg.setBackgroundColor(50,50,50)
         lg.setColor(255,255,255)
-
-
     end,
 }
 
 
+-- mode holds day/night status
+
 game.playing = {
     load = function()
         love.mouse.setVisible(false)
-        input.currentState = input.states.night
+        input.currentState = input.states.playing
 
         scene = Scene.new()
 
@@ -67,14 +64,21 @@ game.playing = {
 
         player1 = Player.new(scene, 1)
 
-        orb = Orb.new(scene, 0,0)
+        orb = Orb.new(scene, 0, 0)
 
-        wavey = wave.new(scene, 0,1000,500)
+        mode.lastSunrise = globalTimer
+        --wavey = wave.new(scene, 0, 1000, 500)
+
         love.resize(love.graphics.getDimensions())
+
         cam:zoomTo(2) -- set render scale
         cam:lookAt(0,0)
     end,
     update = function(dt)
+        if mode.isSunset() then
+            mode.toggle()
+        end
+
         scene:update(dt)
 
         -- camera
@@ -129,6 +133,23 @@ game.playing = {
 
         HUD.draw()
 
+
+        if input.lastAim == 'mouse' then
+            lg.setColor(255,255,255)
+            lg.draw(assets.reticule, input.mousex, input.mousey, 0, cam.scale*0.6, cam.scale*0.6, 7, 7)
+        end
+        lg.setColor(255,255,255)
+
+
+        if mode.current == 'day' then
+            lg.setColor(255,255,255)
+            local width, _ = lg.getDimensions()
+            lg.setPointSize(200)
+            lg.printf(('time until sunset: %.1f'):format(mode.timeUntilSunset()), 0, 20, width-20, 'right')
+        end
+
+
+
         if debugMode then
             lg.setColor(255,0,0)
             love.graphics.print('debug on', 20, 20)
@@ -137,11 +158,7 @@ game.playing = {
             love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 20)
         end
 
-        if input.lastAim == 'mouse' then
-            lg.setColor(255,255,255)
-            lg.draw(assets.reticule, input.mousex, input.mousey, 0, cam.scale*0.6, cam.scale*0.6, 7, 7)
-        end
-        lg.setColor(255,255,255)
+
     end,
 }
 

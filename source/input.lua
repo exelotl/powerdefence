@@ -67,7 +67,7 @@ input.states.menu = {
     joy2Release = {},
 }
 
-input.states.night = {
+input.states.playing = {
     -- whether input should move the characters in this state
     playerControl = true,
 
@@ -198,7 +198,7 @@ input.states.testing = {
 }
 
 
-input.currentState = input.states.night
+input.currentState = input.states.menu
 
 
 

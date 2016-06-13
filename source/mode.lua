@@ -4,8 +4,17 @@ local mode = {}
 
 -- 'day' | 'night'
 -- must also set lighting.amount to sync with this
-mode.current = 'night'
+mode.current = 'day'
 
+mode.lastSunrise = 0
+mode.dayLength = 5 -- seconds
+
+function mode.timeUntilSunset()
+    return mode.lastSunrise + mode.dayLength - globalTimer
+end
+function mode.isSunset()
+    return mode.current == 'day' and mode.timeUntilSunset() <= 0
+end
 
 function mode.toggle()
     if     mode.current == 'day'   then mode.current = 'night'
