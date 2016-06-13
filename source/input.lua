@@ -104,10 +104,10 @@ input.states.playing = {
 
 
         player2NextWeapon = function()
-            player2:nextWeapon()
+            if player2 and player2:isAlive() then player2:nextWeapon() end
         end,
         player2PrevWeapon = function()
-            player2:prevWeapon()
+            if player2 and player2:isAlive() then player2:prevWeapon() end
         end,
     },
 

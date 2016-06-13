@@ -157,16 +157,18 @@ game.playing = {
         love.mouse.setVisible(false)
         input.currentState = input.states.playing
 
-        mode.current = 'day'
 
 
         scene = Scene.new()
 
+        mode.lastSunrise = 0
+        mode.current = 'day'
         lighting.init()
 
         -- makes sure that the player tags in and the color is set correctly to
         -- reflect the choice from the menu
         player2 = nil
+        input.joy2 = nil
 
         player1 = Player.new(scene, 1)
         player1.color = player1Color
@@ -315,7 +317,9 @@ game.playing = {
 game.gameOver = {
     load = function()
         assets.playSfx(assets.sfxOrbDestroy)
-        input.currentState = input.states.gameOverScreen
+        flux.to({}, 1, {}):oncomplete(function()
+            input.currentState = input.states.gameOverScreen
+        end)
     end,
     update = function(dt)
 
