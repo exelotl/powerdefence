@@ -1,5 +1,6 @@
 local spawner = oo.class()
 local EnemyGrunt = require "EnemyGrunt"
+local EnemySoldier = require "EnemySoldier"
 
 function spawner:init(x, y, delay)
     self.x = x
@@ -12,7 +13,7 @@ function spawner:added() end
 function spawner:update(dt)
   if globalTimer - self.lastSpawn > self.delay then
     self.lastSpawn = globalTimer
-    EnemyGrunt.new(scene,self.x,self.y)
+    EnemySoldier.new(scene,self.x,self.y)
     print("spawn")
   end
 end

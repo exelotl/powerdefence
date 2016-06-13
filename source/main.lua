@@ -7,6 +7,7 @@ local limitFrameRate = require "limitframerate"
 local Scene = require "Scene"
 local Player = require "Player"
 local EnemyGrunt = require "EnemyGrunt"
+local EnemySoldier = require "EnemySoldier"
 local lighting = require "lighting"
 local mode = require "mode"
 local ForceField = require "ForceField"
@@ -69,12 +70,14 @@ function love.load(arg)
 	EnemyGrunt.new(scene, 50, 50)
 	EnemyGrunt.new(scene, -50, -50)
 	EnemyGrunt.new(scene, -100, 100)
+    
+    EnemySoldier.new(scene, 100, 100)
 
 
     orb = Orb.new(0,0)
     scene:add(orb)
 
-    wavey = wave.new(0,1000,500)
+    wavey = wave.new(0,10,500)
     scene:add(wavey)
 
 	cam:zoomTo(2) -- set render scale
