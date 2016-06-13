@@ -103,7 +103,7 @@ function assets.load()
 
 	assets.bullet = lg.newImage("assets/bullet.png")
     assets.rocket = lg.newImage("assets/rocket.png")
-    
+
     assets.explosion = lg.newImage("assets/explosion.png")
     assets.explosionq = makeQuads(assets.explosion,64,64)
 
@@ -125,6 +125,7 @@ function assets.load()
 	assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
     assets.orb = love.graphics.newImage("assets/orb.png")
     assets.orbq = makeQuads(assets.orb, 32, 32)
+    assets.orbm = makeMask(assets.orb)
 
 	assets.gamefont = lg.newFont("assets/Skullboy.ttf", 16)
 	assets.menufont = lg.newFont("assets/Little-League.ttf", 30)

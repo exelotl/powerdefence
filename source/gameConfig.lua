@@ -1,7 +1,7 @@
 
 
 -- 0-255
-ambientDarkness = 180
+ambientDarkness = 255--180
 
 
 axisConfig1 = {

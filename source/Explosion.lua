@@ -8,10 +8,9 @@ function Explosion:init(scene, x, y, radius, duration)
     self.duration = duration
     self.initx = x
     self.inity = y
-    self.type = "orb"
+    self.type = "explosion"
     self.radius = radius
 	scene:add(self)
-	self.hp = 6
 end
 
 function Explosion:added()
@@ -25,7 +24,7 @@ end
 
 function Explosion:update(dt)
     self.duration = self.duration - dt
-    screenShake = screenShake + 1
+    screenShake = screenShake + 3
     if self.duration < 0 then
         self.scene:remove(self)
     end
@@ -35,10 +34,6 @@ end
 function Explosion:draw()
     local x,y = self.body:getPosition()
     lg.draw(assets.explosion, assets.explosionq[self.anim.frame], x, y,0,1,1,32,32)
-end
-
-function Explosion:takeDamage()
-    self.hp = self.hp - 1
 end
 
 
