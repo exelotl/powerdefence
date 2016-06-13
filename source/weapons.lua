@@ -121,5 +121,17 @@ function LaserRifle:init(holder)
     self.rate = 0.1
 end
 
+local Minigun = oo.class(Weapon)
+function Minigun:init(holder)
+    Weapon.init(self, holder)
+    self.name = 'minigun'
+    self.image = assets.weapons.minigun
+    self.offset = {x=3, y=8, shoot=0}
+    self.animated = true
+    self.anim = Anim.new({1, 2, 3, 4, 5, 6, 7, 8, rate=15})
+    self.singleShot = false
+    self.rate = 0.03
+end
 
-return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher, LaserRifle=LaserRifle}
+return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher,
+        LaserRifle=LaserRifle, Minigun=Minigun}

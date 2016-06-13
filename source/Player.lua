@@ -24,7 +24,8 @@ function Player:init(playerNum)
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
     self.weapons = {weapons.Pistol.new(self), weapons.MachineGun.new(self),
-                    weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self)}
+                    weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
+                    weapons.Minigun.new(self)}
 	self.currentWeapon = 1
 end
 
