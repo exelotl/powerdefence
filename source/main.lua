@@ -4,14 +4,10 @@ flux = require "flux"
 assets = require "assets"
 input = require "input"
 local limitFrameRate = require "limitframerate"
-local Scene = require "Scene"
-local Player = require "Player"
 local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
 local lighting = require "lighting"
 local mode = require "mode"
-local Orb = require "Orb"
-local wave = require "wave"
 local game = require "game"
 
 local piefiller = require "external.piefiller"
@@ -19,11 +15,6 @@ local piefiller = require "external.piefiller"
 local animSpeed = 1
 debugMode = false -- global debug flag (toggle: F1). Use as you wish
 profilerEnabled = false
-
-player1 = nil
-player2 = nil
-
-orb = nil
 
 -- for scaling the window
 BASE_WIDTH = 400
@@ -51,40 +42,20 @@ function love.load(arg)
 
 	assets.load()
 
-	love.mouse.setVisible(false)
-
-	-- lg.setFont(assets.font)
 
 	globalTimer = 0
 
 	math.randomseed(os.time())
 
-	scene = Scene.new()
 
-    lighting.init()
-
-	player1 = Player.new(1)
-	scene:add(player1)
-
-	EnemyGrunt.new(scene, 50, 50)
-	EnemyGrunt.new(scene, -50, -50)
-	EnemyGrunt.new(scene, -100, 100)
-    
-    EnemySoldier.new(scene, 100, 100)
-
-
-    orb = Orb.new(0,0)
-    scene:add(orb)
-
-    wavey = wave.new(0,100,500)
-    scene:add(wavey)
-
-	cam:zoomTo(2) -- set render scale
-	cam:lookAt(0,0)
+    game.load()
 
 	pie = piefiller:new()
 end
 
+screenShake = 4
+local currentCamX = 0
+local currentCamY = 0
 
 function love.update(dt)
 	limitFrameRate(60)
@@ -92,10 +63,8 @@ function love.update(dt)
 	if profilerEnabled then pie:attach() end
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
-
-
+	
     game.update(dt)
-
 
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()

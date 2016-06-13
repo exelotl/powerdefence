@@ -54,12 +54,10 @@ local collisionCallbacks = {
 }
 
 
-
 local function bulletCleanup(bulletFix)
     local bullet = bulletFix:getUserData().data
     bullet.scene:remove(bullet)
 end
-
 
 
 function beginContact(a, b, coll)

@@ -16,6 +16,7 @@ Weapon.rate = 0 -- delay between firing another bullet
 Weapon.holder = nil -- entity holding the weapon, needs body,angle fields
 Weapon.maxAmmo = math.huge
 Weapon.ammo = math.huge
+Weapon.shake = 0
 
 function Weapon:init(holder)
     self.holder = holder
@@ -61,10 +62,10 @@ function Weapon:update(dt)
             x = x + self.offset.shoot*math.cos(norm)
             y = y + self.offset.shoot*math.sin(norm)
 
-            local b = Bullet.new(x, y, a)
-            scene:add(b)
+            local b = Bullet.new(scene, x, y, a)
             self.lastShotTime = globalTimer
 			self.ammo = self.ammo - 1
+			screenShake = screenShake + self.shake
 			if self.ammo <= 0 then
 				self.ammo = 0
 				-- TODO: discard weapon from inventory
@@ -88,6 +89,7 @@ end
 
 
 local Pistol = oo.class(Weapon)
+Pistol.shake = 1
 function Pistol:init(holder)
     Weapon.init(self, holder)
     self.name = 'pistol'
@@ -98,6 +100,7 @@ function Pistol:init(holder)
 end
 
 local MachineGun = oo.class(Weapon)
+MachineGun.shake = 1
 function MachineGun:init(holder)
     Weapon.init(self, holder)
     self.name = 'machineGun'
@@ -122,6 +125,7 @@ end
 
 
 local LaserRifle = oo.class(Weapon)
+LaserRifle.shake = 1
 function LaserRifle:init(holder)
     Weapon.init(self, holder)
     self.name = 'laserRifle'
@@ -137,6 +141,7 @@ end
 
 
 local Minigun = oo.class(Weapon)
+Minigun.shake = 2
 function Minigun:init(holder)
     Weapon.init(self, holder)
     self.name = 'minigun'

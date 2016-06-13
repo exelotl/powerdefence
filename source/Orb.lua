@@ -1,17 +1,15 @@
 local Orb = oo.class()
 
-function Orb:init(x, y)
-    self.initx = x
-    self.inity = y
-end
-
-function Orb:added()
-    self.body = lp.newBody(self.scene.world, self.initx, self.inity, 'static')
+function Orb:init(scene, x, y)
+	self.type = "orb"
+	scene:add(self)
+    self.body = lp.newBody(scene.world, x, y, 'static')
     self.shape = lp.newCircleShape(16)
     self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setUserData({dataType='orb', data=self})
 	self.hp = 6
 end
+
 function Orb:update(dt) end
 
 function Orb:draw()

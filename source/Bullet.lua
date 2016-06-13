@@ -1,14 +1,14 @@
 local Bullet = oo.class()
 
-function Bullet:init(x, y, angle)
-    self.initx = x + 16*math.cos(angle)
-    self.inity = y + 16*math.sin(angle)
+function Bullet:init(scene, x, y, angle)
+	self.type = "bullet"
+	scene:add(self)
+    x = x + 16*math.cos(angle)
+    y = y + 16*math.sin(angle)
     self.angle = angle
     self.speed = 800
-end
-
-function Bullet:added()
-    self.body = lp.newBody(self.scene.world, self.initx, self.inity, 'dynamic')
+	
+    self.body = lp.newBody(scene.world, x, y, 'dynamic')
     self.body:setBullet(true)
     self.shape = lp.newCircleShape(4)
     self.fixture = lp.newFixture(self.body, self.shape)
@@ -18,6 +18,7 @@ function Bullet:added()
     self.body:setLinearVelocity(self.speed*math.cos(self.angle),
                                 self.speed*math.sin(self.angle))
 end
+
 
 function Bullet:update(dt)
 
