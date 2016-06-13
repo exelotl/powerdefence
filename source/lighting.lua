@@ -1,4 +1,6 @@
 
+require 'gameConfig'
+
 local lighting = {}
 
 -- 0 => no lighting calculation (day)
@@ -13,8 +15,7 @@ end
 function lighting.renderLights()
     local r, g, b, a = lg.getColor()
     love.graphics.setCanvas(lighting.canvas)
-        local level = 255
-        lg.setColor(level, level, level)
+        lg.setColor(ambientDarkness, ambientDarkness, ambientDarkness)
         lg.rectangle('fill', 0, 0, lg.getDimensions())
         cam:attach()
 

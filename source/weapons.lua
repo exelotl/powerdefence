@@ -1,4 +1,7 @@
 
+local Bullet = require "Bullet"
+
+
 local Weapon = oo.class()
 
 Weapon.name = nil
@@ -17,6 +20,15 @@ function Weapon:draw(x, y, angle)
 	lg.draw(self.image, x, y, angle, scalex, 1, self.offset.x, self.offset.y)
 end
 
+
+function Weapon:startShooting(x, y, angle)
+    local b = Bullet.new(x, y, angle)
+    scene:add(b)
+end
+
+function Weapon:stopShooting()
+
+end
 
 
 
@@ -39,7 +51,7 @@ local RocketLauncher = oo.class(Weapon)
 function RocketLauncher:init()
     self.name = 'rocketLauncher'
     self.image = assets.weapons.rocketLauncher
-    self.offset = {x=20, y=16}
+    self.offset = {x=28, y=16}
     self.alwaysBehind = true
 end
 

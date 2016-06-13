@@ -35,7 +35,7 @@ end
 function beginContact(a, b, coll)
     local aType = a:getUserData() and a:getUserData().dataType or nil
     local bType = b:getUserData() and b:getUserData().dataType or nil
-    printf('collision %s %s', aType, bType)
+    --printf('collision %s %s', aType, bType)
 
     for _, cb in pairs(collisionCallbacks) do
         if     cb.test(aType, bType) then cb.callback(a, b)
