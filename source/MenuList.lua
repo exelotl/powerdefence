@@ -12,18 +12,23 @@ function MenuList:add(text, callback)
 	table.insert(self.items, {text=text, callback=callback})
 end
 
+local prevMouseDown = false
+
 function MenuList:update(dt)
+	local mouseDown = love.mouse.isDown(1)
 	local x = input.mousex
 	local y = math.floor((input.mousey - self.y) / self.spacing) + 1
 
 	if y > 0 and y <= #self.items and x >= self.x and x <= self.x + self.width then
-		if love.mouse.isDown(1) then
+		if mouseDown and not prevMouseDown then
 			self.items[y].callback()
 		end
 	else
 		y = 0
 	end
 	self.hoverPos = y
+	
+	prevMouseDown = mouseDown
 end
 
 function MenuList:draw()
