@@ -160,6 +160,7 @@ function LaserRifle:init(holder)
     self.rate = 0.1
 	self.maxAmmo = 32
 	self.ammo = 32
+	self.sfx = assets.sfxLaser
 end
 
 
