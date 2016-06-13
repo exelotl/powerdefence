@@ -78,9 +78,10 @@ local collisionCallbacks = {
             local enemy = enemyFix:getUserData().data
             local fpp = 10
             enemy:takeDamage()
+            enemy:takeDamage()
             px,py = enemy.body:getPosition()
             ex,ey = explosion.body:getPosition()
-            enemy.body:applyLinearImpulse(fpp * (px-ex), fpp * (py-ey))
+            enemy.body:applyLinearImpulse(100 + fpp * (px-ex), 100 + fpp * (py-ey))
             
         end
     },

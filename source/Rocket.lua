@@ -1,8 +1,10 @@
 local Rocket = oo.class()
 
-local explosion = require "Exlosion"
+local explosion = require "Explosion"
 
-function Rocket:init(x, y, angle)
+function Rocket:init(scene, x, y, angle)
+    self.type = "rocket"
+	scene:add(self)
     self.initx = x + 16*math.cos(angle)
     self.inity = y + 16*math.sin(angle)
     self.angle = angle
@@ -31,7 +33,7 @@ end
 
 function Rocket:explode()
     local x,y = self.body:getPosition()
-    explosion.new(scene,x,y,20,1)
+    explosion.new(scene,x,y,30,1)
 end
 
 
