@@ -74,14 +74,23 @@ function hud.draw()
             local scale = cam.scale * 0.8
             p2wy = p2wy - weapon.image:getHeight() * scale - (10 * scale)
 
-            if player2.currentWeapon == i then
+          if player2.currentWeapon == i then
             lg.setColor(255,255,255,255)
-        else
+          else
             lg.setColor(150,150,150,255)
-        end
+          end
             local imgo = assets.weaponso[weapon.image]
-
+            
+            
+          if weapon.animated then
+            local quad = assets.weaponsoq[weapon.image][1]
+            local _,_,width = quad:getViewport()
+            lg.draw(imgo, quad,  p2wx - width*scale, p2wy, 0,scale,scale,-1,1)
+          else
             lg.draw(imgo, p2wx - imgo:getWidth()*scale, p2wy, 0,scale,scale,-1,1)
+          end
+            
+            
 
             if player2.currentWeapon == i then
                 lg.setColor(255,255,255,255)
@@ -89,7 +98,13 @@ function hud.draw()
                 lg.setColor(255,0,0,150)
             end
 
+          if weapon.animated then
+            local quad = assets.weaponsq[weapon.image][1]
+            local _,_,width = quad:getViewport()
+            lg.draw(weapon.image, quad,  p2wx - width*scale, p2wy, 0,scale,scale)
+          else
             lg.draw(weapon.image, p2wx - weapon.image:getWidth()*scale, p2wy, 0,scale,scale)
+          end
         end
 
     end

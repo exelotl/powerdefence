@@ -73,7 +73,7 @@ function love.load(arg)
 
     orb = Orb.new(0,0)
     scene:add(orb)
-    
+
     wavey = wave.new(0,1000,500)
     scene:add(wavey)
 
@@ -98,25 +98,29 @@ function love.update(dt)
 	--	p2x, p2y = player2.body:getPosition()
 	--end
 	--local ratio = 0.5
-  --  cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
-  
-  local dist = 75
-  local p1x, p1y = player1.body:getPosition()
-  p1x = p1x + math.cos(player1.angle) * dist
-  p1y = p1y + math.sin(player1.angle) * dist
-	local p2x, p2y = p1x, p1y
-	if player2 then
-		p2x, p2y = player2.body:getPosition()
-    p2x = p2x + math.cos(player2.angle) * dist
-    p2y = p2y + math.sin(player2.angle) * dist
-	end
-	local ratio = 0.5
-  
-  local targetx = lerp(p1x, p2x, ratio)
-  local targety = lerp(p1y, p2y, ratio)
-  
-  local easevalue = 5
-    cam:lookAt(lerp(cam.x, targetx, ratio*dt*easevalue), lerp(cam.y, targety, ratio*dt*easevalue))
+    --  cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
+
+    -- camera
+    local dist = 75
+    local p1x, p1y = player1.body:getPosition()
+    if input.lastAim == 'joy' then dist = dist*input.joy1LookMag end
+
+    p1x = p1x + math.cos(player1.angle) * dist
+    p1y = p1y + math.sin(player1.angle) * dist
+    local dist = 75*input.joy2LookMag
+    local p2x, p2y = p1x, p1y
+    if player2 then
+        p2x, p2y = player2.body:getPosition()
+        p2x = p2x + math.cos(player2.angle) * dist
+        p2y = p2y + math.sin(player2.angle) * dist
+    end
+
+    local ratio = 0.5
+    local targetx = lerp(p1x, p2x, ratio)
+    local targety = lerp(p1y, p2y, ratio)
+
+    local easevalue = 5
+    cam:lookAt(lerp(cam.x, targetx, math.min(dt*easevalue, 1)), lerp(cam.y, targety, math.min(dt*easevalue, 1)))
 
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
@@ -148,6 +152,8 @@ function love.draw()
         lg.setColor(255,0,0)
         love.graphics.print('debug on', 20, 20)
         love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
+    else
+        love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 20)
     end
 
     if input.lastAim == 'mouse' then
