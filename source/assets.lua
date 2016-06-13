@@ -149,19 +149,21 @@ function assets.load()
     assets.orb = love.graphics.newImage("assets/orb.png")
     assets.orbq = makeQuads(assets.orb, 32, 32)
     assets.orbm = makeMask(assets.orb)
- 
+
 	assets.title = lg.newImage("assets/title.png")
 
 	assets.gamefont = lg.newFont("assets/Skullboy.ttf", 16)
 	assets.menufont = lg.newFont("assets/Little-League.ttf", 25)
-	
+
+    assets.title = lg.newImage("assets/title.png")
+    assets.gameOver = lg.newImage("assets/gameOver.png")
+
 	assets.sfxPistol = makeSfx("assets/sfx/pistol.wav", 3)
 	assets.sfxMachineGun = makeSfx("assets/sfx/machine_gun.wav", 3)
 	assets.sfxMinigun = makeSfx("assets/sfx/minigun.wav", 3)
 	assets.sfxBoom = makeSfx("assets/sfx/boom.wav", 2)
 	assets.sfxRocketLaunch = makeSfx("assets/sfx/rocket_launch.wav", 2)
 	assets.sfxOrbDestroy = makeSfx("assets/sfx/orb_destroy.wav", 1)
-    
 end
 
 return assets
