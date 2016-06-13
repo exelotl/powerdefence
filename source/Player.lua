@@ -56,6 +56,19 @@ function Player:update(dt)
     if self.weapons[self.currentWeapon] then
         self.weapons[self.currentWeapon]:update(dt)
     end
+    
+    local x, y = self.body:getPosition()
+    local force = 50
+    if x > 512 then
+        self.body:applyLinearImpulse(-force, 0)
+    elseif x < -512 then
+        self.body:applyLinearImpulse(force, 0)
+    end
+    if y > 512 then
+        self.body:applyLinearImpulse(0, -force)
+    elseif y < -512 then
+        self.body:applyLinearImpulse(0, force)
+    end
 end
 
 function Player:draw()

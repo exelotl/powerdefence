@@ -102,6 +102,7 @@ function assets.load()
 
 
 	assets.bullet = lg.newImage("assets/bullet.png")
+    assets.rocket = lg.newImage("assets/rocket.png")
 
 	assets.grunt = love.graphics.newImage("assets/grunt.png")
 	assets.gruntq = makeQuads(assets.grunt, 32, 32)

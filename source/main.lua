@@ -76,7 +76,7 @@ function love.load(arg)
     orb = Orb.new(0,0)
     scene:add(orb)
 
-    wavey = wave.new(0,10,500)
+    wavey = wave.new(0,100,500)
     scene:add(wavey)
 
 	cam:zoomTo(2) -- set render scale
