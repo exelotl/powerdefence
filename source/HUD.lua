@@ -30,10 +30,18 @@ function hud.draw()
 
         local imgo = assets.weaponso[weapon.image]
         
+	    local ratio = math.min(weapon.ammo / weapon.maxAmmo, 1)
         if weapon.animated then
-          lg.draw(imgo, assets.weaponsoq[weapon.image][1], p1wx, p1wy, 0,scale,scale,1,1)
+		  local quad = assets.weaponsoq[weapon.image][1]
+		  local qx,qy,qw,qh = quad:getViewport()
+		  lg.setScissor(p1wx, p1wy, ratio*qw*scale, qh*scale)
+          lg.draw(imgo, quad, p1wx, p1wy, 0,scale,scale,1,1)
+		  lg.setScissor()
         else
+		  local w,h = weapon.image:getDimensions()  
+		  lg.setScissor(p1wx, p1wy, ratio*w*scale, h*scale)
           lg.draw(imgo, p1wx, p1wy, 0,scale,scale,1,1)
+		  lg.setScissor()
         end
 
         if player1.currentWeapon == i then
@@ -42,12 +50,11 @@ function hud.draw()
             lg.setColor(255,0,0,150)
         end
 
-        if weapon.animated then
-          lg.draw(weapon.image,assets.weaponsq[weapon.image][1], p1wx, p1wy, 0,scale,scale)
+        if weapon.animated then  
+          lg.draw(weapon.image, assets.weaponsq[weapon.image][1], p1wx, p1wy, 0,scale,scale)
         else
           lg.draw(weapon.image, p1wx, p1wy, 0,scale,scale)
         end
-        
     end
 
     lg.setColor(255,255,255,255)
@@ -59,7 +66,7 @@ function hud.draw()
             local _,_,heartx,hearty = heartquad:getViewport()
             local scale = cam.scale * 0.4
             heartx = heartx * scale
-            hearty = hearty *    scale
+            hearty = hearty * scale
             lg.draw(assets.hearts,heartquad,lg.getWidth() - i * heartx - 10 * scale,lg.getHeight() - hearty - 10 * scale,0,scale,scale)
         end
 
@@ -67,14 +74,23 @@ function hud.draw()
             local scale = cam.scale * 0.8
             p2wy = p2wy - weapon.image:getHeight() * scale - (10 * scale)
 
-            if player2.currentWeapon == i then
+          if player2.currentWeapon == i then
             lg.setColor(255,255,255,255)
-        else
+          else
             lg.setColor(150,150,150,255)
-        end
+          end
             local imgo = assets.weaponso[weapon.image]
-
+            
+            
+          if weapon.animated then
+            local quad = assets.weaponsoq[weapon.image][1]
+            local _,_,width = quad:getViewport()
+            lg.draw(imgo, quad,  p2wx - width*scale, p2wy, 0,scale,scale,-1,1)
+          else
             lg.draw(imgo, p2wx - imgo:getWidth()*scale, p2wy, 0,scale,scale,-1,1)
+          end
+            
+            
 
             if player2.currentWeapon == i then
                 lg.setColor(255,255,255,255)
@@ -82,7 +98,13 @@ function hud.draw()
                 lg.setColor(255,0,0,150)
             end
 
+          if weapon.animated then
+            local quad = assets.weaponsq[weapon.image][1]
+            local _,_,width = quad:getViewport()
+            lg.draw(weapon.image, quad,  p2wx - width*scale, p2wy, 0,scale,scale)
+          else
             lg.draw(weapon.image, p2wx - weapon.image:getWidth()*scale, p2wy, 0,scale,scale)
+          end
         end
 
     end
