@@ -21,6 +21,7 @@ profilerEnabled = false
 
 player1 = nil
 player2 = nil
+players = {player1}
 
 orb = nil
 
@@ -81,7 +82,7 @@ end
 
 
 function love.update(dt)
-	-- limitFrameRate(60)
+	limitFrameRate(60)
 	
 	if profilerEnabled then pie:attach() end
     flux.update(dt*animSpeed) -- update tweening system
