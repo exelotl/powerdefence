@@ -75,7 +75,7 @@ function love.load(arg)
     orb = Orb.new(0,0)
     scene:add(orb)
     
-    wavey = wave.new(1,20,500)
+    wavey = wave.new(0,1000,500)
     scene:add(wavey)
 
 	cam:zoomTo(2) -- set render scale
@@ -93,13 +93,31 @@ function love.update(dt)
     globalTimer = globalTimer + dt
     scene:update(dt)
 
-	local p1x, p1y = player1.body:getPosition()
+	--local p1x, p1y = player1.body:getPosition()
+	--local p2x, p2y = p1x, p1y
+	--if player2 then
+	--	p2x, p2y = player2.body:getPosition()
+	--end
+	--local ratio = 0.5
+  --  cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
+  
+  local dist = 75
+  local p1x, p1y = player1.body:getPosition()
+  p1x = p1x + math.cos(player1.angle) * dist
+  p1y = p1y + math.sin(player1.angle) * dist
 	local p2x, p2y = p1x, p1y
 	if player2 then
 		p2x, p2y = player2.body:getPosition()
+    p2x = p2x + math.cos(player2.angle) * dist
+    p2y = p2y + math.sin(player2.angle) * dist
 	end
 	local ratio = 0.5
-    cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
+  
+  local targetx = lerp(p1x, p2x, ratio)
+  local targety = lerp(p1y, p2y, ratio)
+  
+  local easevalue = 5
+    cam:lookAt(lerp(cam.x, targetx, ratio*dt*easevalue), lerp(cam.y, targety, ratio*dt*easevalue))
 
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
