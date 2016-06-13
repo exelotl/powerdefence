@@ -20,26 +20,40 @@ function EnemyGrunt:init(scene, x, y)
 	self.target = nil
 	self.hp = 2
 	self.depthOffset = 8
+	-- updating the target is expensive
+	self.targetUpdateRate = 0.5
+	self.lastTargetUpdateTime = 0
+	-- save the velocity which aims at the current target
+	self.vx = 0
+	self.vy = 0
 end
 
 function EnemyGrunt:update(dt)
-	self.target = self.scene:getNearest("player", self)
-	if self.target and self.alive then
-		local x1, y1 = self.body:getPosition()
-		local x2, y2 = self.target.body:getPosition()
-		self.angle = math.atan2(y2-y1, x2-x1)
-		self.body:setLinearVelocity(
-			math.cos(self.angle) * self.speed,
-			math.sin(self.angle) * self.speed)
-	else
-		local vx,vy = self.body:getLinearVelocity()
-		if vx < 0.1 and vy < 0.1 then
-			self.body:setLinearVelocity(0, 0)			
-		else
-			self.angle = math.atan2(vy,vx)
-			self.body:setLinearVelocity(vx*0.9, vy*0.9)			
-		end
-	end
+    if globalTimer > self.lastTargetUpdateTime + self.targetUpdateRate then
+        -- slow path: update target
+        self.target = self.scene:getNearest("player", self)
+        if self.target and self.alive then
+            local x1, y1 = self.body:getPosition()
+            local x2, y2 = self.target.body:getPosition()
+            self.angle = math.atan2(y2-y1, x2-x1)
+            self.vx = math.cos(self.angle) * self.speed
+            self.vy = math.sin(self.angle) * self.speed
+            self.body:setLinearVelocity(self.vx, self.vy)
+        end
+        self.lastTargetUpdateTime = globalTimer
+    elseif not self.alive then
+        -- dead path: handle physics at death
+        local vx,vy = self.body:getLinearVelocity()
+        if vx < 0.1 and vy < 0.1 then
+            self.body:setLinearVelocity(0, 0)
+        else
+            self.angle = math.atan2(vy,vx)
+            self.body:setLinearVelocity(vx*0.9, vy*0.9)
+        end
+    else
+        -- fast path: set the velocity to the same as the previous velocity
+        self.body:setLinearVelocity(self.vx, self.vy)
+    end
 	self.anim:update(dt)
 end
 

@@ -341,6 +341,13 @@ function love.keypressed(key, unicode)
 		profilerEnabled = not profilerEnabled
 	end
 
+	if key == "f6" then
+	    -- noclip
+		player1.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+		if player2 then player2.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16) end
+	end
+
+
 
     -- debug stuff
     -- lighting.canvas:newImageData():encode('png', 'lighting-pass.png')

@@ -25,9 +25,9 @@ function Scene:update(dt)
 			if e == e2 then
 				table.remove(self.entities, i)
 				break
-			end 
+			end
 		end
-		
+
 		-- remove from the type list
 		if e.type then
 			for i, e2 in ipairs(self.typelist[e.type]) do
@@ -37,13 +37,13 @@ function Scene:update(dt)
 				end
 			end
 		end
-		
+
 		-- remove from the physics world
 		if e.body then
 			e.body:destroy()
 		end
 	end
-	
+
 	for _,e in ipairs(self.addlist) do
 		e.scene = self
 		table.insert(self.entities, e)
@@ -102,7 +102,7 @@ end
 
 function Scene:draw()
 	table.sort(self.entities, compareEntities)
-	
+
 	for _,e in ipairs(self.entities) do
 		e:draw()
 	end
@@ -134,7 +134,7 @@ function Scene:getNearest(type, e1)
 	local x1, y1 = e1.body:getPosition()
 	local nearest = nil
 	local lowestMag = math.huge
-	
+
 	for _,e2 in ipairs(self.typelist[type]) do
 		if e2.body and e2 ~= e1 then
 			local x2, y2 = e2.body:getPosition()
@@ -147,7 +147,7 @@ function Scene:getNearest(type, e1)
 			end
 		end
 	end
-	
+
 	return nearest
 end
 

@@ -10,10 +10,9 @@ local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
 local lighting = require "lighting"
 local mode = require "mode"
-local ForceField = require "ForceField"
 local Orb = require "Orb"
-local HUD = require "HUD"
 local wave = require "wave"
+local game = require "game"
 
 local piefiller = require "external.piefiller"
 
@@ -93,37 +92,10 @@ function love.update(dt)
 	if profilerEnabled then pie:attach() end
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
-    scene:update(dt)
 
-	--local p1x, p1y = player1.body:getPosition()
-	--local p2x, p2y = p1x, p1y
-	--if player2 then
-	--	p2x, p2y = player2.body:getPosition()
-	--end
-	--local ratio = 0.5
-    --  cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
 
-    -- camera
-    local dist = 75
-    local p1x, p1y = player1.body:getPosition()
-    if input.lastAim == 'joy' then dist = dist*input.joy1LookMag end
+    game.update(dt)
 
-    p1x = p1x + math.cos(player1.angle) * dist
-    p1y = p1y + math.sin(player1.angle) * dist
-    local dist = 75*input.joy2LookMag
-    local p2x, p2y = p1x, p1y
-    if player2 then
-        p2x, p2y = player2.body:getPosition()
-        p2x = p2x + math.cos(player2.angle) * dist
-        p2y = p2y + math.sin(player2.angle) * dist
-    end
-
-    local ratio = 0.5
-    local targetx = lerp(p1x, p2x, ratio)
-    local targety = lerp(p1y, p2y, ratio)
-
-    local easevalue = 5
-    cam:lookAt(lerp(cam.x, targetx, math.min(dt*easevalue, 1)), lerp(cam.y, targety, math.min(dt*easevalue, 1)))
 
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
@@ -132,38 +104,7 @@ end
 
 
 function love.draw()
-    lg.setBackgroundColor(253,233,137)
-    lg.setColor(255,255,255)
-
-
-    cam:attach()
-		lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
-
-		ForceField:drawTop()
-		scene:draw()
-		ForceField:drawBottom()
-    cam:detach()
-
-
-    -- doesn't affect the output during the day
-    lighting.renderLights()
-    lighting.applyLights()
-
-    HUD.draw()
-
-    if debugMode then
-        lg.setColor(255,0,0)
-        love.graphics.print('debug on', 20, 20)
-        love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
-    else
-        love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 20)
-    end
-
-    if input.lastAim == 'mouse' then
-        lg.setColor(255,255,255)
-        lg.draw(assets.reticule, input.mousex, input.mousey, 0, cam.scale*0.6, cam.scale*0.6, 7, 7)
-    end
-    lg.setColor(255,255,255)
+    game.draw()
 	if profilerEnabled then pie:draw() end
 end
 
