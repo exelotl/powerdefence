@@ -30,7 +30,7 @@ BASE_HEIGHT = 240
 
 
 function love.load(arg)
-	
+
     -- allows debugging (specifically breakpoints) in ZeroBrane
     --if arg[#arg] == '-debug' then require('mobdebug').start() end
 
@@ -75,14 +75,14 @@ function love.load(arg)
 
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
-	
+
 	pie = piefiller:new()
 end
 
 
 function love.update(dt)
 	-- limitFrameRate(60)
-	
+
 	if profilerEnabled then pie:attach() end
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
