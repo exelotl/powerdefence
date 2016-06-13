@@ -77,7 +77,7 @@ function assets.load()
     }
 
     assets.weaponsq = {
-        [assets.weapons.laserrifle] = makeQuads(assets.weapons.laserrifle, ),
+        [assets.weapons.laserrifle] = makeQuads(assets.weapons.laserrifle, 32, 13),
     }
     assets.weaponsm = {
         [assets.weapons.pistol] = makeMask(assets.weapons.pistol),

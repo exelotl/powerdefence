@@ -56,4 +56,12 @@ function RocketLauncher:init()
 end
 
 
-return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher}
+local LaserRifle = oo.class(Weapon)
+function LaserRifle:init()
+    self.name = 'laserRifle'
+    self.image = assets.weapons.laserRifle
+    self.offset = {x=28, y=16}
+end
+
+
+return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher, LaserRifle=LaserRifle}
