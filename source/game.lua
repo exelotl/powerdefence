@@ -1,6 +1,6 @@
 
 local MenuList = require "MenuList"
-local Level = require "Level"
+local Level = require "level"
 local ForceField = require "ForceField"
 local lighting = require "lighting"
 local HUD = require "HUD"
@@ -144,7 +144,7 @@ function drawMessage(string)
     local scalex = sw/BASE_WIDTH
     lg.push()
     lg.scale(scalex)
-    lg.printf(string, 0, 20, BASE_WIDTH-5, 8)
+    lg.printf(string, 0, 20, BASE_WIDTH-5, 'right')
     lg.pop()
 end
 
@@ -180,15 +180,16 @@ game.playing = {
         if mode.isSunset() then
             mode.toggle()
             wavey = wave.new(scene, 0, 50, 500, EnemySoldier)
-
         end
 
         -- end of the wave
+        --[[
         if mode.current == 'night' and not scene.typelist.enemy or #scene.typelist.enemy == 0 then
             for _, e = ipairs(scene.typelist.deadEnemy) do
                 scene:remove(e)
             end
         end
+        --]]
 
         scene:update(dt)
 
