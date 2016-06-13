@@ -5,7 +5,7 @@ local lighting = {}
 
 -- 0 => no lighting calculation (day)
 -- 255 => full night time
-lighting.amount = 255
+lighting.amount = 0
 
 function lighting.init()
     lighting.canvas = lg.newCanvas()
