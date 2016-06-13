@@ -82,18 +82,30 @@ game.menu = {
         local playerIndent = 300
         local sf = 20
 
-        lg.setColor(50,50,50)
-        lg.draw(assets.playero[player1Color], assets.playerq[1],
-            playerIndent, height/2, 0, sf, sf, 9, 9)
         lg.setColor(255,255,255)
+        lg.draw(assets.playerm[player1Color], assets.playerq[1],
+            playerIndent, height/2, 0, sf, sf, 8+1, 8)
+        lg.draw(assets.playerm[player1Color], assets.playerq[1],
+            playerIndent, height/2, 0, sf, sf, 8, 8+1)
+        lg.draw(assets.playerm[player1Color], assets.playerq[1],
+            playerIndent, height/2, 0, sf, sf, 8-1, 8)
+        lg.draw(assets.playerm[player1Color], assets.playerq[1],
+            playerIndent, height/2, 0, sf, sf, 8, 8-1)
+        -- draw player 1
         lg.draw(assets.player[player1Color], assets.playerq[1],
             playerIndent, height/2, 0, sf, sf, 8, 8)
 
 
-        lg.setColor(50,50,50)
-        lg.draw(assets.playerm[player2Color], assets.playerq[5],
-            width-playerIndent, height/2, 0, sf+5, sf+5, 8, 8)
         lg.setColor(255,255,255)
+        lg.draw(assets.playerm[player2Color], assets.playerq[5],
+            width-playerIndent, height/2, 0, sf, sf, 8+1, 8)
+        lg.draw(assets.playerm[player2Color], assets.playerq[5],
+            width-playerIndent, height/2, 0, sf, sf, 8, 8+1)
+        lg.draw(assets.playerm[player2Color], assets.playerq[5],
+            width-playerIndent, height/2, 0, sf, sf, 8-1, 8)
+        lg.draw(assets.playerm[player2Color], assets.playerq[5],
+            width-playerIndent, height/2, 0, sf, sf, 8, 8-1)
+        -- draw player2
         lg.draw(assets.player[player2Color], assets.playerq[5],
             width-playerIndent, height/2, 0, sf, sf, 8, 8)
     end,
