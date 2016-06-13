@@ -32,7 +32,6 @@ function Scene:update(dt)
 		if e.type then
 			for i, e2 in ipairs(self.typelist[e.type]) do
 				if e == e2 then
-					print(e, e2, e.type)
 					table.remove(self.typelist[e.type], i)
 					break
 				end
@@ -60,7 +59,7 @@ function Scene:update(dt)
 	self.removelist = {}
 
 	self.world:update(dt)
-	
+
 	for _,e in ipairs(self.entities) do
 		e:update(dt)
 	end
@@ -68,7 +67,6 @@ function Scene:update(dt)
 	for type,list in pairs(self.typelist) do
 		if #list > 0 then
 			for i=#list, 1 -1 do
-				print(i, e)
 				local e = list[i]
 				if e.type ~= type then
 					table.remove(list, i)

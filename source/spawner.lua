@@ -14,7 +14,6 @@ function spawner:update(dt)
   if globalTimer - self.lastSpawn > self.delay then
     self.lastSpawn = globalTimer
     EnemySoldier.new(scene,self.x,self.y)
-    print("spawn")
   end
 end
 function spawner:draw() end

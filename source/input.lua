@@ -48,7 +48,6 @@ input.states.menu = {
     playerControl = false,
     actions = {
         startGame = function()
-            print('start game')
             game.state = 'playing'
             game.load()
         end,
@@ -263,7 +262,6 @@ function input.checkJoystickAxes()
         end
 
         -- trigger
-        print(axes[axisConfig1.trigger])
         local wasPressed = input.lastjoy1Trigger > axisConfig1.triggerActivationPoint
         local isPressed = axes[axisConfig1.trigger] > axisConfig1.triggerActivationPoint
         if not wasPressed and isPressed then

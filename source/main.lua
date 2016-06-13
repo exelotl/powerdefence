@@ -62,7 +62,7 @@ function love.update(dt)
 	if profilerEnabled then pie:attach() end
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
-	
+
     game.update(dt)
 
 	-- no love.blah function for joystick axis change
