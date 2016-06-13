@@ -2,14 +2,35 @@
 local ForceField = require "ForceField"
 local lighting = require "lighting"
 local HUD = require "HUD"
+local Scene = require "Scene"
+local Player = require "Player"
+local Orb = require "Orb"
+local wave = require "wave"
 
 
 
 local game = {}
 
--- 'menu' | 'playing' | 'gameOver'
-game.state = 'playing'
 
+
+player1 = nil
+player2 = nil
+
+orb = nil
+
+
+
+
+
+
+
+
+-- 'menu' | 'playing' | 'gameOver'
+game.state = 'menu'
+
+function game.load()
+    game[game.state].load()
+end
 function game.update(dt)
     game[game.state].update(dt)
 end
@@ -19,17 +40,44 @@ end
 
 
 game.menu = {
+    load = function()
+        love.mouse.setVisible(true)
+        input.currentState = input.states.menu
+    end,
     update = function(dt)
-
     end,
 
     draw = function()
+        lg.setBackgroundColor(50,50,50)
+        lg.setColor(255,255,255)
+
 
     end,
 }
 
 
 game.playing = {
+    load = function()
+        love.mouse.setVisible(false)
+        input.currentState = input.states.night
+
+        scene = Scene.new()
+
+        lighting.init()
+
+        player1 = Player.new(1)
+        scene:add(player1)
+
+        orb = Orb.new(0,0)
+        scene:add(orb)
+
+        wavey = wave.new(0,1000,500)
+        scene:add(wavey)
+
+        love.resize(love.graphics.getDimensions())
+        cam:zoomTo(2) -- set render scale
+        cam:lookAt(0,0)
+    end,
     update = function(dt)
         scene:update(dt)
 
@@ -94,6 +142,8 @@ game.playing = {
 }
 
 game.gameOver = {
+    load = function()
+    end,
     update = function(dt)
 
     end,
