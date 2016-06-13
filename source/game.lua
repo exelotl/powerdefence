@@ -290,6 +290,7 @@ game.playing = {
 
 game.gameOver = {
     load = function()
+        assets.playSfx(assets.sfxOrbDestroy)
     end,
     update = function(dt)
 

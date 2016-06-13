@@ -56,8 +56,8 @@ function lighting.renderLights()
 
                 -- draw glow
                 lg.setColor(100, 100, 100)
-                x = player1.body:getX()
-                y = player1.body:getY()
+                x = player2.body:getX()
+                y = player2.body:getY()
                 lg.draw(assets.playerm[2], assets.playerq[player2.anim.frame], x, y, player2.rotation, 1, 1, 8, 8)
             end
 
