@@ -8,6 +8,8 @@ local Player = require "Player"
 local Orb = require "Orb"
 local wave = require "wave"
 local mode = require "mode"
+local EnemyGrunt = require "EnemyGrunt"
+local EnemySoldier = require "EnemySoldier"
 
 
 
@@ -178,7 +180,7 @@ game.playing = {
     update = function(dt)
         if mode.isSunset() then
             mode.toggle()
-            wavey = wave.new(scene, 0, 1000, 500)
+            wavey = wave.new(scene, 0, 50, 500, EnemySoldier)
         end
 
         -- end of the wave
