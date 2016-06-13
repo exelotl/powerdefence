@@ -95,6 +95,10 @@ function assets.load()
         [assets.weapons.laserRifle] = makeOutline(assets.weapons.laserRifle),
         [assets.weapons.minigun] = makeOutline(assets.weapons.minigun),
     }
+    assets.weaponsoq = {
+        [assets.weapons.laserRifle] = makeQuads(assets.weaponso[assets.weapons.laserRifle], 34, 15),
+        [assets.weapons.minigun] = makeQuads(assets.weaponso[assets.weapons.minigun], 48, 18),
+    }
 
 
 	assets.bullet = lg.newImage("assets/bullet.png")

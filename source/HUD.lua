@@ -29,9 +29,12 @@ function hud.draw()
         end
 
         local imgo = assets.weaponso[weapon.image]
-
-        lg.draw(imgo, p1wx, p1wy, 0,scale,scale,1,1)
-
+        
+        if weapon.animated then
+          lg.draw(imgo, assets.weaponsoq[weapon.image][1], p1wx, p1wy, 0,scale,scale,1,1)
+        else
+          lg.draw(imgo, p1wx, p1wy, 0,scale,scale,1,1)
+        end
 
         if player1.currentWeapon == i then
             lg.setColor(255,255,255,255)
@@ -39,7 +42,12 @@ function hud.draw()
             lg.setColor(255,0,0,150)
         end
 
-        lg.draw(weapon.image, p1wx, p1wy, 0,scale,scale)
+        if weapon.animated then
+          lg.draw(weapon.image,assets.weaponsq[weapon.image][1], p1wx, p1wy, 0,scale,scale)
+        else
+          lg.draw(weapon.image, p1wx, p1wy, 0,scale,scale)
+        end
+        
     end
 
     lg.setColor(255,255,255,255)
