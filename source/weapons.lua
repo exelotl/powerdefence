@@ -68,6 +68,11 @@ function Weapon:update(dt)
             self.lastShotTime = globalTimer
 			self.ammo = self.ammo - 1
 			screenShake = screenShake + self.shake
+			
+			if self.sfx then
+				assets.playSfx(self.sfx)
+			end
+			
 			if self.ammo <= 0 then
 				self.ammo = 0
                 -- remove the weapon from the holder
@@ -105,6 +110,7 @@ function Pistol:init(holder)
     self.offset = {x=-8, y=1, shoot=0}
 	self.maxAmmo = math.huge
 	self.ammo = math.huge
+	self.sfx = assets.sfxPistol
 end
 
 local MachineGun = oo.class(Weapon)
@@ -118,6 +124,7 @@ function MachineGun:init(holder)
     self.rate = 0.1
 	self.maxAmmo = 255
 	self.ammo = 255
+	self.sfx = assets.sfxMachineGun
 end
 
 local RocketLauncher = oo.class(Weapon)
@@ -130,6 +137,7 @@ function RocketLauncher:init(holder)
     self.ammoType = Rocket
 	self.maxAmmo = 16
 	self.ammo = 16
+	self.sfx = assets.sfxRocketLaunch
 end
 
 
@@ -164,6 +172,7 @@ function Minigun:init(holder)
     self.rate = 0.03
 	self.maxAmmo = 512
 	self.ammo = 512
+	self.sfx = assets.sfxMinigun
 end
 
 return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher,

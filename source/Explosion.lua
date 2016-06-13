@@ -19,6 +19,7 @@ function Explosion:added()
     self.fixture = lp.newFixture(self.body, self.shape)
     self.fixture:setSensor(true)
 	self.fixture:setUserData({dataType='explosion', data=self})
+	assets.playSfx(assets.sfxBoom)
     self.anim:play(ANIM_EXPLOSION)
 end
 
