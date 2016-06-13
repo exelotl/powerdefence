@@ -75,11 +75,20 @@ function assets.load()
         rocketLauncher = lg.newImage("assets/rocketlauncher.png"),
         laserrifle = lg.newImage("assets/laserrifle.png"),
     }
+
+    assets.weaponsq = {
+        [assets.weapons.laserrifle] = makeQuads(assets.weapons.laserrifle, ),
+    }
     assets.weaponsm = {
         [assets.weapons.pistol] = makeMask(assets.weapons.pistol),
         [assets.weapons.machineGun] = makeMask(assets.weapons.machineGun),
         [assets.weapons.rocketLauncher] = makeMask(assets.weapons.rocketLauncher),
         [assets.weapons.laserrifle] = makeMask(assets.weapons.laserrifle),
+    }
+    assets.weaponso = {
+        [assets.weapons.pistol] = makeOutline(assets.weapons.pistol),
+        [assets.weapons.machineGun] = makeOutline(assets.weapons.machineGun),
+        [assets.weapons.rocketLauncher] = makeOutline(assets.weapons.rocketLauncher),
     }
 
 
