@@ -1,5 +1,6 @@
 
 local MenuList = require "MenuList"
+local Level = require "Level"
 local ForceField = require "ForceField"
 local lighting = require "lighting"
 local HUD = require "HUD"
@@ -129,9 +130,7 @@ game.menu = {
 local currentLevel = 1
 local levels = {
     {
-        numRed = 10,
-        numGreen = 10,
-        rate = 1,
+        Level.new()
     },
 }
 
@@ -181,6 +180,7 @@ game.playing = {
         if mode.isSunset() then
             mode.toggle()
             wavey = wave.new(scene, 0, 50, 500, EnemySoldier)
+
         end
 
         -- end of the wave
