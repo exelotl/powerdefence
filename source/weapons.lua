@@ -137,6 +137,7 @@ function RocketLauncher:init(holder)
     self.ammoType = Rocket
 	self.maxAmmo = 16
 	self.ammo = 16
+	self.sfx = assets.sfxRocketLaunch
 end
 
 

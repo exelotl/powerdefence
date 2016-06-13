@@ -147,6 +147,8 @@ function assets.load()
 	assets.sfxPistol = makeSfx("assets/sfx/pistol.wav", 3)
 	assets.sfxMachineGun = makeSfx("assets/sfx/machine_gun.wav", 3)
 	assets.sfxMinigun = makeSfx("assets/sfx/minigun.wav", 3)
+	assets.sfxBoom = makeSfx("assets/sfx/boom.wav", 2)
+	assets.sfxRocketLaunch = makeSfx("assets/sfx/rocket_launch.wav", 2)
 end
 
 return assets
