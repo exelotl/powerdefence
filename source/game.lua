@@ -116,10 +116,12 @@ game.playing = {
 
         cam:zoomTo(2) -- set render scale
         cam:lookAt(0,0)
+		
+		lg.setFont(assets.gamefont)
     end,
     update = function(dt)
         if mode.isSunset() then
-            mode.toggle()
+            --mode.toggle()
         end
 
         scene:update(dt)
@@ -198,9 +200,15 @@ game.playing = {
             lg.setColor(255,255,255)
             local width, _ = lg.getDimensions()
             lg.setPointSize(200)
-            lg.printf(('time until sunset: %.1f'):format(mode.timeUntilSunset()), 0, 20, width-20, 'right')
+            --lg.printf(('time until sunset: %.1f'):format(mode.timeUntilSunset()), 0, 20, width-20, 'right')
+			local sw, sh = lg.getDimensions()
+			--local scalex = math.ceil(sw/BASE_WIDTH)
+			local scalex = sw/BASE_WIDTH
+			lg.push()
+			lg.scale(scalex)
+            lg.print(('time until sunset: %.1f'):format(mode.timeUntilSunset()), BASE_WIDTH-110, 8)
+			lg.pop()
         end
-
 
 
         if debugMode then
