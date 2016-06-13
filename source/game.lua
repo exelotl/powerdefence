@@ -1,4 +1,5 @@
 
+local MenuList = require "MenuList"
 local ForceField = require "ForceField"
 local lighting = require "lighting"
 local HUD = require "HUD"
@@ -36,17 +37,54 @@ function game.draw()
 end
 
 
+local menuList = nil
+local colors = {1, 2, 3, 4} -- enum in Player.lua
+player1Color = Player.COLOR_BLUE
+player2Color = Player.COLOR_PINK
+
 game.menu = {
     load = function()
         love.mouse.setVisible(true)
         input.currentState = input.states.menu
+
+        menuList = MenuList.new(300, 100)
+        menuList:add('Start Game', function()
+            game.state = 'playing'
+            game.load()
+        end)
+        menuList:add('Cycle Player 1 Color', function()
+            if player1Color == 4 then player1Color = 1
+            else player1Color = player1Color + 1 end
+        end)
+        menuList:add('Cycle Player 2 Color', function()
+            if player2Color == 4 then player2Color = 1
+            else player2Color = player2Color + 1 end
+        end)
+
+        lg.setFont(assets.menufont)
+
+
     end,
     update = function(dt)
+
+        menuList:update(dt)
+
     end,
 
     draw = function()
         lg.setBackgroundColor(50,50,50)
         lg.setColor(255,255,255)
+
+        menuList:draw()
+
+        local width, height = lg.getDimensions()
+        local playerIndent = 300
+        local sf = 20
+
+        lg.draw(assets.player[player1Color], assets.playerq[1],
+            playerIndent, height/2, 0, sf, sf, 8, 8)
+        lg.draw(assets.player[player2Color], assets.playerq[5],
+            width-playerIndent, height/2, 0, 20, 20, 8, 8)
     end,
 }
 
@@ -62,7 +100,12 @@ game.playing = {
 
         lighting.init()
 
+        -- makes sure that the player tags in and the color is set correctly to
+        -- reflect the choice from the menu
+        player2 = nil
+
         player1 = Player.new(scene, 1)
+        player1.color = player1Color
 
         orb = Orb.new(scene, 0, 0)
 

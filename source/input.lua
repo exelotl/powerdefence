@@ -46,17 +46,10 @@ input.joy2dead = true
 
 input.states.menu = {
     playerControl = false,
-    actions = {
-        startGame = function()
-            game.state = 'playing'
-            game.load()
-        end,
-    },
+    actions = {},
     kbdPress = {},
     kbdRelease = {},
-    mousePress = {
-        [1] = 'startGame'
-    },
+    mousePress = {},
     mouseRelease = {},
     mouseMove = function(x, y, dx, dy) end,
     wheelMove = function(x, y) end,
@@ -93,7 +86,7 @@ input.states.playing = {
         player2PrevWeapon = function()
             player2:prevWeapon()
         end,
-        
+
     },
 
 
@@ -428,6 +421,7 @@ function love.gamepadpressed(j, button)
         input.joy2 = j
 
         player2 = Player.new(scene, 2)
+        player2.color = player2Color
     end
 
     -- game state dependent actions
