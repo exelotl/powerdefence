@@ -114,7 +114,6 @@ function love.draw()
 		ForceField:drawTop()
 		scene:draw()
 		ForceField:drawBottom()
-
     cam:detach()
 
 
