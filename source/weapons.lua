@@ -127,6 +127,7 @@ function RocketLauncher:init(holder)
     self.image = assets.weapons.rocketLauncher
     self.offset = {x=28, y=16, shoot=5}
     self.alwaysBehind = true
+    self.ammoType = Rocket
 	self.maxAmmo = 16
 	self.ammo = 16
 end

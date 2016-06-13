@@ -67,7 +67,7 @@ game.playing = {
         orb = Orb.new(scene, 0, 0)
 
         mode.lastSunrise = globalTimer
-        --wavey = wave.new(scene, 0, 1000, 500)
+        wavey = wave.new(scene, 0, 1000, 500)
 
         love.resize(love.graphics.getDimensions())
 

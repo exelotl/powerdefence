@@ -93,6 +93,7 @@ input.states.playing = {
         player2PrevWeapon = function()
             player2:prevWeapon()
         end,
+        
     },
 
 
@@ -426,8 +427,7 @@ function love.gamepadpressed(j, button)
     elseif not input.joy2 and j ~= input.joy1 then
         input.joy2 = j
 
-        player2 = Player.new(2)
-        scene:add(player2)
+        player2 = Player.new(scene, 2)
     end
 
     -- game state dependent actions
