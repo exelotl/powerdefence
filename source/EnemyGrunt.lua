@@ -68,6 +68,7 @@ function EnemyGrunt:takeDamage()
     self.hp = self.hp - 1
     if self.hp <= 0 then
 		self.alive = false
+		self.type = 'deadEnemy'
 		self.anim:play(ANIM_DIE)
 		self.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
     end

@@ -68,7 +68,7 @@ local collisionCallbacks = {
             px,py = player.body:getPosition()
             ex,ey = explosion.body:getPosition()
             player.body:applyLinearImpulse(fpp * (px-ex), fpp * (py-ey))
-            
+
         end
     },
     explosionEnemy = {
@@ -79,10 +79,12 @@ local collisionCallbacks = {
             local fpp = 10
             enemy:takeDamage()
             enemy:takeDamage()
+            enemy:takeDamage()
+            enemy:takeDamage()
             px,py = enemy.body:getPosition()
             ex,ey = explosion.body:getPosition()
             enemy.body:applyLinearImpulse(100 + fpp * (px-ex), 100 + fpp * (py-ey))
-            
+
         end
     },
     rocketEnemy = {
@@ -92,10 +94,10 @@ local collisionCallbacks = {
             local enemy = enemyFix:getUserData().data
             enemy:takeDamage()
             rocket:explode()
-            
+
         end
     },
-    
+
 }
 
 

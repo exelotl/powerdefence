@@ -33,7 +33,7 @@ end
 
 function Rocket:explode()
     local x,y = self.body:getPosition()
-    explosion.new(scene,x,y,30,1)
+    explosion.new(scene,x,y,30,0.5)
 end
 
 

@@ -2,10 +2,15 @@ local MenuList = oo.class()
 
 function MenuList:init(x, y)
 	self.x, self.y = x, y
-	self.width = 100
-	self.spacing = 30
+	self.width = 500
+	self.spacing = 75
 	self.items = {}
 	self.hoverPos = 0
+end
+
+function MenuList:centerH()
+    local w, _ = lg.getDimensions()
+    self.x = w/2 - self.width/2
 end
 
 function MenuList:add(text, callback)
@@ -27,12 +32,16 @@ function MenuList:update(dt)
 		y = 0
 	end
 	self.hoverPos = y
-	
+
 	prevMouseDown = mouseDown
 end
 
 function MenuList:draw()
 	love.graphics.setBackgroundColor(30, 0, 0)
+    
+    local xscale = lg.getWidth()/1920
+    local yscale = lg.getHeight()/1080
+    lg.draw(assets.title, 0, 0, 0, xscale,yscale)
 
 	if self.hoverPos > 0 then
 		love.graphics.setColor(255,255,255,80)
@@ -46,7 +55,7 @@ function MenuList:draw()
 
 	love.graphics.setColor(255,255,255)
 	for i, item in ipairs(self.items) do
-		love.graphics.print(item.text, self.x+8, self.y + (i-1)*self.spacing + 10)
+		love.graphics.printf(item.text, self.x+8, self.y + (i-1)*self.spacing + 10, self.width, 'center')
 	end
 end
 

@@ -83,6 +83,11 @@ function assets.load()
 		assets.playerm[i] = makeMask(v)
 	end
 
+	assets.playero = {}
+	for i,v in ipairs(assets.player) do
+		assets.playero[i] = makeOutline(v)
+	end
+
 	assets.hearts = lg.newImage("assets/heart.png")
 	assets.heartq = makeQuads(assets.hearts,32,32)
 	assets.reticule = lg.newImage('assets/reticule.png')
@@ -122,9 +127,12 @@ function assets.load()
 	assets.bullet = lg.newImage("assets/bullet.png")
     assets.rocket = lg.newImage("assets/rocket.png")
 
+    assets.explosion = lg.newImage("assets/explosion.png")
+    assets.explosionq = makeQuads(assets.explosion,64,64)
+
 	assets.grunt = love.graphics.newImage("assets/grunt.png")
 	assets.gruntq = makeQuads(assets.grunt, 32, 32)
-  
+
     assets.soldier = lg.newImage("assets/soldier.png")
     assets.soldierq = makeQuads(assets.soldier, 32, 32)
 
@@ -140,15 +148,19 @@ function assets.load()
 	assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
     assets.orb = love.graphics.newImage("assets/orb.png")
     assets.orbq = makeQuads(assets.orb, 32, 32)
+    assets.orbm = makeMask(assets.orb)
+ 
+	assets.title = lg.newImage("assets/title.png")
 
 	assets.gamefont = lg.newFont("assets/Skullboy.ttf", 16)
-	assets.menufont = lg.newFont("assets/Little-League.ttf", 20)
+	assets.menufont = lg.newFont("assets/Little-League.ttf", 25)
 	
 	assets.sfxPistol = makeSfx("assets/sfx/pistol.wav", 3)
 	assets.sfxMachineGun = makeSfx("assets/sfx/machine_gun.wav", 3)
 	assets.sfxMinigun = makeSfx("assets/sfx/minigun.wav", 3)
 	assets.sfxBoom = makeSfx("assets/sfx/boom.wav", 2)
 	assets.sfxRocketLaunch = makeSfx("assets/sfx/rocket_launch.wav", 2)
+    
 end
 
 return assets

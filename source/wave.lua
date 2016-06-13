@@ -2,7 +2,7 @@ local wave = oo.class()
 local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
 
-function wave:init(scene, delay, ammo, distance)
+function wave:init(scene, delay, ammo, distance, EnemyType)
 	self.type = "wave"
 	scene:add(self)
     self.x = 0
@@ -11,6 +11,7 @@ function wave:init(scene, delay, ammo, distance)
     self.lastSpawn = 0
     self.ammo = ammo
     self.distance = distance
+    self.EnemyType = EnemyType
 end
 
 function wave:update(dt)
@@ -19,11 +20,10 @@ function wave:update(dt)
     local rand = math.random() * 2 * math.pi
     local x = self.x + math.cos(rand) * self.distance
     local y = self.x - math.sin(rand) * self.distance
-    EnemySoldier.new(self.scene, x, y)
+    self.EnemyType.new(self.scene, x, y)
     self.ammo = self.ammo - 1
   end
 end
 
-function wave:draw() end
 
 return wave
