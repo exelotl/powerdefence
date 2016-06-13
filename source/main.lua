@@ -22,6 +22,7 @@ profilerEnabled = false
 
 player1 = nil
 player2 = nil
+players = {player1}
 
 orb = nil
 
@@ -31,7 +32,7 @@ BASE_HEIGHT = 240
 
 
 function love.load(arg)
-	
+
     -- allows debugging (specifically breakpoints) in ZeroBrane
     --if arg[#arg] == '-debug' then require('mobdebug').start() end
 
@@ -79,14 +80,14 @@ function love.load(arg)
 
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
-	
+
 	pie = piefiller:new()
 end
 
 
 function love.update(dt)
 	limitFrameRate(60)
-	
+
 	if profilerEnabled then pie:attach() end
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
@@ -117,7 +118,6 @@ function love.draw()
 		ForceField:drawTop()
 		scene:draw()
 		ForceField:drawBottom()
-
     cam:detach()
 
 

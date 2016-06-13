@@ -7,7 +7,6 @@ function lerp(a, b, ratio)
 	return a + (b-a)*ratio
 end
 
-
 -- from http://lua-users.org/wiki/TableUtils
 function table.val_to_str ( v )
   if "string" == type( v ) then

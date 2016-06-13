@@ -17,7 +17,6 @@ function Bullet:added()
     self.body:setAngle(self.angle)
     self.body:setLinearVelocity(self.speed*math.cos(self.angle),
                                 self.speed*math.sin(self.angle))
-
 end
 
 function Bullet:update(dt)
