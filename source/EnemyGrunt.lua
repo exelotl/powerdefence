@@ -23,7 +23,7 @@ function EnemyGrunt:init(scene, x, y)
 end
 
 function EnemyGrunt:update(dt)
-	self.target = self.scene:getNearest(self, "player")
+	self.target = self.scene:getNearest("player", self)
 	if self.target and self.alive then
 		local x1, y1 = self.body:getPosition()
 		local x2, y2 = self.target.body:getPosition()
