@@ -126,6 +126,8 @@ function assets.load()
     assets.orb = love.graphics.newImage("assets/orb.png")
     assets.orbq = makeQuads(assets.orb, 32, 32)
 
+	assets.gamefont = lg.newFont("assets/Skullboy.ttf", 16)
+	assets.menufont = lg.newFont("assets/Little-League.ttf", 20)
 end
 
 return assets
