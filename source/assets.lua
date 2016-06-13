@@ -79,6 +79,11 @@ function assets.load()
       [assets.weapons.machineGun] = makeMask(assets.weapons.machineGun),
       [assets.weapons.rocketLauncher] = makeMask(assets.weapons.rocketLauncher),
   }
+  assets.weaponso = {
+      [assets.weapons.pistol] = makeOutline(assets.weapons.pistol),
+      [assets.weapons.machineGun] = makeOutline(assets.weapons.machineGun),
+      [assets.weapons.rocketLauncher] = makeOutline(assets.weapons.rocketLauncher),
+  }
   
     
 	assets.bullet = lg.newImage("assets/bullet.png")
