@@ -14,6 +14,8 @@ Weapon.animated = false
 Weapon.singleShot = true
 Weapon.rate = 0 -- delay between firing another bullet
 Weapon.holder = nil -- entity holding the weapon, needs body,angle fields
+Weapon.maxAmmo = math.huge
+Weapon.ammo = math.huge
 
 function Weapon:init(holder)
     self.holder = holder
@@ -51,7 +53,7 @@ function Weapon:update(dt)
             fire = not self.lastShotTime or globalTimer >= self.lastShotTime + self.rate
         end
 
-        if fire then
+        if fire and self.ammo > 0 then
             local x, y = self.holder.body:getPosition()
             local a = self.holder.angle
             local rightAngle = math.pi/2
@@ -62,6 +64,11 @@ function Weapon:update(dt)
             local b = Bullet.new(x, y, a)
             scene:add(b)
             self.lastShotTime = globalTimer
+			self.ammo = self.ammo - 1
+			if self.ammo <= 0 then
+				self.ammo = 0
+				-- TODO: discard weapon from inventory
+			end
         end
     end
 end
@@ -80,15 +87,14 @@ function Weapon:stopShooting()
 end
 
 
-
-
-
 local Pistol = oo.class(Weapon)
 function Pistol:init(holder)
     Weapon.init(self, holder)
     self.name = 'pistol'
     self.image = assets.weapons.pistol
     self.offset = {x=-8, y=1, shoot=0}
+	self.maxAmmo = math.huge
+	self.ammo = math.huge
 end
 
 local MachineGun = oo.class(Weapon)
@@ -99,6 +105,8 @@ function MachineGun:init(holder)
     self.offset = {x=5, y=4, shoot=-1}
     self.singleShot = false
     self.rate = 0.1
+	self.maxAmmo = 255
+	self.ammo = 255
 end
 
 local RocketLauncher = oo.class(Weapon)
@@ -108,6 +116,8 @@ function RocketLauncher:init(holder)
     self.image = assets.weapons.rocketLauncher
     self.offset = {x=28, y=16, shoot=5}
     self.alwaysBehind = true
+	self.maxAmmo = 16
+	self.ammo = 16
 end
 
 
@@ -121,6 +131,8 @@ function LaserRifle:init(holder)
     self.anim = Anim.new({1, 2, 3, 4, 5, 6, 7, 8, rate=15})
     self.singleShot = false
     self.rate = 0.1
+	self.maxAmmo = 32
+	self.ammo = 32
 end
 
 
@@ -136,6 +148,8 @@ function Minigun:init(holder)
     self.anim = Anim.new(restingAnim)
     self.singleShot = false
     self.rate = 0.03
+	self.maxAmmo = 512
+	self.ammo = 512
 end
 
 return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher,
