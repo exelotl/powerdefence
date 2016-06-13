@@ -34,6 +34,7 @@ input.lastAim = 'mouse'
 input.lastjoy1Trigger = axisConfig1.deadZones[axisConfig1.trigger]
 input.lastjoy2Trigger = axisConfig2.deadZones[axisConfig2.trigger]
 
+-- magnitude of the look axes (roughly 0 to 1)
 input.joy1LookMag = 0
 input.joy2LookMag = 0
 
