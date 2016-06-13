@@ -12,6 +12,7 @@ require 'gameConfig'
 local lighting = require "lighting"
 local mode = require "mode"
 local Player = require "Player"
+local game = require "game"
 
 local input = {}
 
@@ -43,6 +44,29 @@ input.joy2LookMag = 0
 input.joy1dead = true
 input.joy2dead = true
 
+input.states.menu = {
+    playerControl = false,
+    actions = {
+        startGame = function()
+            print('start game')
+            game.state = 'playing'
+            game.load()
+        end,
+    },
+    kbdPress = {},
+    kbdRelease = {},
+    mousePress = {
+        [1] = 'startGame'
+    },
+    mouseRelease = {},
+    mouseMove = function(x, y, dx, dy) end,
+    wheelMove = function(x, y) end,
+    joy1Press = {},
+    joy1Release = {},
+
+    joy2Press = {},
+    joy2Release = {},
+}
 
 input.states.night = {
     -- whether input should move the characters in this state
@@ -340,6 +364,13 @@ function love.keypressed(key, unicode)
 	if key == "f5" then
 		profilerEnabled = not profilerEnabled
 	end
+
+	if key == "f6" then
+	    -- noclip
+		player1.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
+		if player2 then player2.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16) end
+	end
+
 
 
     -- debug stuff

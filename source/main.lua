@@ -4,26 +4,17 @@ flux = require "flux"
 assets = require "assets"
 input = require "input"
 local limitFrameRate = require "limitframerate"
-local Scene = require "Scene"
-local Player = require "Player"
 local EnemyGrunt = require "EnemyGrunt"
+local EnemySoldier = require "EnemySoldier"
 local lighting = require "lighting"
 local mode = require "mode"
-local ForceField = require "ForceField"
-local Orb = require "Orb"
-local HUD = require "HUD"
-local wave = require "wave"
+local game = require "game"
 
 local piefiller = require "external.piefiller"
 
 local animSpeed = 1
 debugMode = false -- global debug flag (toggle: F1). Use as you wish
 profilerEnabled = false
-
-player1 = nil
-player2 = nil
-
-orb = nil
 
 -- for scaling the window
 BASE_WIDTH = 400
@@ -51,31 +42,12 @@ function love.load(arg)
 
 	assets.load()
 
-	love.mouse.setVisible(false)
-
-	-- lg.setFont(assets.font)
 
 	globalTimer = 0
 
 	math.randomseed(os.time())
 
-	scene = Scene.new()
-
-    lighting.init()
-
-	player1 = Player.new(scene, 1)
-
-	EnemyGrunt.new(scene, 50, 50)
-	EnemyGrunt.new(scene, -50, -50)
-	EnemyGrunt.new(scene, -100, 100)
-
-    orb = Orb.new(scene, 0,0)
-
-    wavey = wave.new(0,1000,500)
-    scene:add(wavey)
-
-	cam:zoomTo(2) -- set render scale
-	cam:lookAt(0,0)
+    game.load()
 
 	pie = piefiller:new()
 end
@@ -90,44 +62,8 @@ function love.update(dt)
 	if profilerEnabled then pie:attach() end
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
-    scene:update(dt)
-
-	--local p1x, p1y = player1.body:getPosition()
-	--local p2x, p2y = p1x, p1y
-	--if player2 then
-	--	p2x, p2y = player2.body:getPosition()
-	--end
-	--local ratio = 0.5
-    --  cam:lookAt(lerp(p1x, p2x, ratio), lerp(p1y, p2y, ratio))
-
-    -- camera
-    local dist = 75
-    local p1x, p1y = player1.body:getPosition()
-    if input.lastAim == 'joy' then dist = dist*input.joy1LookMag end
-
-    p1x = p1x + math.cos(player1.angle) * dist
-    p1y = p1y + math.sin(player1.angle) * dist
-    local dist = 75*input.joy2LookMag
-    local p2x, p2y = p1x, p1y
-    if player2 then
-        p2x, p2y = player2.body:getPosition()
-        p2x = p2x + math.cos(player2.angle) * dist
-        p2y = p2y + math.sin(player2.angle) * dist
-    end
-
-    local ratio = 0.5
-    local targetx = lerp(p1x, p2x, ratio)
-    local targety = lerp(p1y, p2y, ratio)
-
-    local easevalue = 5
-	currentCamX = lerp(currentCamX, targetx, math.min(dt*easevalue, 1))
-	currentCamY = lerp(currentCamY, targety, math.min(dt*easevalue, 1))
-	cam.x = currentCamX + math.random(-screenShake, screenShake)
-	cam.y = currentCamY + math.random(-screenShake, screenShake)
-	screenShake = screenShake - dt*screenShake*10
-	if screenShake < 0.1 then
-		screenShake = 0
-	end
+	
+    game.update(dt)
 
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
@@ -136,36 +72,7 @@ end
 
 
 function love.draw()
-    lg.setBackgroundColor(253,233,137)
-    lg.setColor(255,255,255)
-
-    cam:attach()
-		lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
-
-		ForceField:drawTop()
-		scene:draw()
-		ForceField:drawBottom()
-    cam:detach()
-
-    -- doesn't affect the output during the day
-    lighting.renderLights()
-    lighting.applyLights()
-
-    HUD.draw()
-
-    if debugMode then
-        lg.setColor(255,0,0)
-        love.graphics.print('debug on', 20, 20)
-        love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
-    else
-        love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 20)
-    end
-
-    if input.lastAim == 'mouse' then
-        lg.setColor(255,255,255)
-        lg.draw(assets.reticule, input.mousex, input.mousey, 0, cam.scale*0.6, cam.scale*0.6, 7, 7)
-    end
-    lg.setColor(255,255,255)
+    game.draw()
 	if profilerEnabled then pie:draw() end
 end
 

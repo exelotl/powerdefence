@@ -105,6 +105,9 @@ function assets.load()
 
 	assets.grunt = love.graphics.newImage("assets/grunt.png")
 	assets.gruntq = makeQuads(assets.grunt, 32, 32)
+  
+    assets.soldier = lg.newImage("assets/soldier.png")
+    assets.soldierq = makeQuads(assets.soldier, 32, 32)
 
 	assets.lights = {
 		surround = lg.newImage('assets/glow_white.png'),
@@ -117,6 +120,7 @@ function assets.load()
     assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
 	assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
     assets.orb = love.graphics.newImage("assets/orb.png")
+    assets.orbq = makeQuads(assets.orb, 32, 32)
 
 end
 

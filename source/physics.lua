@@ -21,6 +21,36 @@ local collisionCallbacks = {
             enemy:takeDamage()
         end
     },
+    bulletOrb = {
+        test = function(aType, bType) return aType == 'bullet' and bType == 'orb' end,
+        callback = function(bulletFix, orbFix, coll)
+            local orb = orbFix:getUserData().data
+            orb:takeDamage()
+        end
+    },
+
+    enemyPlayer = {
+        test = function(aType, bType) return aType == 'enemy' and bType == 'player' end,
+        callback = function(enemyFix, playerFix, coll)
+            local player = playerFix:getUserData().data
+            local enemy = enemyFix:getUserData().data
+            local force = 50
+            local nx, ny = coll:getNormal()
+            player.body:applyLinearImpulse(force*nx, force*ny)
+            enemy.body:applyLinearImpulse(-force*nx, -force*ny)
+            player:takeDamage()
+        end
+    },
+    enemyOrb = {
+        test = function(aType, bType) return aType == 'enemy' and bType == 'orb' end,
+        callback = function(enemyFix, orbFix, coll)
+            local orb = orbFix:getUserData().data
+            local enemy = enemyFix:getUserData().data
+            orb:takeDamage()
+            enemy.hp = 1
+            enemy:takeDamage()
+        end
+    },
 }
 
 
@@ -36,8 +66,8 @@ function beginContact(a, b, coll)
     --printf('collision %s %s', aType, bType)
 
     for _, cb in pairs(collisionCallbacks) do
-        if     cb.test(aType, bType) then cb.callback(a, b)
-        elseif cb.test(bType, aType) then cb.callback(b, a)
+        if     cb.test(aType, bType) then cb.callback(a, b, coll)
+        elseif cb.test(bType, aType) then cb.callback(b, a, coll)
         end
     end
 
