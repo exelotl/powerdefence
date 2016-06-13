@@ -47,6 +47,7 @@ function love.load(arg)
 
 	math.randomseed(os.time())
 
+
     game.load()
 
 	pie = piefiller:new()
