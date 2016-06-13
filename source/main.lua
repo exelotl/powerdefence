@@ -12,6 +12,7 @@ local mode = require "mode"
 local ForceField = require "ForceField"
 local Orb = require "Orb"
 local HUD = require "HUD"
+local wave = require "wave"
 
 local piefiller = require "external.piefiller"
 
@@ -73,6 +74,9 @@ function love.load(arg)
 
     orb = Orb.new(0,0)
     scene:add(orb)
+    
+    wavey = wave.new(1,20,500)
+    scene:add(wavey)
 
 	cam:zoomTo(2) -- set render scale
 	cam:lookAt(0,0)
