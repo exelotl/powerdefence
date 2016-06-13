@@ -68,11 +68,11 @@ function Weapon:update(dt)
             self.lastShotTime = globalTimer
 			self.ammo = self.ammo - 1
 			screenShake = screenShake + self.shake
-			
+
 			if self.sfx then
 				assets.playSfx(self.sfx)
 			end
-			
+
 			if self.ammo <= 0 then
 				self.ammo = 0
                 -- remove the weapon from the holder
@@ -98,6 +98,12 @@ function Weapon:stopShooting()
     self.isShooting = false
     self.lastShotTime = nil
     if self.restingAnim then self.anim:play(self.restingAnim) end
+end
+
+
+
+function Weapon:reload()
+    self.ammo = self.maxAmmo
 end
 
 

@@ -135,6 +135,11 @@ local redSpawner = nil
 local greenSpawner = nil
 local currentLevel = nil
 
+local lastSpawnTime = 0
+function spawn()
+    wave.new(scene, 0, 25, 500, EnemySoldier)
+    wave.new(scene, 0, 75, 500, EnemyGrunt)
+end
 
 function drawMessage(string)
     lg.setColor(255,255,255)
@@ -151,6 +156,9 @@ game.playing = {
     load = function()
         love.mouse.setVisible(false)
         input.currentState = input.states.playing
+
+        mode.current = 'day'
+
 
         scene = Scene.new()
 
@@ -177,8 +185,24 @@ game.playing = {
     update = function(dt)
         if mode.isSunset() then
             mode.toggle()
-            wavey = wave.new(scene, 0, 25, 500, EnemySoldier)
-            wavez = wave.new(scene, 0, 75, 500, EnemyGrunt)
+            spawn()
+        end
+
+        if globalTimer > lastSpawnTime + 15 then
+            spawn()
+            if player1:isAlive() then player1.hp = player1.hp + 1 end
+            if player2 and player2:isAlive() then player2.hp = player2.hp + 1 end
+
+            for _, g in ipairs(player1.weapons) do
+                g:reload()
+            end
+
+            if player2 then
+                for _, g in ipairs(player2.weapons) do
+                    g:reload()
+                end
+            end
+            lastSpawnTime = globalTimer
         end
 
         -- end of the wave
@@ -291,6 +315,7 @@ game.playing = {
 game.gameOver = {
     load = function()
         assets.playSfx(assets.sfxOrbDestroy)
+        input.currentState = input.states.gameOverScreen
     end,
     update = function(dt)
 

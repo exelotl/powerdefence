@@ -9,6 +9,8 @@ function hud.draw()
     local p2wx = lg.getWidth() - 10 * cam.scale * 0.4
     local p2wy = p1wy
 
+    lg.setColor(255, 255, 255, 255)
+
 
     if player1:isAlive() then
         for i = 0, player1.hp-1 do

@@ -60,6 +60,29 @@ input.states.menu = {
     joy2Release = {},
 }
 
+input.states.gameOverScreen = {
+    playerControl = false,
+    actions = {
+        reset = function()
+            game.state = 'menu'
+            game.load()
+        end
+    },
+    kbdPress = {},
+    kbdRelease = {},
+    mousePress = {
+        [1] = 'reset'
+    },
+    mouseRelease = {},
+    mouseMove = function(x, y, dx, dy) end,
+    wheelMove = function(x, y) end,
+    joy1Press = {},
+    joy1Release = {},
+
+    joy2Press = {},
+    joy2Release = {},
+}
+
 input.states.playing = {
     -- whether input should move the characters in this state
     playerControl = true,
@@ -266,7 +289,7 @@ function input.checkJoystickAxes()
 
     end
 
-    if input.joy2 then
+    if input.joy2 and player2 then
         local axes = {input.joy2:getAxes()}
         local dead = isDead(axes, axisConfig2)
 

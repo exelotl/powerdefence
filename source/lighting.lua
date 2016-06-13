@@ -9,6 +9,7 @@ lighting.amount = 0
 
 function lighting.init()
     lighting.canvas = lg.newCanvas()
+    lighting.amount = 0 -- start in day time
 end
 
 
