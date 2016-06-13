@@ -398,7 +398,6 @@ function love.gamepadpressed(j, button)
 
         player2 = Player.new(2)
         scene:add(player2)
-		players[2] = player2
     end
 
     -- game state dependent actions

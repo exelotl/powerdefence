@@ -22,7 +22,6 @@ profilerEnabled = false
 
 player1 = nil
 player2 = nil
-players = {player1}
 
 orb = nil
 
