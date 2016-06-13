@@ -63,16 +63,13 @@ function love.load(arg)
 
     lighting.init()
 
-	player1 = Player.new(1)
-	scene:add(player1)
+	player1 = Player.new(scene, 1)
 
 	EnemyGrunt.new(scene, 50, 50)
 	EnemyGrunt.new(scene, -50, -50)
 	EnemyGrunt.new(scene, -100, 100)
 
-
-    orb = Orb.new(0,0)
-    scene:add(orb)
+    orb = Orb.new(scene, 0,0)
 
     wavey = wave.new(0,1000,500)
     scene:add(wavey)
@@ -83,6 +80,9 @@ function love.load(arg)
 	pie = piefiller:new()
 end
 
+screenShake = 4
+local currentCamX = 0
+local currentCamY = 0
 
 function love.update(dt)
 	limitFrameRate(60)
@@ -120,7 +120,14 @@ function love.update(dt)
     local targety = lerp(p1y, p2y, ratio)
 
     local easevalue = 5
-    cam:lookAt(lerp(cam.x, targetx, math.min(dt*easevalue, 1)), lerp(cam.y, targety, math.min(dt*easevalue, 1)))
+	currentCamX = lerp(currentCamX, targetx, math.min(dt*easevalue, 1))
+	currentCamY = lerp(currentCamY, targety, math.min(dt*easevalue, 1))
+	cam.x = currentCamX + math.random(-screenShake, screenShake)
+	cam.y = currentCamY + math.random(-screenShake, screenShake)
+	screenShake = screenShake - dt*screenShake*10
+	if screenShake < 0.1 then
+		screenShake = 0
+	end
 
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
@@ -132,7 +139,6 @@ function love.draw()
     lg.setBackgroundColor(253,233,137)
     lg.setColor(255,255,255)
 
-
     cam:attach()
 		lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
 
@@ -140,7 +146,6 @@ function love.draw()
 		scene:draw()
 		ForceField:drawBottom()
     cam:detach()
-
 
     -- doesn't affect the output during the day
     lighting.renderLights()

@@ -32,7 +32,8 @@ function Scene:update(dt)
 		if e.type then
 			for i, e2 in ipairs(self.typelist[e.type]) do
 				if e == e2 then
-					table.remove(self.types, i)
+					print(e, e2, e.type)
+					table.remove(self.typelist[e.type], i)
 					break
 				end
 			end
@@ -58,23 +59,26 @@ function Scene:update(dt)
 	self.addlist = {}
 	self.removelist = {}
 
+	self.world:update(dt)
+	
 	for _,e in ipairs(self.entities) do
 		e:update(dt)
 	end
 	-- account for changed types (if for some reason you want to do this)
 	for type,list in pairs(self.typelist) do
-		for i=#list, 1 -1 do
-			local e = list[i]
-			if e.type ~= type then
-				table.remove(list, i)
-				if e.type then
-					table.insert(self.typelist[e.type], e)
+		if #list > 0 then
+			for i=#list, 1 -1 do
+				print(i, e)
+				local e = list[i]
+				if e.type ~= type then
+					table.remove(list, i)
+					if e.type then
+						table.insert(self.typelist[e.type], e)
+					end
 				end
 			end
 		end
 	end
-
-	self.world:update(dt)
 end
 
 local nextsortid = 0
@@ -128,7 +132,7 @@ end
 
 
 function Scene:getNearest(type, e1)
-	if not e1.body then
+	if not (e1.body and self.typelist[type]) then
 		return
 	end
 	local x1, y1 = e1.body:getPosition()
