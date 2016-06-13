@@ -1,5 +1,6 @@
 local wave = oo.class()
 local EnemyGrunt = require "EnemyGrunt"
+local EnemySoldier = require "EnemySoldier"
 
 function wave:init(delay, ammo, distance)
     self.x = 0
@@ -17,8 +18,7 @@ function wave:update(dt)
     local rand = math.random() * 2 * math.pi
     local x = self.x + math.cos(rand) * self.distance
     local y = self.x - math.sin(rand) * self.distance
-    print("spawning at (" .. x .. "," .. y .. ")")
-    EnemyGrunt.new(scene,x,y)
+    EnemySoldier.new(scene,x,y)
     self.ammo = self.ammo - 1
   end
 end

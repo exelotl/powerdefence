@@ -105,6 +105,9 @@ function assets.load()
 
 	assets.grunt = love.graphics.newImage("assets/grunt.png")
 	assets.gruntq = makeQuads(assets.grunt, 32, 32)
+  
+    assets.soldier = lg.newImage("assets/soldier.png")
+    assets.soldierq = makeQuads(assets.soldier, 32, 32)
 
 	assets.lights = {
 		surround = lg.newImage('assets/glow_white.png'),
