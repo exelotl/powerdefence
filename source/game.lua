@@ -137,8 +137,8 @@ local currentLevel = nil
 
 local lastSpawnTime = 0
 function spawn()
-    wave.new(scene, 0, 25, 500, EnemySoldier)
-    wave.new(scene, 0, 75, 500, EnemyGrunt)
+    wave.new(scene, 0.1, 25, 500, EnemySoldier)
+    wave.new(scene, 0.3, 75, 500, EnemyGrunt)
 end
 
 function drawMessage(string)

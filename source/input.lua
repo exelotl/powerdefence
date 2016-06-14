@@ -435,15 +435,24 @@ end
 
 
 function love.gamepadpressed(j, button)
-    -- if new (not touched before) then assign it to the next available slot
-    -- (player 1 or player 2)
-    if not input.joy1 then
-        input.joy1 = j
-    elseif not input.joy2 and j ~= input.joy1 then
-        input.joy2 = j
+    if singleGamepadTwoPlayers then
+        if not input.joy2 then
+            input.joy2 = j
 
-        player2 = Player.new(scene, 2)
-        player2.color = player2Color
+            player2 = Player.new(scene, 2)
+            player2.color = player2Color
+        end
+    else
+        -- if new (not touched before) then assign it to the next available slot
+        -- (player 1 or player 2)
+        if not input.joy1 then
+            input.joy1 = j
+        elseif not input.joy2 and j ~= input.joy1 then
+            input.joy2 = j
+
+            player2 = Player.new(scene, 2)
+            player2.color = player2Color
+        end
     end
 
     -- game state dependent actions
