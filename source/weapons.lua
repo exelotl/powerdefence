@@ -1,6 +1,7 @@
 
 local Bullet = require "Bullet"
 local Rocket = require "Rocket"
+local Flame = require "Flame"
 local Anim = require "Anim"
 
 
@@ -182,5 +183,19 @@ function Minigun:init(holder)
 	self.sfx = assets.sfxMinigun
 end
 
+local FlameThrower = oo.class(Weapon)
+function FlameThrower:init(holder)
+    Weapon.init(self, holder)
+    self.name = 'flamethrower'
+    self.image = assets.weapons.flameThrower
+    self.offset = {x=10, y=0, shoot=-5}
+    self.singleShot = false
+    self.rate = 0.05
+	self.maxAmmo = 512
+	self.ammo = 512
+    self.ammoType = Flame
+	self.sfx = assets.sfxFlame
+end
+
 return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher,
-        LaserRifle=LaserRifle, Minigun=Minigun}
+        LaserRifle=LaserRifle, Minigun=Minigun, FlameThrower=FlameThrower}

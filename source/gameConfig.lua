@@ -14,9 +14,9 @@ axisConfig1 = {
     deadZoneTolerance = 0.2,
     moveX = 1,
     moveY = 2,
-    lookX = 3,
-    lookY = 4,
-    trigger = 5,
+    lookX = 4,
+    lookY = 5,
+    trigger = 6,
     triggerActivationPoint = 0.46,
 }
 
@@ -25,8 +25,8 @@ axisConfig2 = {
     deadZoneTolerance = 0.2,
     moveX = 1,
     moveY = 2,
-    lookX = 3,
-    lookY = 4,
-    trigger = 5,
+    lookX = 4,
+    lookY = 5,
+    trigger = 6,
     triggerActivationPoint = 0.46,
 }

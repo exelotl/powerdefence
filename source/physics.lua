@@ -126,7 +126,30 @@ local collisionCallbacks = {
             rocket:explode()
         end
     },
-
+    flameCollidable = {
+        test = function(aType, bType) return
+            aType == 'flame' and
+            (bType == 'player' or
+             bType == 'orb' or
+             bType == 'rocket'
+            or bType == 'bullet')
+        end,
+        callback = function(rocketFix, otherFix, coll)
+            local other = otherFix:getUserData().data
+            other:takeDamage()
+        end
+    },
+    flameCollidable = {
+        test = function(aType, bType) return
+            aType == 'flame' and
+            (bType == 'enemy')
+        end,
+        callback = function(rocketFix, otherFix, coll)
+            local other = otherFix:getUserData().data
+            other:burn()
+        end
+    },
+    
 }
 
 

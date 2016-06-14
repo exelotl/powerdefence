@@ -26,7 +26,7 @@ function Player:init(scene, playerNum)
 	self.hp = 5
     self.weapons = {weapons.Pistol.new(self), weapons.MachineGun.new(self),
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
-                    weapons.Minigun.new(self)}
+                    weapons.Minigun.new(self),weapons.FlameThrower.new(self)}
 	self.currentWeapon = 1
 
 	local x = self.playerNum == 1 and -32 or 32
