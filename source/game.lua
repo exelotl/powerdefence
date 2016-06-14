@@ -11,6 +11,7 @@ local wave = require "wave"
 local mode = require "mode"
 local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
+local debugWorldDraw = require "external/debugworlddraw"
 
 
 
@@ -29,6 +30,8 @@ orb = nil
 -- 'menu' | 'playing' | 'gameOver'
 game.state = 'menu'
 
+
+
 function game.load()
     game[game.state].load()
 end
@@ -40,35 +43,45 @@ function game.draw()
 end
 
 
-local menuList = nil
-local colors = {1, 2, 3, 4} -- enum in Player.lua
-player1Color = Player.COLOR_BLUE
-player2Color = Player.COLOR_PINK
+function game.setState(newState)
+    game.state = newState
+    game.load()
+end
+
+
 
 game.menu = {
+    globals = {},
     load = function()
+        game.menu.globals = {} -- reset globals
+        local g = game.menu.globals
+
         love.mouse.setVisible(true)
         input.currentState = input.states.menu
 
-        menuList = MenuList.new(0, 300)
-        menuList:add('Start Game', function()
-            game.state = 'playing'
-            game.load()
+        g.menuList = MenuList.new(0, 300)
+        g.menuList:add('Start Game', function()
+            game.setState('playing')
         end)
-        menuList:add('Cycle Player 1 Color', function()
-            if player1Color == 4 then player1Color = 1
-            else player1Color = player1Color + 1 end
+        g.menuList:add('Cycle Player 1 Color', function()
+            if g.player1Color == 4 then g.player1Color = 1
+            else g.player1Color = g.player1Color + 1 end
         end)
-        menuList:add('Cycle Player 2 Color', function()
-            if player2Color == 4 then player2Color = 1
-            else player2Color = player2Color + 1 end
+        g.menuList:add('Cycle Player 2 Color', function()
+            if g.player2Color == 4 then g.player2Color = 1
+            else g.player2Color = g.player2Color + 1 end
         end)
 
         lg.setFont(assets.menufont)
 
+        g.colors = {1, 2, 3, 4} -- enum in Player.lua
+        g.player1Color = g.colors[math.random(#g.colors)]
+        g.player2Color = g.colors[math.random(#g.colors)]
 
     end,
     update = function(dt)
+        local menuList = game.menu.globals.menuList
+
         menuList:centerH()
         local _, h = lg.getDimensions()
         menuList.y = h * 0.40
@@ -76,6 +89,8 @@ game.menu = {
     end,
 
     draw = function()
+        local g = game.menu.globals
+
         lg.setBackgroundColor(50,50,50)
         lg.setColor(255,255,255)
 
@@ -83,37 +98,37 @@ game.menu = {
         local yscale = lg.getHeight()/1080
         lg.draw(assets.title, 0, 0, 0, xscale,yscale)
 
-        menuList:draw()
+        g.menuList:draw()
 
         local width, height = lg.getDimensions()
-        local playerIndent = 300
-        local sf = 20
+        local playerIndent = lg.getWidth()/8
+        local sf = lg.getWidth()/100
 
+        -- draw masks around player 1
         lg.setColor(255,255,255)
-        lg.draw(assets.playerm[player1Color], assets.playerq[1],
-            playerIndent, height/2, 0, sf, sf, 8+1, 8)
-        lg.draw(assets.playerm[player1Color], assets.playerq[1],
-            playerIndent, height/2, 0, sf, sf, 8, 8+1)
-        lg.draw(assets.playerm[player1Color], assets.playerq[1],
-            playerIndent, height/2, 0, sf, sf, 8-1, 8)
-        lg.draw(assets.playerm[player1Color], assets.playerq[1],
-            playerIndent, height/2, 0, sf, sf, 8, 8-1)
+        local mask = assets.playerm[g.player1Color]
+        local quad = assets.playerq[1]
+        lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8+1, 8)
+        lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8, 8+1)
+        lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8-1, 8)
+        lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8, 8-1)
+
         -- draw player 1
-        lg.draw(assets.player[player1Color], assets.playerq[1],
+        lg.draw(assets.player[g.player1Color], assets.playerq[1],
             playerIndent, height/2, 0, sf, sf, 8, 8)
 
 
+        -- draw masks around player 2
         lg.setColor(255,255,255)
-        lg.draw(assets.playerm[player2Color], assets.playerq[5],
-            width-playerIndent, height/2, 0, sf, sf, 8+1, 8)
-        lg.draw(assets.playerm[player2Color], assets.playerq[5],
-            width-playerIndent, height/2, 0, sf, sf, 8, 8+1)
-        lg.draw(assets.playerm[player2Color], assets.playerq[5],
-            width-playerIndent, height/2, 0, sf, sf, 8-1, 8)
-        lg.draw(assets.playerm[player2Color], assets.playerq[5],
-            width-playerIndent, height/2, 0, sf, sf, 8, 8-1)
+        mask = assets.playerm[g.player2Color]
+        quad = assets.playerq[5]
+        lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8+1, 8)
+        lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8, 8+1)
+        lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8-1, 8)
+        lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8, 8-1)
+
         -- draw player2
-        lg.draw(assets.player[player2Color], assets.playerq[5],
+        lg.draw(assets.player[g.player2Color], assets.playerq[5],
             width-playerIndent, height/2, 0, sf, sf, 8, 8)
     end,
 }
@@ -152,16 +167,26 @@ function drawMessage(string)
 end
 
 
+
+
+
 game.playing = {
+    globals = {},
     load = function()
+        game.playing.globals = {} -- reset globals
+        local pg = game.playing.globals
+
         love.mouse.setVisible(false)
         input.currentState = input.states.playing
 
 
-
         scene = Scene.new()
 
-        mode.lastSunrise = 0
+        -- not game over
+        pg.isDoomed = false
+
+        -- set to day time
+        mode.lastSunrise = globalTimer
         mode.current = 'day'
         lighting.init()
 
@@ -170,12 +195,13 @@ game.playing = {
         player2 = nil
         input.joy2 = nil
 
-        player1 = Player.new(scene, 1)
-        player1.color = player1Color
+        player1 = Player.new(scene, 1, game.menu.globals.player1Color)
+
+        local e = EnemyGrunt.new(scene, 100, 100)
+        e.hp = 9999
+        e.moveForce = 0
 
         orb = Orb.new(scene, 0, 0)
-
-        mode.lastSunrise = globalTimer
 
         love.resize(love.graphics.getDimensions())
 
@@ -183,9 +209,13 @@ game.playing = {
         cam:lookAt(0,0)
 
 		lg.setFont(assets.gamefont)
+
     end,
     update = function(dt)
-        if mode.isSunset() then
+        if paused then return end
+
+
+        if mode.isSunset() and not debugMode then
             mode.toggle()
             spawn()
         end
@@ -195,13 +225,13 @@ game.playing = {
             if player1:isAlive() then player1.hp = player1.hp + 1 end
             if player2 and player2:isAlive() then player2.hp = player2.hp + 1 end
 
-            for _, g in ipairs(player1.weapons) do
-                g:reload()
+            for _, w in ipairs(player1.weapons) do
+                w:reload()
             end
 
             if player2 then
-                for _, g in ipairs(player2.weapons) do
-                    g:reload()
+                for _, w in ipairs(player2.weapons) do
+                    w:reload()
                 end
             end
             lastSpawnTime = globalTimer
@@ -218,9 +248,11 @@ game.playing = {
         --]]
 
         -- game over
-        if (not player1:isAlive() and (not player2 or not player2:isAlive())) or orb.hp <= 0 then
-            game.state = 'gameOver'
-            game.load()
+        if (not player1:isAlive() and (not player2 or not player2:isAlive()))
+            or orb.hp <= 0 then
+            if not debugMode then
+                initiateGameOver()
+            end
         end
 
         scene:update(dt)
@@ -234,8 +266,8 @@ game.playing = {
             local dist1 = 75
             p1x, p1y = player1.body:getPosition()
             if input.lastAim == 'joy' then dist1 = dist1*input.joy1LookMag end
-            p1x = p1x + math.cos(player1.angle) * dist1
-            p1y = p1y + math.sin(player1.angle) * dist1
+            p1x = p1x + math.cos(player1.aimAngle) * dist1
+            p1y = p1y + math.sin(player1.aimAngle) * dist1
         end
 
 		local p2x, p2y = 0, 0
@@ -257,8 +289,13 @@ game.playing = {
 		local lerpAmount = math.min(dt*5, 1)
 		currentCamX = lerp(cam.x, targetx, lerpAmount)
 		currentCamY = lerp(cam.y, targety, lerpAmount)
-		cam.x = currentCamX + math.random(-screenShake, screenShake)
-		cam.y = currentCamY + math.random(-screenShake, screenShake)
+		if debugMode then
+            cam.x = currentCamX
+            cam.y = currentCamY
+        else
+            cam.x = currentCamX + math.random(-screenShake, screenShake)
+            cam.y = currentCamY + math.random(-screenShake, screenShake)
+        end
 
 		screenShake = screenShake - dt*screenShake*10
 		if screenShake < 0.1 then
@@ -295,28 +332,49 @@ game.playing = {
         lg.setColor(255,255,255)
 
 
-        if mode.current == 'day' then
-            drawMessage(('time until sunset: %.1f'):format(mode.timeUntilSunset()))
+        if paused then
+            drawMessage('Paused')
         else
-            drawMessage(('%d enemies remaining'):format(scene.typelist.enemy and #scene.typelist.enemy or 0))
+            if mode.current == 'day' then
+                drawMessage(('time until sunset: %.1f'):format(mode.timeUntilSunset()))
+            else
+                drawMessage(('%d enemies remaining'):format(scene.typelist.enemy and #scene.typelist.enemy or 0))
+            end
         end
-
 
         if debugMode then
-            lg.setColor(255,0,0)
-            love.graphics.print('debug on', 20, 20)
-            love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
-        else
-            love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 20)
+            cam:attach()
+                -- passes area to search
+                debugWorldDraw(scene.world, -1024, -1024, 2048, 2048)
+            cam:detach()
         end
-
-
     end,
 }
 
+-- playing globals
+local pg = game.playing.globals
+
+
+
+-- can be called many times but only initiates game over sequence once
+function initiateGameOver()
+    if not pg.doomed then
+        pg.doomed = true
+        assets.playSfx(assets.sfxOrbDestroy)
+
+        -- delay showing the game over screen
+        flux.to({}, 4, {}):oncomplete(function()
+            game.setState('gameOver')
+        end)
+    end
+end
+
+
+
+
 game.gameOver = {
     load = function()
-        assets.playSfx(assets.sfxOrbDestroy)
+        -- delay registering clicks as taking back to main menu
         flux.to({}, 1, {}):oncomplete(function()
             input.currentState = input.states.gameOverScreen
         end)

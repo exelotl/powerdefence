@@ -5,15 +5,16 @@ local seed = 123
 local rng = love.math.newRandomGenerator(seed)
 
 local function drawFixture(fixture)
+    -- graphics is transformed to be local to the body
 	local shape = fixture:getShape()
 	local shapeType = shape:getType()
-	
+
 	if (fixture:isSensor()) then
 		love.graphics.setColor(0,0,255,96)
 	else
 		love.graphics.setColor(rng:random(32,255),rng:random(32,255),rng:random(32,255),96)
 	end
-	
+
 	if (shapeType == "circle") then
 		local x,y = shape:getPoint()
 		local radius = shape:getRadius()
@@ -35,18 +36,30 @@ local function drawFixture(fixture)
 		love.graphics.setColor(255,0,0,255)
 		love.graphics.line(shape:getPoints())
 	end
+
+    local body = fixture:getBody()
+    local sf = 0.1 -- scale factor
+    local vx,vy = body:getLinearVelocity()
+    local angle = body:getAngle()
+    --vx = vx*math.cos(-angle)
+    --vy = vy*math.sin(-angle)
+    local fx,fy = body:getLinearVelocity()
+
+	love.graphics.setColor(255,255,0,255)
+	love.graphics.rotate(-angle)
+    love.graphics.line(0, 0, vx*sf, vy*sf)
 end
 
 local function drawBody(body)
 	local bx,by = body:getPosition()
 	local bodyAngle = body:getAngle()
-	
+
 	love.graphics.push()
 	love.graphics.translate(bx,by)
 	love.graphics.rotate(bodyAngle)
-	
+
 	rng:setSeed(seed)
-	
+
 	local fixtures = body:getFixtureList()
 	for i=1,#fixtures do
 		drawFixture(fixtures[i])
@@ -62,13 +75,13 @@ end
 
 local function debugWorldDraw(world,topLeft_x,topLeft_y,width,height)
 	world:queryBoundingBox(topLeft_x,topLeft_y,topLeft_x+width,topLeft_y+height,debugWorldDraw_scissor_callback)
-	
+
 	love.graphics.setLineWidth(1)
 	for body in pairs(drawnBodies) do
 		drawnBodies[body] = nil
 		drawBody(body)
 	end
-	
+
 	love.graphics.setColor(0,255,0,255)
 	love.graphics.setLineWidth(3)
 	love.graphics.setPointSize(3)
@@ -86,7 +99,7 @@ local function debugWorldDraw(world,topLeft_x,topLeft_y,width,height)
 			end
 		end
 	end
-	
+
 	love.graphics.setColor(255,0,0,255)
 	love.graphics.setPointSize(3)
 	local contacts = world:getContactList()

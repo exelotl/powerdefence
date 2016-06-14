@@ -23,7 +23,8 @@ function lighting.renderLights()
             -- orb glow
             lg.setColor(150, 150, 0)
             local scale = 1 + math.sin(globalTimer*3)*0.2
-            lg.draw(assets.lights.surround, 0, 0, 0, scale, scale, 256, 256)
+            local orbX, orbY = orb.body:getPosition()
+            lg.draw(assets.lights.surround, orbX, orbY, 0, scale, scale, 256, 256)
 
             -- orb mask
             lg.setColor(50, 50, 50)
@@ -36,7 +37,7 @@ function lighting.renderLights()
 
             -- player1 torch
             if player1:isAlive() then
-                local angle = player1.angle
+                local angle = player1.aimAngle
                 local x = player1.body:getX()+10*math.cos(angle)
                 local y = player1.body:getY()+10*math.sin(angle)
                 lg.draw(assets.lights.torch, x, y, angle, 0.4, 0.4, originx, originy)

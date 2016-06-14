@@ -19,15 +19,19 @@ function Explosion:added()
     self.fixture = lp.newFixture(self.body, self.shape)
     self.fixture:setSensor(true)
 	self.fixture:setUserData({dataType='explosion', data=self})
-	assets.playSfx(assets.sfxBoom)
     self.anim:play(ANIM_EXPLOSION)
 end
 
 function Explosion:update(dt)
     self.duration = self.duration - dt
-    screenShake = screenShake + 3
     if self.duration < 0 then
         self.scene:remove(self)
+    else
+        -- using self.duration which counts down to ease from lots of shake to a
+        -- little at the end
+        local shakePerSecond = 650
+        screenShake = screenShake + shakePerSecond*dt*self.duration
+        --screenShake = screenShake + 3
     end
     self.anim:update(dt)
 end

@@ -1,9 +1,25 @@
 
+require 'helperMath'
+
 --[[
 example usage:
     self.fixture:setUserData({dataType='this data type', data=self})
 
 --]]
+
+
+-- apply impulse from two colliding bodies directed away from the point of collision
+-- applyA and applyB are whether to apply the impulse to that body
+function impulseBetween(bodyA, bodyB, force, applyA, applyB)
+    local ax, ay = bodyA:getPosition()
+    local bx, by = bodyB:getPosition()
+    local fx, fy = directionTo(ax, ay, bx, by)
+    if applyA then bodyA:applyLinearImpulse(-force*fx, -force*fy) end
+    if applyB then bodyB:applyLinearImpulse(force*fx, force*fy) end
+end
+
+local bulletForce = 20
+local explosionForce = 200
 
 local collisionCallbacks = {
     bulletPlayer = {
@@ -11,6 +27,10 @@ local collisionCallbacks = {
         callback = function(bulletFix, playerFix, coll)
             local player = playerFix:getUserData().data
             player:takeDamage()
+
+            if player:isAlive() then
+                impulseBetween(bulletFix:getBody(), player.body, bulletForce, false, true)
+            end
         end
     },
 
@@ -19,6 +39,11 @@ local collisionCallbacks = {
         callback = function(bulletFix, enemyFix, coll)
             local enemy = enemyFix:getUserData().data
             enemy:takeDamage()
+
+            -- if they are dead let them fall straight down
+            if enemy:isAlive() then
+                impulseBetween(bulletFix:getBody(), enemy.body, bulletForce, false, true)
+            end
         end
     },
     bulletOrb = {
@@ -26,6 +51,8 @@ local collisionCallbacks = {
         callback = function(bulletFix, orbFix, coll)
             local orb = orbFix:getUserData().data
             orb:takeDamage()
+
+            impulseBetween(bulletFix:getBody(), orb.body, bulletForce, false, true)
         end
     },
 
@@ -34,82 +61,52 @@ local collisionCallbacks = {
         callback = function(enemyFix, playerFix, coll)
             local player = playerFix:getUserData().data
             local enemy = enemyFix:getUserData().data
-            local force = 50
-            local nx, ny = coll:getNormal()
-            player.body:applyLinearImpulse(force*nx, force*ny)
-            enemy.body:applyLinearImpulse(-force*nx, -force*ny)
             player:takeDamage()
+
+            -- if they are dead let them fall straight down
+            impulseBetween(enemy.body, player.body, 50,
+                enemy:isAlive(), player:isAlive())
         end
     },
     enemyOrb = {
         test = function(aType, bType) return aType == 'enemy' and bType == 'orb' end,
         callback = function(enemyFix, orbFix, coll)
-            local orb = orbFix:getUserData().data
             local enemy = enemyFix:getUserData().data
+            local orb = orbFix:getUserData().data
             orb:takeDamage()
-            enemy.hp = 1
-            enemy:takeDamage()
+            enemy:takeDamage(99)
+
+            impulseBetween(orb.body, enemy.body, 100+200*math.random(),
+                false, true)
         end
     },
     explosionOrb = {
+        -- note: before making orb dynamic: did not fire. Maybe sensors can't
+        -- collide with static bodies?
         test = function(aType, bType) return aType == 'explosion' and bType == 'orb' end,
-        callback = function(explodeFix, orbFix, coll)
+        callback = function(explosionFix, orbFix, coll)
             local orb = orbFix:getUserData().data
-            orb:takeDamage()
+            orb:takeDamage(4)
+
+            impulseBetween(explosionFix:getBody(), orb.body, explosionForce, false, true)
         end
     },
     explosionPlayer = {
         test = function(aType, bType) return aType == 'explosion' and bType == 'player' end,
-        callback = function(explodeFix, playerFix, coll)
-            local explosion = explodeFix:getUserData().data
+        callback = function(explosionFix, playerFix, coll)
             local player = playerFix:getUserData().data
-            local fpp = 10
-            player:takeDamage()
-            px,py = player.body:getPosition()
-            ex,ey = explosion.body:getPosition()
-            player.body:applyLinearImpulse(fpp * (px-ex), fpp * (py-ey))
+            player:takeDamage(4)
 
+            impulseBetween(explosionFix:getBody(), player.body, explosionForce, false, true)
         end
     },
     explosionEnemy = {
         test = function(aType, bType) return aType == 'explosion' and bType == 'enemy' end,
-        callback = function(explodeFix, enemyFix, coll)
-            local explosion = explodeFix:getUserData().data
+        callback = function(explosionFix, enemyFix, coll)
             local enemy = enemyFix:getUserData().data
-            local fpp = 10 -- force per pixel
-            enemy:takeDamage()
-            enemy:takeDamage()
-            enemy:takeDamage()
-            enemy:takeDamage()
-            px,py = enemy.body:getPosition()
-            ex,ey = explosion.body:getPosition()
-            enemy.body:applyLinearImpulse(100 + fpp * (px-ex), 100 + fpp * (py-ey))
+            enemy:takeDamage(4)
 
-        end
-    },
-    explosionPlayer = {
-        test = function(aType, bType) return aType == 'explosion' and bType == 'player' end,
-        callback = function(explodeFix, playerFix, coll)
-            local explosion = explodeFix:getUserData().data
-            local player = playerFix:getUserData().data
-            local fpp = 10 -- force per pixel
-            player:takeDamage()
-            player:takeDamage()
-            player:takeDamage()
-            player:takeDamage()
-            px,py = player.body:getPosition()
-            ex,ey = explosion.body:getPosition()
-            player.body:applyLinearImpulse(100 + fpp * (px-ex), 100 + fpp * (py-ey))
-        end
-    },
-    explosionOrb = {
-        test = function(aType, bType) return aType == 'explosion' and bType == 'orb' end,
-        callback = function(explodeFix, orbFix, coll)
-            local orb = orbFix:getUserData().data
-            orb:takeDamage()
-            orb:takeDamage()
-            orb:takeDamage()
-            orb:takeDamage()
+            impulseBetween(explosionFix:getBody(), enemy.body, explosionForce, false, true)
         end
     },
     rocketCollidable = {
@@ -118,8 +115,9 @@ local collisionCallbacks = {
             (bType == 'enemy' or
              bType == 'player' or
              bType == 'orb' or
-             bType == 'rocket'
-            or bType == 'bullet')
+             bType == 'rocket' or
+             bType == 'bullet' or
+             bType == 'explosion')
         end,
         callback = function(rocketFix, otherFix, coll)
             local rocket = rocketFix:getUserData().data

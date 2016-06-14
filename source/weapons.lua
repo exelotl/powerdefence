@@ -27,7 +27,7 @@ end
 
 function Weapon:draw()
 	local x, y = self.holder.body:getPosition()
-    local angle = self.holder.angle
+    local angle = self.holder.aimAngle
 
 
     local scalex = 1
@@ -58,11 +58,11 @@ function Weapon:update(dt)
 
         if fire and self.ammo > 0 then
             local x, y = self.holder.body:getPosition()
-            local a = self.holder.angle
+            local a = self.holder.aimAngle
             local rightAngle = math.pi/2
             local norm = math.abs(a) > rightAngle and a+rightAngle or a-rightAngle
-            x = x + self.offset.shoot*math.cos(norm)
-            y = y + self.offset.shoot*math.sin(norm)
+            x = x + 16*math.cos(a) + self.offset.shoot*math.cos(norm)
+            y = y + 16*math.sin(a) + self.offset.shoot*math.sin(norm)
 
             local b = self.ammoType.new(scene, x, y, a)
             self.lastShotTime = globalTimer

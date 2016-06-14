@@ -1,3 +1,4 @@
+require 'helperMath'
 local Anim = require "Anim"
 local weapons = require "weapons"
 
@@ -13,15 +14,15 @@ local ANIM_IDLE_L = {5}
 local ANIM_WALK_R = {1, 2, 3, 4, rate = 15}
 local ANIM_WALK_L = {5, 6, 7, 8, rate = 15}
 
-function Player:init(scene, playerNum)
+function Player:init(scene, playerNum, color)
 	self.type = "player"
 	scene:add(self)
-	self.color = playerNum == 1 and Player.COLOR_BLUE or Player.COLOR_PINK
+	self.color = color or (playerNum == 1 and Player.COLOR_BLUE or Player.COLOR_PINK)
 	self.anim = Anim.new()
-	self.speed = 150
+	self.moveForce = 300
 	self.moveDirection = 0
 	self.moving = false
-	self.angle = 0
+	self.aimAngle = 0
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
     self.weapons = {weapons.Pistol.new(self), weapons.MachineGun.new(self),
@@ -32,6 +33,8 @@ function Player:init(scene, playerNum)
 	local x = self.playerNum == 1 and -32 or 32
 	local y = 0
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
+	self.body:setMass(0.1)
+    self.body:setLinearDamping(10)
 	self.shape = lp.newCircleShape(8)
 	self.fixture = lp.newFixture(self.body, self.shape)
 	self.fixture:setUserData({dataType='player', data=self})
@@ -45,17 +48,14 @@ function Player:update(dt)
     if self:isAlive() then
         self.anim:update(dt)
         if self.moving then
-            self.body:setLinearVelocity(self.speed*math.cos(self.moveDirection),
-                                        self.speed*math.sin(self.moveDirection))
-        else
-            self.body:setLinearVelocity(0, 0)
+            self.body:applyForce(fromPolar(self.moveForce, self.moveDirection))
         end
 
         -- only look at the mouse if the mouse was the last thing to be touched out
         -- of mouse/gamepad. The gamepad updates the aim as soon as the message
         -- comes in rather than here
         if input.lastAim == 'mouse' then
-            player1:pointAtMouse()
+            player1:aimAtMouse()
         end
 
         if self.weapons[self.currentWeapon] then
@@ -63,20 +63,18 @@ function Player:update(dt)
         end
 
         local x, y = self.body:getPosition()
-        local force = 50
+        -- must overcome walking otherwise can escape map using explosions and stay still
+        local force = self.moveForce + 100
         if x > 512 then
-            self.body:applyLinearImpulse(-force, 0)
+            self.body:applyForce(-force, 0)
         elseif x < -512 then
-            self.body:applyLinearImpulse(force, 0)
+            self.body:applyForce(force, 0)
         end
         if y > 512 then
-            self.body:applyLinearImpulse(0, -force)
+            self.body:applyForce(0, -force)
         elseif y < -512 then
-            self.body:applyLinearImpulse(0, force)
+            self.body:applyForce(0, force)
         end
-
-    else
-        self.body:setLinearVelocity(0, 0)
     end
 end
 
@@ -86,7 +84,7 @@ function Player:draw()
     local gun = self.weapons[self.currentWeapon]
 
     if self:isAlive() then
-        local angle = self.angle
+        local angle = self.aimAngle
         local scalex = 1
         if math.abs(angle) > math.pi / 2 then
             scalex =  -1
@@ -101,7 +99,7 @@ function Player:draw()
         if gun then
             if gun.alwaysBehind
             then gunInFront = false
-            else gunInFront = 0 <= self.angle and self.angle <= math.pi end
+            else gunInFront = 0 <= self.aimAngle and self.aimAngle <= math.pi end
         end
 
         if gun and not gunInFront then gun:draw() end
@@ -126,12 +124,12 @@ function Player:move(angle)
 end
 
 
-function Player:pointAtMouse()
+function Player:aimAtMouse()
 	local x, y = self.body:getPosition()
     local mx, my = cam:worldCoords(input.mousex, input.mousey)
 	local dx = mx - x
 	local dy = my - y
-	self.angle = math.atan2(dy, dx)
+	self.aimAngle = math.atan2(dy, dx)
 end
 
 -- when the gamepad axis goes from not in the dead zone to inside the dead zone.
@@ -141,11 +139,15 @@ function Player:stopMoving()
     --print('stopped walking')
 end
 
-function Player:takeDamage()
-    self.hp = self.hp - 1
-    if not self:isAlive() then
-		self.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
-		self.type = 'deadPlayer'
+function Player:takeDamage(amount)
+    if not debugMode then
+        local amount = amount or 1
+
+        self.hp = self.hp - amount
+        if not self:isAlive() then
+            self.type = 'deadPlayer'
+            self.scene:removePhysicsFrom(self)
+        end
     end
 end
 

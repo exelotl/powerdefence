@@ -7,7 +7,7 @@ local mode = {}
 mode.current = 'day'
 
 mode.lastSunrise = 0
-mode.dayLength = 5 -- seconds
+mode.dayLength = 1 -- seconds
 
 function mode.timeUntilSunset()
     return mode.lastSunrise + mode.dayLength - globalTimer
@@ -19,7 +19,10 @@ end
 function mode.toggle()
     if     mode.current == 'day'   then mode.current = 'night'
     elseif mode.current == 'night' then mode.current = 'day'  end
-    flux.to(lighting, 5, {amount= mode.current == 'day' and 0 or 255})
+    flux.to(lighting, 5, {amount = mode.current == 'day' and 0 or 255})
+    if mode.current == 'day' then
+        mode.lastSunrise = globalTimer
+    end
 end
 
 return mode

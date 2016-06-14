@@ -1,5 +1,4 @@
 local Scene = oo.class()
-local debugWorldDraw = require "debugworlddraw"
 require "physics"
 
 
@@ -11,10 +10,37 @@ function Scene:init()
 	self.entities = {}
 	self.addlist = {}
 	self.removelist = {}
+	self.removePhysicsList = {}
 	self.typelist = {}      -- map: typestring -> list of entities
 end
 
 function Scene:update(dt)
+
+	-- add all from the add list
+	for _,e in ipairs(self.addlist) do
+		e.scene = self
+		table.insert(self.entities, e)
+		if e.type then
+			-- register the entity's type
+			if not self.typelist[e.type] then self.typelist[e.type] = {} end
+			table.insert(self.typelist[e.type], e)
+		end
+		if e.added then e:added() end
+	end
+
+	-- remove physics from all from the remove physics list
+	for _,e in ipairs(self.removePhysicsList) do
+		-- remove from the physics world
+		if e.body then
+            -- cannot destroy the body because the entity and the scene may use
+            -- it for keeping track of position
+			-- hopefully this will reduce the amount of work done
+			e.fixture:destroy()
+		    -- shape cannot be destroyed
+		end
+    end
+
+	-- remove all from the remove list
 	for _,e in ipairs(self.removelist) do
 		-- activate removal callback
 		if e.removed then e:removed() end
@@ -40,23 +66,15 @@ function Scene:update(dt)
 
 		-- remove from the physics world
 		if e.body then
-			e.body:destroy()
+			e.body:destroy() -- also removes the fixture
+		    -- shape cannot be destroyed
 		end
 	end
 
-	for _,e in ipairs(self.addlist) do
-		e.scene = self
-		table.insert(self.entities, e)
-		if e.type then
-			-- register the entity's type
-			if not self.typelist[e.type] then self.typelist[e.type] = {} end
-			table.insert(self.typelist[e.type], e)
-		end
-		if e.added then e:added() end
-	end
 
 	self.addlist = {}
 	self.removelist = {}
+	self.removePhysicsList = {}
 
 	self.world:update(dt)
 
@@ -108,9 +126,6 @@ function Scene:draw()
 	for _,e in ipairs(self.entities) do
 		if e.draw then e:draw() end
 	end
-	if debugMode then
-		debugWorldDraw(self.world, -1024, -1024, 2048, 2048)
-	end
 end
 
 -- schedule entity to be added on the next frame
@@ -127,6 +142,20 @@ function Scene:remove(e)
 		end
 	end
 	table.insert(self.removelist, e)
+end
+
+-- remove the entities fixture from the world
+-- but does not destroy the entity or body or fixture
+function Scene:removePhysicsFrom(e)
+	for _,v in ipairs(self.removePhysicsList) do
+		if e == v then
+			return
+		end
+	end
+	table.insert(self.removePhysicsList, e)
+
+    -- see: https://love2d.org/wiki/Remove_Workaround
+    e.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
 end
 
 

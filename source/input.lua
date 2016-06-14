@@ -109,11 +109,16 @@ input.states.playing = {
         player2PrevWeapon = function()
             if player2 and player2:isAlive() then player2:prevWeapon() end
         end,
+
+
+        togglePause = function()
+            paused = not paused
+        end,
     },
 
 
     kbdPress = {
-
+        p = 'togglePause'
     },
     kbdRelease = {},
 
@@ -259,7 +264,7 @@ function input.checkJoystickAxes()
         -- aiming
         if not dead[axisConfig1.lookX] or not dead[axisConfig1.lookY] then
             local lookx, looky = axes[axisConfig1.lookY], axes[axisConfig1.lookX]
-            player1.angle = math.atan2(lookx, looky)
+            player1.aimAngle = math.atan2(lookx, looky)
             input.joy1LookMag = lookx^2+looky^2
             input.lastAim = 'joy'
         end
@@ -354,7 +359,8 @@ end
 
 
 function love.keypressed(key, unicode)
-	pie:keypressed(key,unicode)
+	if profilerEnabled then pie:keypressed(key, unicode) end
+
     -- global key bindings
     if key == "f1" then
         debugMode = not debugMode
@@ -439,8 +445,7 @@ function love.gamepadpressed(j, button)
         if not input.joy2 then
             input.joy2 = j
 
-            player2 = Player.new(scene, 2)
-            player2.color = player2Color
+            player2 = Player.new(scene, 2, game.menu.globals.player2Color)
         end
     else
         -- if new (not touched before) then assign it to the next available slot
@@ -450,8 +455,7 @@ function love.gamepadpressed(j, button)
         elseif not input.joy2 and j ~= input.joy1 then
             input.joy2 = j
 
-            player2 = Player.new(scene, 2)
-            player2.color = player2Color
+            player2 = Player.new(scene, 2, game.menu.globals.player2Color)
         end
     end
 

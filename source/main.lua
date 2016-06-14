@@ -75,6 +75,15 @@ end
 function love.draw()
     game.draw()
 	if profilerEnabled then pie:draw() end
+
+    if debugMode then
+        lg.setColor(255,0,0)
+        love.graphics.print('debug on', 20, 20)
+        love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 40)
+    else
+        lg.setColor(100, 100, 100)
+        love.graphics.print(string.format('FPS: %d', love.timer.getFPS()), 20, 20)
+    end
 end
 
 function love.resize(w, h)
