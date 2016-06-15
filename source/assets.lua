@@ -98,6 +98,7 @@ function assets.load()
         rocketLauncher = lg.newImage("assets/rocketlauncher.png"),
         laserRifle = lg.newImage("assets/laserrifle.png"),
         minigun = lg.newImage("assets/minigun.png"),
+        flameThrower = lg.newImage("assets/flamethrower.png")
     }
 
     assets.weaponsq = {
@@ -110,6 +111,7 @@ function assets.load()
         [assets.weapons.rocketLauncher] = makeMask(assets.weapons.rocketLauncher),
         [assets.weapons.laserRifle] = makeMask(assets.weapons.laserRifle),
         [assets.weapons.minigun] = makeMask(assets.weapons.minigun),
+        [assets.weapons.flameThrower] = makeMask(assets.weapons.flameThrower),
     }
     assets.weaponso = {
         [assets.weapons.pistol] = makeOutline(assets.weapons.pistol),
@@ -117,6 +119,7 @@ function assets.load()
         [assets.weapons.rocketLauncher] = makeOutline(assets.weapons.rocketLauncher),
         [assets.weapons.laserRifle] = makeOutline(assets.weapons.laserRifle),
         [assets.weapons.minigun] = makeOutline(assets.weapons.minigun),
+        [assets.weapons.flameThrower] = makeOutline(assets.weapons.flameThrower),
     }
     assets.weaponsoq = {
         [assets.weapons.laserRifle] = makeQuads(assets.weaponso[assets.weapons.laserRifle], 34, 15),
@@ -126,6 +129,7 @@ function assets.load()
 
 	assets.bullet = lg.newImage("assets/bullet.png")
     assets.rocket = lg.newImage("assets/rocket.png")
+    assets.flame = lg.newImage("assets/flame.png")
 
     assets.explosion = lg.newImage("assets/explosion.png")
     assets.explosionq = makeQuads(assets.explosion,64,64)
@@ -165,6 +169,7 @@ function assets.load()
 	assets.sfxRocketLaunch = makeSfx("assets/sfx/rocket_launch.wav", 2)
 	assets.sfxOrbDestroy = makeSfx("assets/sfx/orb_destroy.wav", 1)
 	assets.sfxLaser = makeSfx("assets/sfx/laser.wav", 3)
+    assets.sfxFlame = makeSfx("assets/sfx/flame.wav",3)
 end
 
 return assets

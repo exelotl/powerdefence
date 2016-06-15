@@ -73,6 +73,15 @@ function lighting.renderLights()
                 end
             end
 
+            local allFlames = scene.typelist.flame
+            if allFlames then
+                for _, e in ipairs(allFlames) do
+                    lg.setColor(0, 100, 100)
+                    local scale = 0.1 + 0.1*math.random()
+                    lg.draw(assets.lights.surround, e.body:getX(), e.body:getY(), 0, scale, scale, 256, 256)
+                end
+            end
+
         cam:detach()
     love.graphics.setCanvas()
 end

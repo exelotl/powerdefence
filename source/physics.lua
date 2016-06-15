@@ -110,8 +110,7 @@ local collisionCallbacks = {
         end
     },
     rocketCollidable = {
-        test = function(aType, bType) return
-            aType == 'rocket' and
+        test = function(aType, bType) return aType == 'rocket' and
             (bType == 'enemy' or
              bType == 'player' or
              bType == 'orb' or
@@ -124,7 +123,20 @@ local collisionCallbacks = {
             rocket:explode()
         end
     },
-
+    flamePlayer = {
+        test = function(aType, bType) return aType == 'flame' and bType == 'player' end,
+        callback = function(Fix, playerFix, coll)
+            local player = playerFix:getUserData().data
+            enemy:takeDamage()
+        end
+    },
+    flameEnemy = {
+        test = function(aType, bType) return aType == 'flame' and bType == 'enemy' end,
+        callback = function(flameFix, enemyFix, coll)
+            local enemy = enemyFix:getUserData().data
+            enemy:burn() -- different death animation from takeDamage
+        end
+    },
 }
 
 

@@ -1,6 +1,7 @@
 
 local Bullet = require "Bullet"
 local Rocket = require "Rocket"
+local Flame = require "Flame"
 local Anim = require "Anim"
 
 
@@ -8,6 +9,7 @@ local Weapon = oo.class()
 
 Weapon.name = nil
 Weapon.image = nil
+-- offset x and y are for drawing
 -- shoot offset is along the normal to the shooting angle
 Weapon.offset = {x = nil, y = nil, shoot=nil}
 Weapon.alwaysBehind = false
@@ -182,5 +184,19 @@ function Minigun:init(holder)
 	self.sfx = assets.sfxMinigun
 end
 
+local FlameThrower = oo.class(Weapon)
+function FlameThrower:init(holder)
+    Weapon.init(self, holder)
+    self.name = 'flamethrower'
+    self.image = assets.weapons.flameThrower
+    self.offset = {x=7, y=7, shoot=3}
+    self.singleShot = false
+    self.rate = 0.05
+    self.maxAmmo = 512
+    self.ammo = 512
+    self.ammoType = Flame
+    self.sfx = assets.sfxFlame
+end
+
 return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher,
-        LaserRifle=LaserRifle, Minigun=Minigun}
+        LaserRifle=LaserRifle, Minigun=Minigun, FlameThrower=FlameThrower}
