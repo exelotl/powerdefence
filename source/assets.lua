@@ -169,7 +169,7 @@ function assets.load()
 		rocketLaunch = makeSfx("assets/sfx/rocket_launch.wav", 2),
 		orbDestroy = makeSfx("assets/sfx/orb_destroy.wav", 1),
 		laser = makeSfx("assets/sfx/laser.wav", 3),
-		flame = makeSfx("assets/sfx/flame.wav", 3),
+		flamethrower = makeSfx("assets/sfx/flame.wav", 3),
 	}
 end
 
