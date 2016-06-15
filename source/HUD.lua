@@ -39,7 +39,7 @@ function drawWeapons(weapons, currentI, pos)
     x = left and x or lg:getWidth() - x
     local y = lg.getHeight() * 14/15
 
-    local scalex = scale--left and scale or -scale
+    local scalex = left and scale or -scale
 
     for i, weapon in ipairs(weapons) do
         local image = assets.weapons[weapon.image]
@@ -57,19 +57,24 @@ function drawWeapons(weapons, currentI, pos)
         end
 
         local ratio = math.min(weapon.ammo / weapon.maxAmmo, 1)
-        local offsetx = left and 1 or -1
         if weapon.animated then
             local quad = assets.weaponsoq[weapon.image][1]
             local qx,qy,qw,qh = quad:getViewport()
-            local drawx = left and x or x - qw*scale
-            lg.setScissor(drawx, y, ratio*qw*scale, qh*scale)
-            lg.draw(imgo, quad, drawx, y, 0, scalex, scale, offsetx, 1)
+
+            local leftx = left and x              or x - ratio*qw*scale
+            local draww = left and ratio*qw*scale or qw*scale+5
+
+            lg.setScissor(leftx, y, draww, qh*scale)
+            lg.draw(imgo, quad, x, y, 0, scalex, scale, 1, 1)
             lg.setScissor()
         else
             local w,h = image:getDimensions()
-            local drawx = left and x or x - imgo:getWidth()*scale
-            lg.setScissor(drawx, y, ratio*w*scale, h*scale)
-            lg.draw(imgo, drawx, y, 0, scalex, scale, offsetx, 1)
+
+            local leftx = left and x             or x - ratio*w*scale
+            local draww = left and ratio*w*scale or imgo:getWidth()*scale+5
+
+            lg.setScissor(leftx, y, draww, h*scale)
+            lg.draw(imgo, x, y, 0, scalex, scale, 1, 1)
             lg.setScissor()
         end
 
@@ -83,17 +88,9 @@ function drawWeapons(weapons, currentI, pos)
 
         if weapon.animated then
             local quad = assets.weaponsq[weapon.image][1]
-
-            local drawx = x
-            if pos == 'right' then
-                local _,_,width = quad:getViewport()
-                drawx = x - width*scale
-            end
-
-            lg.draw(image, quad, drawx, y, 0, scalex, scale)
+            lg.draw(image, quad, x, y, 0, scalex, scale)
         else
-            local drawx = left and x or x - image:getWidth()*scale
-            lg.draw(image, drawx, y, 0, scalex, scale)
+            lg.draw(image, x, y, 0, scalex, scale)
         end
     end
 end
