@@ -127,7 +127,7 @@ local collisionCallbacks = {
         test = function(aType, bType) return aType == 'flame' and bType == 'player' end,
         callback = function(Fix, playerFix, coll)
             local player = playerFix:getUserData().data
-            enemy:takeDamage()
+            player:takeDamage()
         end
     },
     flameEnemy = {
