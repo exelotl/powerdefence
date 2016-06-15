@@ -29,6 +29,8 @@ function Player:init(scene, playerNum, color)
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
                     weapons.Minigun.new(self),weapons.FlameThrower.new(self)}
 	self.currentWeapon = 1
+	self.placeables = {}
+    self.currentPlaceable = 1
 
 	local x = self.playerNum == 1 and -32 or 32
 	local y = 0
