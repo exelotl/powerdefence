@@ -9,7 +9,7 @@ local Weapon = oo.class()
 
 Weapon.name = nil
 Weapon.image = nil
--- offset x and y are for drawing
+-- offset x and y are for drawing the gun itsself
 -- shoot offset is along the normal to the shooting angle
 Weapon.offset = {x = nil, y = nil, shoot=nil}
 Weapon.alwaysBehind = false
@@ -189,7 +189,7 @@ function FlameThrower:init(holder)
     Weapon.init(self, holder)
     self.name = 'flamethrower'
     self.image = assets.weapons.flameThrower
-    self.offset = {x=7, y=7, shoot=3}
+    self.offset = {x=12, y=0, shoot=3}
     self.singleShot = false
     self.rate = 0.05
     self.maxAmmo = 512

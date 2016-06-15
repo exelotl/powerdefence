@@ -197,9 +197,11 @@ game.playing = {
 
         player1 = Player.new(scene, 1, game.menu.globals.player1Color)
 
+        --[[
         local e = EnemyGrunt.new(scene, 100, 100)
         e.hp = 9999
         e.moveForce = 0
+        --]]
 
         orb = Orb.new(scene, 0, 0)
 

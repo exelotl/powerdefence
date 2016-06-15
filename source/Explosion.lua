@@ -29,7 +29,7 @@ function Explosion:update(dt)
     else
         -- using self.duration which counts down to ease from lots of shake to a
         -- little at the end
-        local shakePerSecond = 650
+        local shakePerSecond = 600
         screenShake = screenShake + shakePerSecond*dt*self.duration
         --screenShake = screenShake + 3
     end
