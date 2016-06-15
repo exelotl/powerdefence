@@ -71,6 +71,9 @@ game.menu = {
             if g.player2Color == 4 then g.player2Color = 1
             else g.player2Color = g.player2Color + 1 end
         end)
+        g.menuList:add('Exit', function()
+            love.event.quit()
+        end)
 
         lg.setFont(assets.menufont)
 
