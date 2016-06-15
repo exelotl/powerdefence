@@ -353,15 +353,13 @@ game.playing = {
     end,
 }
 
--- playing globals
-local pg = game.playing.globals
-
 
 
 -- can be called many times but only initiates game over sequence once
 function initiateGameOver()
-    if not pg.doomed then
-        pg.doomed = true
+    local pg = game.playing.globals
+    if not pg.isDoomed then
+        pg.isDoomed = true
         assets.playSfx(assets.sfxOrbDestroy)
 
         -- delay showing the game over screen
