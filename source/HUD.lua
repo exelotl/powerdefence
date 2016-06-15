@@ -18,21 +18,22 @@ function hud.draw()
             local _,_,heartx,hearty = heartquad:getViewport()
             local scale = cam.scale * 0.4
             heartx = heartx * scale
-            hearty = hearty *    scale
+            hearty = hearty * scale
             lg.draw(assets.hearts,heartquad,i * heartx + 10 * scale,lg.getHeight() - hearty - 10 * scale,0,scale,scale)
         end
 
         for i,weapon in ipairs(player1.weapons) do
             local scale = cam.scale * 0.8
-            p1wy = p1wy - (weapon.image:getHeight() * scale) - (10 * scale)
+			local image = assets.weapons[weapon.image]
+            local imgo = assets.weaponso[weapon.image]
+			
+            p1wy = p1wy - (image:getHeight() * scale) - (10 * scale)
 
             if player1.currentWeapon == i then
                 lg.setColor(255,255,255,255)
             else
                 lg.setColor(150,150,150,255)
             end
-
-            local imgo = assets.weaponso[weapon.image]
 
             local ratio = math.min(weapon.ammo / weapon.maxAmmo, 1)
             if weapon.animated then
@@ -42,7 +43,7 @@ function hud.draw()
               lg.draw(imgo, quad, p1wx, p1wy, 0,scale,scale,1,1)
               lg.setScissor()
             else
-              local w,h = weapon.image:getDimensions()
+              local w,h = image:getDimensions()
               lg.setScissor(p1wx, p1wy, ratio*w*scale, h*scale)
               lg.draw(imgo, p1wx, p1wy, 0,scale,scale,1,1)
               lg.setScissor()
@@ -55,9 +56,10 @@ function hud.draw()
             end
 
             if weapon.animated then
-              lg.draw(weapon.image, assets.weaponsq[weapon.image][1], p1wx, p1wy, 0,scale,scale)
+			  local quad = assets.weaponsq[weapon.image][1]
+              lg.draw(image, quad, p1wx, p1wy, 0,scale,scale)
             else
-              lg.draw(weapon.image, p1wx, p1wy, 0,scale,scale)
+              lg.draw(image, p1wx, p1wy, 0,scale,scale)
             end
         end
     end

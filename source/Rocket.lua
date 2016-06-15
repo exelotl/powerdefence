@@ -45,7 +45,7 @@ end
 
 function Rocket:explode()
     if not self.hasExploded then
-        assets.playSfx(assets.sfxBoom)
+        assets.playSfx(assets.sfx.boom)
         local x,y = self.body:getPosition()
         explosion.new(scene,x,y,40,0.5)
         self.hasExploded = true

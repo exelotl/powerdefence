@@ -102,28 +102,28 @@ function assets.load()
     }
 
     assets.weaponsq = {
-        [assets.weapons.laserRifle] = makeQuads(assets.weapons.laserRifle, 32, 13),
-        [assets.weapons.minigun] = makeQuads(assets.weapons.minigun, 46, 16),
+        laserRifle = makeQuads(assets.weapons.laserRifle, 32, 13),
+        minigun = makeQuads(assets.weapons.minigun, 46, 16),
     }
     assets.weaponsm = {
-        [assets.weapons.pistol] = makeMask(assets.weapons.pistol),
-        [assets.weapons.machineGun] = makeMask(assets.weapons.machineGun),
-        [assets.weapons.rocketLauncher] = makeMask(assets.weapons.rocketLauncher),
-        [assets.weapons.laserRifle] = makeMask(assets.weapons.laserRifle),
-        [assets.weapons.minigun] = makeMask(assets.weapons.minigun),
-        [assets.weapons.flameThrower] = makeMask(assets.weapons.flameThrower),
+        pistol = makeMask(assets.weapons.pistol),
+        machineGun = makeMask(assets.weapons.machineGun),
+        rocketLauncher = makeMask(assets.weapons.rocketLauncher),
+        laserRifle = makeMask(assets.weapons.laserRifle),
+        minigun = makeMask(assets.weapons.minigun),
+        flameThrower = makeMask(assets.weapons.flameThrower),
     }
     assets.weaponso = {
-        [assets.weapons.pistol] = makeOutline(assets.weapons.pistol),
-        [assets.weapons.machineGun] = makeOutline(assets.weapons.machineGun),
-        [assets.weapons.rocketLauncher] = makeOutline(assets.weapons.rocketLauncher),
-        [assets.weapons.laserRifle] = makeOutline(assets.weapons.laserRifle),
-        [assets.weapons.minigun] = makeOutline(assets.weapons.minigun),
-        [assets.weapons.flameThrower] = makeOutline(assets.weapons.flameThrower),
+        pistol = makeOutline(assets.weapons.pistol),
+        machineGun = makeOutline(assets.weapons.machineGun),
+        rocketLauncher = makeOutline(assets.weapons.rocketLauncher),
+        laserRifle = makeOutline(assets.weapons.laserRifle),
+        minigun = makeOutline(assets.weapons.minigun),
+        flameThrower = makeOutline(assets.weapons.flameThrower),
     }
     assets.weaponsoq = {
-        [assets.weapons.laserRifle] = makeQuads(assets.weaponso[assets.weapons.laserRifle], 34, 15),
-        [assets.weapons.minigun] = makeQuads(assets.weaponso[assets.weapons.minigun], 48, 18),
+        laserRifle = makeQuads(assets.weaponso.laserRifle, 34, 15),
+        minigun = makeQuads(assets.weaponso.minigun, 48, 18),
     }
 
 
@@ -161,15 +161,16 @@ function assets.load()
 
     assets.title = lg.newImage("assets/title.png")
     assets.gameOver = lg.newImage("assets/gameOver.png")
-
-	assets.sfxPistol = makeSfx("assets/sfx/pistol.wav", 3)
-	assets.sfxMachineGun = makeSfx("assets/sfx/machine_gun.wav", 3)
-	assets.sfxMinigun = makeSfx("assets/sfx/minigun.wav", 3)
-	assets.sfxBoom = makeSfx("assets/sfx/boom.wav", 2)
-	assets.sfxRocketLaunch = makeSfx("assets/sfx/rocket_launch.wav", 2)
-	assets.sfxOrbDestroy = makeSfx("assets/sfx/orb_destroy.wav", 1)
-	assets.sfxLaser = makeSfx("assets/sfx/laser.wav", 3)
-    assets.sfxFlame = makeSfx("assets/sfx/flame.wav",3)
+	assets.sfx = {
+		pistol = makeSfx("assets/sfx/pistol.wav", 3),
+		machineGun = makeSfx("assets/sfx/machine_gun.wav", 3),
+		minigun = makeSfx("assets/sfx/minigun.wav", 3),
+		boom = makeSfx("assets/sfx/boom.wav", 2),
+		rocketLaunch = makeSfx("assets/sfx/rocket_launch.wav", 2),
+		orbDestroy = makeSfx("assets/sfx/orb_destroy.wav", 1),
+		laser = makeSfx("assets/sfx/laser.wav", 3),
+		flame = makeSfx("assets/sfx/flame.wav", 3),
+	}
 end
 
 return assets

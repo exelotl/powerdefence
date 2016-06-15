@@ -360,7 +360,7 @@ function initiateGameOver()
     local pg = game.playing.globals
     if not pg.isDoomed then
         pg.isDoomed = true
-        assets.playSfx(assets.sfxOrbDestroy)
+        assets.playSfx(assets.sfx.orbDestroy)
 
         -- delay showing the game over screen
         flux.to({}, 4, {}):oncomplete(function()

@@ -5,32 +5,107 @@ local Flame = require "Flame"
 local Anim = require "Anim"
 
 
-local Weapon = oo.class()
+local wepAttrs = {
+	None = {
+		name = "none",
+		image = nil,
+		-- offset x and y are for drawing the gun itsself
+		-- shoot offset is along the normal to the shooting angle
+		offset = {x = nil, y = nil, shoot=nil},
+		alwaysBehind = false,
+		animated = false,
+		singleShot = true,
+		rate = 0,           -- delay between firing another bullet
+		holder = nil,       -- entity holding the weapon, needs body,angle fields
+		ammoType = Bullet,
+		maxAmmo = math.huge,
+		ammo = math.huge,
+		shake = 0
+	},
+	Pistol = {
+		shake = 1,
+		name = "pistol",
+		image = "pistol",
+		offset = {x=-8, y=1, shoot=0},
+		maxAmmo = math.huge,
+		ammo = math.huge,
+		sfx = "pistol", -- todo: automatically look up SFX based on name of weapon?
+	},
+	MachineGun = {
+		shake = 1,
+		name = 'machineGun',
+		image = "machineGun",
+		offset = {x=5, y=4, shoot=-1},
+		singleShot = false,
+		rate = 0.1,
+		maxAmmo = 255,
+		ammo = 255,
+		sfx = "machineGun"
+	},
+	RocketLauncher = {
+		name = "rocketLauncher",
+		image = "rocketLauncher",
+		offset = {x=28, y=16, shoot=5},
+		alwaysBehind = true,
+		ammoType = Rocket,
+		maxAmmo = 16,
+		ammo = 16,
+		sfx = "rocketLaunch",
+	},
+	LaserRifle = {
+		shake = 1,
+		name = "laserRifle",
+		image = "laserRifle",
+		offset = {x=3, y=5, shoot=0},
+		animated = true,
+		restingAnim = {1},
+		firingAnim = {1, 2, 3, 4, 5, 6, 7, 8, rate=15},
+		singleShot = false,
+		rate = 0.1,
+		maxAmmo = 32,
+		ammo = 32,
+		sfx = "laser",
+	},
+	Minigun = {
+		shake = 2,
+		name = "minigun",
+		image = "minigun",
+		offset = {x=3, y=8, shoot=0},
+		animated = true,
+		restingAnim = {1},
+		firingAnim = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, rate=25},
+		singleShot = false,
+		rate = 0.03,
+		maxAmmo = 512,
+		ammo = 512,
+		sfx = "minigun",
+	},
+	FlameThrower = {
+		name = "flamethrower",
+		image = "flameThrower",
+		offset = {x=12, y=0, shoot=3},
+		singleShot = false,
+		rate = 0.05,
+		maxAmmo = 512,
+		ammo = 512,
+		ammoType = Flame,
+		sfx = "flamethrower",
+	}
+}
 
-Weapon.name = nil
-Weapon.image = nil
--- offset x and y are for drawing the gun itsself
--- shoot offset is along the normal to the shooting angle
-Weapon.offset = {x = nil, y = nil, shoot=nil}
-Weapon.alwaysBehind = false
-Weapon.animated = false
-Weapon.singleShot = true
-Weapon.rate = 0 -- delay between firing another bullet
-Weapon.holder = nil -- entity holding the weapon, needs body,angle fields
-Weapon.ammoType = Bullet
-Weapon.maxAmmo = math.huge
-Weapon.ammo = math.huge
-Weapon.shake = 0
+local Weapon = oo.class(wepAttrs.None)
 
 function Weapon:init(holder)
     self.holder = holder
+	if self.animated then
+		self.anim = Anim.new(self.restingAnim)
+	end
 end
-
 
 function Weapon:draw()
 	local x, y = self.holder.body:getPosition()
     local angle = self.holder.aimAngle
-
+	local image = assets.weapons[self.image]
 
     local scalex = 1
     if math.abs(angle) > math.pi / 2 then
@@ -39,9 +114,10 @@ function Weapon:draw()
 	end
 
 	if self.animated then
-        lg.draw(self.image, assets.weaponsq[self.image][self.anim.frame], x, y, angle, scalex, 1, self.offset.x, self.offset.y)
+		local quads = assets.weaponsq[self.image]
+        lg.draw(image, quads[self.anim.frame], x, y, angle, scalex, 1, self.offset.x, self.offset.y)
 	else
-        lg.draw(self.image, x, y, angle, scalex, 1, self.offset.x, self.offset.y)
+        lg.draw(image, x, y, angle, scalex, 1, self.offset.x, self.offset.y)
     end
 end
 
@@ -71,8 +147,8 @@ function Weapon:update(dt)
 			self.ammo = self.ammo - 1
 			screenShake = screenShake + self.shake
 
-			if self.sfx then
-				assets.playSfx(self.sfx)
+			if self.sfx and assets.sfx[self.sfx] then
+				assets.playSfx(assets.sfx[self.sfx])
 			end
 
 			if self.ammo <= 0 then
@@ -102,101 +178,17 @@ function Weapon:stopShooting()
     if self.restingAnim then self.anim:play(self.restingAnim) end
 end
 
-
-
 function Weapon:reload()
     self.ammo = self.maxAmmo
 end
 
+-- Generate all the weapon classes based on their attribute definitions
+-- All have Weapon as the base class, and properties from the
+--  corresponding attribute definition are mixed in.
+local weapons = {}
 
-local Pistol = oo.class(Weapon)
-Pistol.shake = 1
-function Pistol:init(holder)
-    Weapon.init(self, holder)
-    self.name = 'pistol'
-    self.image = assets.weapons.pistol
-    self.offset = {x=-8, y=1, shoot=0}
-	self.maxAmmo = math.huge
-	self.ammo = math.huge
-	self.sfx = assets.sfxPistol
+for name,attrs in pairs(wepAttrs) do
+	weapons[name] = oo.class(Weapon, attrs)
 end
 
-local MachineGun = oo.class(Weapon)
-MachineGun.shake = 1
-function MachineGun:init(holder)
-    Weapon.init(self, holder)
-    self.name = 'machineGun'
-    self.image = assets.weapons.machineGun
-    self.offset = {x=5, y=4, shoot=-1}
-    self.singleShot = false
-    self.rate = 0.1
-	self.maxAmmo = 255
-	self.ammo = 255
-	self.sfx = assets.sfxMachineGun
-end
-
-local RocketLauncher = oo.class(Weapon)
-function RocketLauncher:init(holder)
-    Weapon.init(self, holder)
-    self.name = 'rocketLauncher'
-    self.image = assets.weapons.rocketLauncher
-    self.offset = {x=28, y=16, shoot=5}
-    self.alwaysBehind = true
-    self.ammoType = Rocket
-	self.maxAmmo = 16
-	self.ammo = 16
-	self.sfx = assets.sfxRocketLaunch
-end
-
-
-local LaserRifle = oo.class(Weapon)
-LaserRifle.shake = 1
-function LaserRifle:init(holder)
-    Weapon.init(self, holder)
-    self.name = 'laserRifle'
-    self.image = assets.weapons.laserRifle
-    self.offset = {x=3, y=5, shoot=0}
-    self.animated = true
-    self.anim = Anim.new({1, 2, 3, 4, 5, 6, 7, 8, rate=15})
-    self.singleShot = false
-    self.rate = 0.1
-	self.maxAmmo = 32
-	self.ammo = 32
-	self.sfx = assets.sfxLaser
-end
-
-
-local Minigun = oo.class(Weapon)
-Minigun.shake = 2
-function Minigun:init(holder)
-    Weapon.init(self, holder)
-    self.name = 'minigun'
-    self.image = assets.weapons.minigun
-    self.offset = {x=3, y=8, shoot=0}
-    self.animated = true
-    self.restingAnim = {1}
-    self.firingAnim = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, rate=25}
-    self.anim = Anim.new(restingAnim)
-    self.singleShot = false
-    self.rate = 0.03
-	self.maxAmmo = 512
-	self.ammo = 512
-	self.sfx = assets.sfxMinigun
-end
-
-local FlameThrower = oo.class(Weapon)
-function FlameThrower:init(holder)
-    Weapon.init(self, holder)
-    self.name = 'flamethrower'
-    self.image = assets.weapons.flameThrower
-    self.offset = {x=12, y=0, shoot=3}
-    self.singleShot = false
-    self.rate = 0.05
-    self.maxAmmo = 512
-    self.ammo = 512
-    self.ammoType = Flame
-    self.sfx = assets.sfxFlame
-end
-
-return {Pistol=Pistol, MachineGun=MachineGun, RocketLauncher=RocketLauncher,
-        LaserRifle=LaserRifle, Minigun=Minigun, FlameThrower=FlameThrower}
+return weapons
