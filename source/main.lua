@@ -1,8 +1,8 @@
 oo = require "oo"
-cam = (require "camera")()
 flux = require "flux"
 assets = require "assets"
 input = require "input"
+require 'camera'
 local limitFrameRate = require "limitframerate"
 local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
@@ -16,9 +16,6 @@ local animSpeed = 1
 debugMode = false -- global debug flag (toggle: F1). Use as you wish
 profilerEnabled = false
 
--- for scaling the window
-BASE_WIDTH = 400
-BASE_HEIGHT = 240
 
 
 function love.load(arg)
@@ -53,14 +50,12 @@ function love.load(arg)
 	pie = piefiller:new()
 end
 
-screenShake = 4
-local currentCamX = 0
-local currentCamY = 0
 
 function love.update(dt)
 	limitFrameRate(60)
 
 	if profilerEnabled then pie:attach() end
+
     flux.update(dt*animSpeed) -- update tweening system
     globalTimer = globalTimer + dt
 
@@ -68,6 +63,7 @@ function love.update(dt)
 
 	-- no love.blah function for joystick axis change
     input.checkJoystickAxes()
+
 	if profilerEnabled then pie:detach() end
 end
 
@@ -86,8 +82,3 @@ function love.draw()
     end
 end
 
-function love.resize(w, h)
-	local ratiox = w / BASE_WIDTH
-	local ratioy = h / BASE_HEIGHT
-	flux.to(cam, 1, {scale = math.max(ratiox, ratioy)})
-end

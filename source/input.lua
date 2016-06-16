@@ -308,7 +308,7 @@ function input.checkJoystickAxes()
         -- aiming
         if not dead[axisConfig2.lookX] or not dead[axisConfig2.lookY] then
             local lookx, looky = axes[axisConfig2.lookY], axes[axisConfig2.lookX]
-            player2.angle = math.atan2(lookx, looky)
+            player2.aimAngle = math.atan2(lookx, looky)
             input.joy2LookMag = lookx^2+looky^2
         end
 

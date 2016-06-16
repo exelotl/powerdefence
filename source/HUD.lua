@@ -2,118 +2,103 @@ local hud = {}
 
 local assets = require "assets"
 
-function hud.draw()
 
-    local p1wy = lg.getHeight() - lg.getHeight()/15
-    local p1wx = 10 * cam.scale * 0.4
-    local p2wx = lg.getWidth() - 10 * cam.scale * 0.4
-    local p2wy = p1wy
+-- draw a number of hearts
+-- pos = 'left' | 'right'
+function drawHearts(number, color, pos)
+    assert(pos == 'left' or pos == 'right')
+
+    for i = 0, number-1 do
+        local heartquad = assets.heartq[color]
+        local _,_,heartx,hearty = heartquad:getViewport()
+        local scale = cam.scale * 0.4
+        local border = 10
+
+        local x = 0
+        if pos == 'left' then
+            x = (i * heartx + border) * scale
+        elseif pos == 'right' then
+            x = lg.getWidth() - ((i+1) * heartx + border) * scale
+        end
+
+        local y = lg.getHeight() - (hearty + border) * scale
+
+        lg.draw(assets.hearts,heartquad, x, y, 0, scale, scale)
+    end
+end
+
+function drawWeapons(weapons, currentI, pos)
+    assert(pos == 'left' or pos == 'right')
+
+    local left = pos == 'left'
+
+    local scale = cam.scale * 0.8
+    local spacing = 10
+
+    local x = cam.scale * 4
+    x = left and x or lg:getWidth() - x
+    local y = lg.getHeight() * 14/15
+
+    local scalex = left and scale or -scale
+
+    for i, weapon in ipairs(weapons) do
+        local image = assets.weapons[weapon.image]
+        local outline = assets.weaponso[weapon.image]
+
+        y = y - (outline:getHeight() + spacing) * scale
+
+
+        -- draw outline depending on remaining ammo
+        if i == currentI then
+            lg.setColor(255,255,255,150)
+        else
+            lg.setColor(150,150,150,150)
+        end
+
+        local ratio = math.max(math.min(weapon.ammo / weapon.maxAmmo, 1), 0)
+        local w,h = outline:getDimensions()
+        local gw,gh = lg.getDimensions()
+
+        local ox, oy = (left and x-1*scale or x+1*scale), y-1*scale
+
+        local sx = left and ox            or ox - w*ratio*scale
+        local sw = left and w*ratio*scale or gw
+
+        -- outlines are 2 pixels wider and taller than the weapon image
+        lg.setScissor(sx, 0, sw, gh)
+        lg.draw(outline, ox, oy, 0, scalex, scale)
+        lg.setScissor() -- disable scissor
+
+
+        -- draw weapon
+        if i == currentI then
+            lg.setColor(255,255,255,255)
+        else
+            lg.setColor(150,150,150,150)
+        end
+
+        if weapon.animated then
+            local quad = assets.weaponsq[weapon.image][1]
+            lg.draw(image, quad, x, y, 0, scalex, scale)
+        else
+            lg.draw(image, x, y, 0, scalex, scale)
+        end
+    end
+end
+
+function hud.draw()
+    lg.setColor(255, 255, 255, 255)
+
+    if player1:isAlive() then
+        drawHearts(player1.hp, player1.color, 'left')
+        drawWeapons(player1.weapons, player1.currentWeapon, 'left')
+    end
 
     lg.setColor(255, 255, 255, 255)
 
-
-    if player1:isAlive() then
-        for i = 0, player1.hp-1 do
-            local heartquad = assets.heartq[player1.color]
-            local _,_,heartx,hearty = heartquad:getViewport()
-            local scale = cam.scale * 0.4
-            heartx = heartx * scale
-            hearty = hearty * scale
-            lg.draw(assets.hearts,heartquad,i * heartx + 10 * scale,lg.getHeight() - hearty - 10 * scale,0,scale,scale)
-        end
-
-        for i,weapon in ipairs(player1.weapons) do
-            local scale = cam.scale * 0.8
-			local image = assets.weapons[weapon.image]
-            local imgo = assets.weaponso[weapon.image]
-			
-            p1wy = p1wy - (image:getHeight() * scale) - (10 * scale)
-
-            if player1.currentWeapon == i then
-                lg.setColor(255,255,255,255)
-            else
-                lg.setColor(150,150,150,255)
-            end
-
-            local ratio = math.min(weapon.ammo / weapon.maxAmmo, 1)
-            if weapon.animated then
-              local quad = assets.weaponsoq[weapon.image][1]
-              local qx,qy,qw,qh = quad:getViewport()
-              lg.setScissor(p1wx, p1wy, ratio*qw*scale, qh*scale)
-              lg.draw(imgo, quad, p1wx, p1wy, 0,scale,scale,1,1)
-              lg.setScissor()
-            else
-              local w,h = image:getDimensions()
-              lg.setScissor(p1wx, p1wy, ratio*w*scale, h*scale)
-              lg.draw(imgo, p1wx, p1wy, 0,scale,scale,1,1)
-              lg.setScissor()
-            end
-
-            if player1.currentWeapon == i then
-                lg.setColor(255,255,255,255)
-            else
-                lg.setColor(255,0,0,150)
-            end
-
-            if weapon.animated then
-			  local quad = assets.weaponsq[weapon.image][1]
-              lg.draw(image, quad, p1wx, p1wy, 0,scale,scale)
-            else
-              lg.draw(image, p1wx, p1wy, 0,scale,scale)
-            end
-        end
-    end
-
-    lg.setColor(255,255,255,255)
-
-
     if player2 and player2:isAlive() then
-        for i = 1, player2.hp do
-            local heartquad = assets.heartq[player2.color]
-            local _,_,heartx,hearty = heartquad:getViewport()
-            local scale = cam.scale * 0.4
-            heartx = heartx * scale
-            hearty = hearty * scale
-            lg.draw(assets.hearts,heartquad,lg.getWidth() - i * heartx - 10 * scale,lg.getHeight() - hearty - 10 * scale,0,scale,scale)
-        end
-
-        for i,weapon in ipairs(player2.weapons) do
-            local scale = cam.scale * 0.8
-            p2wy = p2wy - weapon.image:getHeight() * scale - (10 * scale)
-
-          if player2.currentWeapon == i then
-            lg.setColor(255,255,255,255)
-          else
-            lg.setColor(150,150,150,255)
-          end
-            local imgo = assets.weaponso[weapon.image]
-
-
-          if weapon.animated then
-            local quad = assets.weaponsoq[weapon.image][1]
-            local _,_,width = quad:getViewport()
-            lg.draw(imgo, quad,  p2wx - width*scale, p2wy, 0,scale,scale,-1,1)
-          else
-            lg.draw(imgo, p2wx - imgo:getWidth()*scale, p2wy, 0,scale,scale,-1,1)
-          end
-
-
-
-            if player2.currentWeapon == i then
-                lg.setColor(255,255,255,255)
-            else
-                lg.setColor(255,0,0,150)
-            end
-
-          if weapon.animated then
-            local quad = assets.weaponsq[weapon.image][1]
-            local _,_,width = quad:getViewport()
-            lg.draw(weapon.image, quad,  p2wx - width*scale, p2wy, 0,scale,scale)
-          else
-            lg.draw(weapon.image, p2wx - weapon.image:getWidth()*scale, p2wy, 0,scale,scale)
-          end
-        end
-
+        drawHearts(player2.hp, player2.color, 'right')
+        drawWeapons(player2.weapons, player2.currentWeapon, 'right')
     end
 end
 

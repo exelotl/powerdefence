@@ -51,7 +51,7 @@ function lighting.renderLights()
 
             -- player2 torch
             if player2 and player2:isAlive() then
-                angle = player2.angle
+                angle = player2.aimAngle
                 x = player2.body:getX()+10*math.cos(angle)
                 y = player2.body:getY()+10*math.sin(angle)
                 lg.draw(assets.lights.torch, x, y, angle, 0.4, 0.4, originx, originy)

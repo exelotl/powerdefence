@@ -7,7 +7,7 @@ local mode = {}
 mode.current = 'day'
 
 mode.lastSunrise = 0
-mode.dayLength = 1 -- seconds
+mode.dayLength = 20 -- seconds
 
 function mode.timeUntilSunset()
     return mode.lastSunrise + mode.dayLength - globalTimer
