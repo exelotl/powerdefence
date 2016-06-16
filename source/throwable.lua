@@ -8,18 +8,26 @@ local throAttrs = {
 
 		animated = false,
 		holder = nil,       -- entity holding the weapon, needs body,angle fields
-        
+
 		maxAmmo = math.huge,
 		ammo = math.huge,
+
+        throwStrength = 200,
+
+		spawnRadius = 16, -- how far in x and y to spawn away from the holder
 	},
     Grenade = {
         name = "grenade",
         image = assets.grenade,
-        
+
         ammoType = Grenade,
         maxAmmo = 50,
         ammo = 50,
         sfx = "whoosh",
+
+        throwStrength = 10,
+
+		spawnRadius = 16, -- how far in x and y to spawn away from the holder
     },
 }
 
@@ -33,32 +41,19 @@ function Throwable:init(holder)
 end
 
 function Throwable:throw()
-        if self.ammo > 0 then
-            local x, y = self.holder.body:getPosition()
-            local a = self.holder.aimAngle
-            local rightAngle = math.pi/2
-            --local norm = math.abs(a) > rightAngle and a+rightAngle or a-rightAngle
-            x = x + 16*math.cos(a)--+ self.offset.shoot*math.cos(norm)
-            y = y + 16*math.sin(a)-- + self.offset.shoot*math.sin(norm)
-            
-            local b = self.ammoType.new(scene, x, y, a)
-			self.ammo = self.ammo - 1
+    if self.ammo > 0 then
+        local x, y = self.holder.body:getPosition()
+        local a = self.holder.aimAngle
+        x = x + self.spawnRadius*math.cos(a)
+        y = y + self.spawnRadius*math.sin(a)
 
-			if self.sfx and assets.sfx[self.sfx] then
-				assets.playSfx(assets.sfx[self.sfx])
-			end
+        local b = self.ammoType.new(scene, x, y, a, self.throwStrength)
+        self.ammo = self.ammo - 1
 
-			if self.ammo <= 0 then
-				self.ammo = 0
-                -- remove the weapon from the holder
-                for i = 1,#self.holder.weapons do
-                    if self.holder.weapons[i] == self then
-                        table.remove(self.holder.throwable, i)
-                        break
-                    end
-                end
-			end
+        if self.sfx and assets.sfx[self.sfx] then
+            assets.playSfx(assets.sfx[self.sfx])
         end
+    end
 end
 
 function Throwable:draw() end
@@ -69,9 +64,7 @@ function Throwable:reload()
     self.ammo = self.maxAmmo
 end
 
--- Generate all the weapon classes based on their attribute definitions
--- All have Weapon as the base class, and properties from the
---  corresponding attribute definition are mixed in.
+
 local throwable = {}
 
 for name,attrs in pairs(throAttrs) do

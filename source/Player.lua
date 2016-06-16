@@ -30,7 +30,7 @@ function Player:init(scene, playerNum, color)
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
                     weapons.Minigun.new(self),weapons.FlameThrower.new(self)}
 	self.currentWeapon = 1
-    
+
     self.throwables = {throwable.Grenade.new(self)}
     self.currentThrowable = 1
 
@@ -188,7 +188,6 @@ function Player:stopShooting()
 end
 
 function Player:throw()
-    print "GRENADE!"
     local throw = self.throwables[self.currentThrowable]
     if throw then throw:throw() end
 end

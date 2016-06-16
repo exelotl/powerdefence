@@ -109,6 +109,17 @@ local collisionCallbacks = {
             impulseBetween(explosionFix:getBody(), enemy.body, explosionForce, false, true)
         end
     },
+    grenadeTriggering = {
+        test = function(aType, bType) return aType == 'grenade' and
+            (bType == 'rocket' or
+             bType == 'bullet' or
+             bType == 'explosion')
+        end,
+        callback = function(grenadeFix, otherFix, coll)
+            local grenade = grenadeFix:getUserData().data
+            grenade:explode()
+        end
+    },
     rocketCollidable = {
         test = function(aType, bType) return aType == 'rocket' and
             (bType == 'enemy' or
@@ -116,7 +127,8 @@ local collisionCallbacks = {
              bType == 'orb' or
              bType == 'rocket' or
              bType == 'bullet' or
-             bType == 'explosion')
+             bType == 'explosion' or
+             bType == 'grenade')
         end,
         callback = function(rocketFix, otherFix, coll)
             local rocket = rocketFix:getUserData().data
