@@ -10,7 +10,7 @@ function Grenade:init(scene, x, y, angle, throwStrength)
     self.body = lp.newBody(scene.world, x, y, 'dynamic')
 
     self.body:setLinearDamping(1)
-    self.body:setAngularDamping(3)
+    self.body:setAngularDamping(2)
     self.body:setBullet(true)
 
     self.shape = lp.newCircleShape(4)

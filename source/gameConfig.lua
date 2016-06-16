@@ -6,7 +6,7 @@ ambientDarkness = 240
 -- whether the sole gamepad should be assigned to player 2
 -- true  => player1:keyboard/mouse                player2:gamepad_1
 -- false => player1:gamepad_1 and keyboard/mouse  player2:gamepad_2
-singleGamepadTwoPlayers = false
+singleGamepadTwoPlayers = true
 
 
 
@@ -64,6 +64,6 @@ defaultAxisConfig2 = {
 }
 
 
-axisConfig1 = benAxisConfig1
-axisConfig2 = benAxisConfig2
+axisConfig1 = defaultAxisConfig1
+axisConfig2 = defaultAxisConfig2
 

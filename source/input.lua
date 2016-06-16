@@ -101,9 +101,12 @@ input.states.playing = {
         player1PrevWeapon = function()
             player1:prevWeapon()
         end,
-        
+
         player1Grenade = function()
             player1:throw()
+        end,
+        player2Grenade = function()
+            player2:throw()
         end,
 
 
@@ -123,7 +126,6 @@ input.states.playing = {
 
     kbdPress = {
         p = 'togglePause'
-        
     },
     kbdRelease = {},
 
@@ -155,6 +157,7 @@ input.states.playing = {
     joy2Press = {
         y = 'player2NextWeapon',
         x = 'player2PrevWeapon',
+        rightshoulder = 'player2Grenade',
     },
     joy2Release = {},
 
