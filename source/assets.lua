@@ -93,12 +93,12 @@ function assets.load()
 	assets.reticule = lg.newImage('assets/reticule.png')
 
 	assets.weapons = {
-        pistol = lg.newImage("assets/pistol.png"),
-        machineGun = lg.newImage("assets/machinegun.png"),
-        rocketLauncher = lg.newImage("assets/rocketlauncher.png"),
-        laserRifle = lg.newImage("assets/laserrifle.png"),
-        minigun = lg.newImage("assets/minigun.png"),
-        flameThrower = lg.newImage("assets/flamethrower.png")
+        pistol = lg.newImage("assets/weapons/pistol.png"),
+        machineGun = lg.newImage("assets/weapons/machinegun.png"),
+        rocketLauncher = lg.newImage("assets/weapons/rocketlauncher.png"),
+        laserRifle = lg.newImage("assets/weapons/laserrifle.png"),
+        minigun = lg.newImage("assets/weapons/minigun.png"),
+        flameThrower = lg.newImage("assets/weapons/flamethrower.png")
     }
 
     assets.weaponsq = {
@@ -113,18 +113,23 @@ function assets.load()
         minigun = makeMask(assets.weapons.minigun),
         flameThrower = makeMask(assets.weapons.flameThrower),
     }
+    -- for animated weapons: the outline is for the first frame only
     assets.weaponso = {
-        pistol = makeOutline(assets.weapons.pistol),
-        machineGun = makeOutline(assets.weapons.machineGun),
-        rocketLauncher = makeOutline(assets.weapons.rocketLauncher),
-        laserRifle = makeOutline(assets.weapons.laserRifle),
-        minigun = makeOutline(assets.weapons.minigun),
-        flameThrower = makeOutline(assets.weapons.flameThrower),
+        pistol = lg.newImage("assets/weapons/pistolo.png"),
+        machineGun = lg.newImage("assets/weapons/machineguno.png"),
+        rocketLauncher = lg.newImage("assets/weapons/rocketlaunchero.png"),
+        laserRifle = lg.newImage("assets/weapons/laserrifleo.png"),
+        minigun = lg.newImage("assets/weapons/miniguno.png"),
+        flameThrower = lg.newImage("assets/weapons/flamethrowero.png"),
     }
+
+    -- no longer needed
+    --[[
     assets.weaponsoq = {
         laserRifle = makeQuads(assets.weaponso.laserRifle, 34, 15),
         minigun = makeQuads(assets.weaponso.minigun, 48, 18),
     }
+    --]]
 
 
 	assets.bullet = lg.newImage("assets/bullet.png")

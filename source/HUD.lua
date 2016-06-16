@@ -43,10 +43,9 @@ function drawWeapons(weapons, currentI, pos)
 
     for i, weapon in ipairs(weapons) do
         local image = assets.weapons[weapon.image]
-        local imgo = assets.weaponso[weapon.image]
+        local outline = assets.weaponso[weapon.image]
 
-        y = y - (image:getHeight() + spacing) * scale
-
+        y = y - (outline:getHeight() + spacing) * scale
 
 
         -- draw outline depending on remaining ammo
@@ -56,27 +55,19 @@ function drawWeapons(weapons, currentI, pos)
             lg.setColor(150,150,150,150)
         end
 
-        local ratio = math.min(weapon.ammo / weapon.maxAmmo, 1)
-        if weapon.animated then
-            local quad = assets.weaponsoq[weapon.image][1]
-            local qx,qy,qw,qh = quad:getViewport()
+        local ratio = math.max(math.min(weapon.ammo / weapon.maxAmmo, 1), 0)
+        local w,h = outline:getDimensions()
+        local gw,gh = lg.getDimensions()
 
-            local leftx = left and x              or x - ratio*qw*scale
-            local draww = left and ratio*qw*scale or qw*scale+5
+        local ox, oy = (left and x-1*scale or x+1*scale), y-1*scale
 
-            lg.setScissor(leftx, y, draww, qh*scale)
-            lg.draw(imgo, quad, x, y, 0, scalex, scale, 1, 1)
-            lg.setScissor()
-        else
-            local w,h = image:getDimensions()
+        local sx = left and ox            or ox - w*ratio*scale
+        local sw = left and w*ratio*scale or gw
 
-            local leftx = left and x             or x - ratio*w*scale
-            local draww = left and ratio*w*scale or imgo:getWidth()*scale+5
-
-            lg.setScissor(leftx, y, draww, h*scale)
-            lg.draw(imgo, x, y, 0, scalex, scale, 1, 1)
-            lg.setScissor()
-        end
+        -- outlines are 2 pixels wider and taller than the weapon image
+        lg.setScissor(sx, 0, sw, gh)
+        lg.draw(outline, ox, oy, 0, scalex, scale)
+        lg.setScissor() -- disable scissor
 
 
         -- draw weapon

@@ -260,6 +260,7 @@ game.playing = {
         if (not player1:isAlive() and (not player2 or not player2:isAlive()))
             or orb.hp <= 0 then
             if not debugMode then
+                screenShake = screenShake + 100*dt
                 initiateGameOver()
             end
         end
