@@ -56,7 +56,7 @@ local function makeSfx(str, count)
 	return t
 end
 
-local sfxIndices = {}
+local sfxIndices = setmetatable({}, {__mode='k'})
 
 function assets.playSfx(t)
 	local n = sfxIndices[t]

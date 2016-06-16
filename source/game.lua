@@ -18,13 +18,10 @@ local debugWorldDraw = require "external/debugworlddraw"
 local game = {}
 
 
-
 player1 = nil
 player2 = nil
 
 orb = nil
-
-
 
 
 -- 'menu' | 'playing' | 'gameOver'
@@ -136,13 +133,6 @@ game.menu = {
 
 
 
-
-
-
-
-
-
-
 -- mode module holds day/night status
 
 
@@ -168,22 +158,25 @@ end
 
 
 
+local loadMap = require "loadMap"
 
 
 game.playing = {
     globals = {},
     load = function()
         game.playing.globals = {} -- reset globals
-        local pg = game.playing.globals
+        local g = game.playing.globals
 
         love.mouse.setVisible(false)
         input.currentState = input.states.playing
 
 
         scene = Scene.new()
+		
+		g.map = loadMap(require("assets/maps/map1"))
 
         -- not game over
-        pg.isDoomed = false
+        g.isDoomed = false
 
         -- set to day time
         mode.lastSunrise = globalTimer
@@ -215,7 +208,6 @@ game.playing = {
     end,
     update = function(dt)
         if paused then return end
-
 
         if mode.isSunset() and not debugMode then
             mode.toggle()
@@ -307,12 +299,13 @@ game.playing = {
     end,
 
     draw = function()
+		local g = game.playing.globals
+		
         lg.setBackgroundColor(253,233,137)
         lg.setColor(255,255,255)
 
-
         cam:attach()
-            lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
+			g.map:draw()
 
             ForceField:drawTop()
             scene:draw()

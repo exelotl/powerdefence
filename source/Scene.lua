@@ -11,7 +11,7 @@ function Scene:init()
 	self.addlist = {}
 	self.removelist = {}
 	self.removePhysicsList = {}
-	self.types = {}      -- map: typestring -> list of entities
+	self.types = {}      -- typestring -> list of entities
 end
 
 function Scene:update(dt)
