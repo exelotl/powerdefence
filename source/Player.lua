@@ -1,6 +1,7 @@
 require 'helperMath'
 local Anim = require "Anim"
 local weapons = require "weapons"
+local throwable = require "throwable"
 
 local Player = oo.class()
 
@@ -29,6 +30,9 @@ function Player:init(scene, playerNum, color)
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
                     weapons.Minigun.new(self),weapons.FlameThrower.new(self)}
 	self.currentWeapon = 1
+    
+    self.throwables = {throwable.Grenade.new(self)}
+    self.currentThrowable = 1
 
 	local x = self.playerNum == 1 and -32 or 32
 	local y = 0
@@ -177,6 +181,12 @@ end
 function Player:stopShooting()
     local gun = self.weapons[self.currentWeapon]
     if gun then gun:stopShooting() end
+end
+
+function Player:throw()
+    print "GRENADE!"
+    local throw = self.throwables[self.currentThrowable]
+    if throw then throw:throw() end
 end
 
 return Player

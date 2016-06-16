@@ -125,11 +125,12 @@ function assets.load()
         laserRifle = makeQuads(assets.weaponso.laserRifle, 34, 15),
         minigun = makeQuads(assets.weaponso.minigun, 48, 18),
     }
-
-
+    
 	assets.bullet = lg.newImage("assets/bullet.png")
     assets.rocket = lg.newImage("assets/rocket.png")
     assets.flame = lg.newImage("assets/flame.png")
+    
+    assets.grenade = lg.newImage("assets/grenade.png")
 
     assets.explosion = lg.newImage("assets/explosion.png")
     assets.explosionq = makeQuads(assets.explosion,64,64)
@@ -170,6 +171,7 @@ function assets.load()
 		orbDestroy = makeSfx("assets/sfx/orb_destroy.wav", 1),
 		laser = makeSfx("assets/sfx/laser.wav", 3),
 		flamethrower = makeSfx("assets/sfx/flame.wav", 3),
+        whoosh = makeSfx("assets/sfx/whoosh.wav",1),
 	}
 end
 

@@ -101,6 +101,10 @@ input.states.playing = {
         player1PrevWeapon = function()
             player1:prevWeapon()
         end,
+        
+        player1Grenade = function()
+            player1:throw()
+        end,
 
 
         player2NextWeapon = function()
@@ -119,12 +123,14 @@ input.states.playing = {
 
     kbdPress = {
         p = 'togglePause'
+        
     },
     kbdRelease = {},
 
 
     mousePress = {
         [1] = 'player1StartShooting',
+        [2] = 'player1Grenade'
     },
     mouseRelease = {
         [1] = 'player1StopShooting',
@@ -142,6 +148,7 @@ input.states.playing = {
     joy1Press = {
         y = 'player1NextWeapon',
         x = 'player1PrevWeapon',
+        rightshoulder = 'player1Grenade',
     },
     joy1Release = {},
 
@@ -441,6 +448,8 @@ end
 
 
 function love.gamepadpressed(j, button)
+    --print(button)
+    
     if singleGamepadTwoPlayers then
         if not input.joy2 then
             input.joy2 = j
