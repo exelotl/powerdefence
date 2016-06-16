@@ -11,7 +11,7 @@ function Scene:init()
 	self.addlist = {}
 	self.removelist = {}
 	self.removePhysicsList = {}
-	self.typelist = {}      -- map: typestring -> list of entities
+	self.types = {}      -- map: typestring -> list of entities
 end
 
 function Scene:update(dt)
@@ -22,8 +22,8 @@ function Scene:update(dt)
 		table.insert(self.entities, e)
 		if e.type then
 			-- register the entity's type
-			if not self.typelist[e.type] then self.typelist[e.type] = {} end
-			table.insert(self.typelist[e.type], e)
+			if not self.types[e.type] then self.types[e.type] = {} end
+			table.insert(self.types[e.type], e)
 		end
 		if e.added then e:added() end
 	end
@@ -56,9 +56,9 @@ function Scene:update(dt)
 
 		-- remove from the type list
 		if e.type then
-			for i, e2 in ipairs(self.typelist[e.type]) do
+			for i, e2 in ipairs(self.types[e.type]) do
 				if e == e2 then
-					table.remove(self.typelist[e.type], i)
+					table.remove(self.types[e.type], i)
 					break
 				end
 			end
@@ -82,14 +82,14 @@ function Scene:update(dt)
 		e:update(dt)
 	end
 	-- account for changed types (if for some reason you want to do this)
-	for type,list in pairs(self.typelist) do
+	for type,list in pairs(self.types) do
 		if #list > 0 then
 			for i=#list, 1 -1 do
 				local e = list[i]
 				if e.type ~= type then
 					table.remove(list, i)
 					if e.type then
-						table.insert(self.typelist[e.type], e)
+						table.insert(self.types[e.type], e)
 					end
 				end
 			end
@@ -98,8 +98,11 @@ function Scene:update(dt)
 end
 
 local nextsortid = 0
-local sortids = {}
-
+local sortids = setmetatable({}, {__mode='k'})
+-- kinda hacky stuff here
+-- if you try to add an entity without a body, it will be assigned an ID
+-- that way, we can ensure that entities are always drawn in the same order
+-- otherwise, we sort by the Y position of the entity
 local function compareEntities(e1, e2)
 	local b1,b2 = e1.body, e2.body
 	if not (b1 and b2) then
@@ -160,14 +163,14 @@ end
 
 
 function Scene:getNearest(type, e1)
-	if not (e1.body and self.typelist[type]) then
+	if not (e1.body and self.types[type]) then
 		return
 	end
 	local x1, y1 = e1.body:getPosition()
 	local nearest = nil
 	local lowestMag = math.huge
 
-	for _,e2 in ipairs(self.typelist[type]) do
+	for _,e2 in ipairs(self.types[type]) do
 		if e2.body and e2 ~= e1 then
 			local x2, y2 = e2.body:getPosition()
 			local dx = x2 - x1

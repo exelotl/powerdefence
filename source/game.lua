@@ -242,8 +242,8 @@ game.playing = {
         -- end of the wave
 
         --[[
-        if mode.current == 'night' and not scene.typelist.enemy or #scene.typelist.enemy == 0 then
-            for _, e = ipairs(scene.typelist.deadEnemy) do
+        if mode.current == 'night' and not scene.types.enemy or #scene.types.enemy == 0 then
+            for _, e = ipairs(scene.types.deadEnemy) do
                 scene:remove(e)
             end
         end
@@ -340,7 +340,7 @@ game.playing = {
             if mode.current == 'day' then
                 drawMessage(('time until sunset: %.1f'):format(mode.timeUntilSunset()))
             else
-                drawMessage(('%d enemies remaining'):format(scene.typelist.enemy and #scene.typelist.enemy or 0))
+                drawMessage(('%d enemies remaining'):format(scene.types.enemy and #scene.types.enemy or 0))
             end
         end
 

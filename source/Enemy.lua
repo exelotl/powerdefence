@@ -6,6 +6,7 @@ local Enemy = oo.class()
 
 function Enemy:init(scene, x, y, shape, defaultAnim, deathAnim)
 	scene:add(self)
+	self.type = "enemy"
 	self.body = lp.newBody(scene.world, x, y, "dynamic")
 	self.body:setFixedRotation(true)
 	--self.shape = lp.newCircleShape(10)
