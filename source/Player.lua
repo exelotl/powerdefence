@@ -26,6 +26,7 @@ function Player:init(scene, playerNum, color)
 	self.aimAngle = 0
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
+	self.timeOfDeath = nil -- assigned to globalTimer upon death
     self.weapons = {weapons.Pistol.new(self), weapons.MachineGun.new(self),
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
                     weapons.Minigun.new(self),weapons.FlameThrower.new(self)}
@@ -153,6 +154,7 @@ function Player:takeDamage(amount)
         self.hp = self.hp - amount
         if not self:isAlive() then
             self.type = 'deadPlayer'
+            self.timeOfDeath = globalTimer
             self.scene:removePhysicsFrom(self)
         end
     end

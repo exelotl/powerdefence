@@ -21,6 +21,7 @@ function Enemy:init(scene, x, y, shape, defaultAnim, deathAnim)
 	self.deathAnim = deathAnim
 	self.anim = Anim.new(defaultAnim)
 	self.depthOffset = 8
+	self.onDeath = nil -- a callback function (optional)
 
 	-- updating the target is expensive
 	self.targetUpdateRate = 0.5
@@ -52,6 +53,7 @@ end
 
 
 function Enemy:draw()
+
 end
 
 function Enemy:takeDamage(amount)
@@ -59,6 +61,7 @@ function Enemy:takeDamage(amount)
     self.hp = self.hp - amount
     if self.hp <= 0 then
 		self.type = 'deadEnemy'
+		if self.onDeath then self.onDeath() end
 		self.anim:play(self.deathAnim)
 		self.scene:removePhysicsFrom(self)
     end

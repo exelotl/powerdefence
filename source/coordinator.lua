@@ -1,11 +1,18 @@
 local Orb = require "Orb"
+local Enemy = require "Enemy"
+local EnemyGrunt = require "EnemyGrunt"
+local EnemySoldier = require "EnemySoldier"
+require "helperMath"
 local game -- cannot require here since it causes a recursive loop
+
 
 -- whereas 'game.lua' deals with the application state: menu/game/game over
 -- the coordinator deals with state within the game world, depending on the
 -- current game mode
 
 coordinator = {}
+
+local enemyTypes = {EnemyGrunt=EnemyGrunt, EnemySoldier=EnemySoldier}
 
 
 -- for use with the current game mode
@@ -15,14 +22,28 @@ local d = coordinator.gameData
 note: not all game modes will use all fields
 
 gameData = {
+-- used by all modes
     mode = 'survival' | 'orb',
+    scene = scene to place the entities into,
+
+    isDoomed = whether the game is lost,
+
     time = 'day' | 'night',  -- needs to be in sync with lighting.amount
     lightingAmount = 0-255, -- opacity for the lighting pass
+
+-- used only by orb mode
     lastSunrise = globalTimer value last time sunrise happened,
     dayLength = time in seconds between lastSunrise and the next sunset,
-    scene = scene to place the entities into,
     orb = the orb entity,
-    isDoomed = whether the game is lost
+
+-- used only by survival mode
+    slowestSpawnInterval = 0.5, -- largest interval in seconds between spawning
+    currentSpawnInterval = ?, -- the current interval between spawns 
+    lastSpawnTime = globalTimer value last time an enemy spawned
+    d.enemyDeaths = MovingAverageRate, -- used to balance the spawn rate
+
+    spawnPDF = {}, -- enemy type probability density function (should sum to 1)
+    startTime = globalTimer value when the game started
 }
 
 --]]
@@ -63,6 +84,9 @@ function coordinator.startGame(scene, mode)
     assert(mode == 'survival' or mode == 'orb')
     game = game or require 'game'
 
+    -- TODO: might want to clean up this global and do something better with it
+    enemiesKilled = 0
+
     coordinator.gameData = {}
     d = coordinator.gameData
 
@@ -70,10 +94,30 @@ function coordinator.startGame(scene, mode)
     d.mode = mode
 
     if mode == 'survival' then
+        -- set to night
+        d.time = 'night'
+        d.lightingAmount = 255 -- full lighting pass
+
+        d.isDoomed = false
+
+        -- remember: larger interval => smaller rate
+        d.slowestSpawnInterval = 0.5
+        d.currentSpawnInterval = d.slowestSpawnInterval
+        d.spawnPDF = {
+            EnemyGrunt = 0.8,
+            EnemySoldier = 0.2,
+        }
+        d.lastSpawnTime = globalTimer
+
+        -- used to balance the spawn rate
+        d.enemyDeaths = MovingAverageRate.new(10) -- seconds, window size
+
+        d.startTime = globalTimer
 
     elseif mode == 'orb' then
+        -- set to day
         d.time = 'day'
-        d.lightingAmount = 0
+        d.lightingAmount = 0 -- no lighting pass
 
         d.lastSunrise = globalTimer
         d.dayLength = 15 -- seconds
@@ -99,9 +143,29 @@ function coordinator.initiateGameOver()
 end
 
 
+function spawn()
+    assert(d.mode == 'survival')
+    local enemyType = enemyTypes[pickFromPDF(d.spawnPDF)]
+    assert(enemyType)
+
+    local spawnAngle = math.random()*2*math.pi
+    local spawnDistance = 500 + math.random()*100
+
+    local sx, sy = fromPolar(spawnDistance, spawnAngle)
+
+    local e = enemyType.new(d.scene, sx, sy)
+    e.onDeath = function() d.enemyDeaths:logEvent() end
+end
+
 
 function coordinator.update(dt)
     if d.mode == 'survival' then
+
+        if globalTimer > d.lastSpawnTime + d.currentSpawnInterval then
+            spawn()
+            d.lastSpawnTime = globalTimer
+            d.currentSpawnInterval = math.min(d.enemyDeaths:getAvgInterval() * 0.8, d.slowestSpawnInterval)
+        end
 
     elseif d.mode == 'orb' then
 
@@ -114,6 +178,7 @@ function coordinator.update(dt)
         if not d.lastSpawnTime then d.lastSpawnTime = globalTimer end
         if globalTimer > d.lastSpawnTime + 15 then
             spawn()
+
             if player1:isAlive() then player1.hp = player1.hp + 1 end
             if player2 and player2:isAlive() then player2.hp = player2.hp + 1 end
 
@@ -189,11 +254,15 @@ end
 
 
 function coordinator.drawMessages()
-    if d.time == 'day' then
-        drawMessage(('time until sunset: %.1f'):format(coordinator.timeUntilSunset()))
-    else
-        local numEnemies = d.scene.typelist.enemy and #d.scene.typelist.enemy or 0
-        drawMessage(('%d enemies remaining'):format(numEnemies))
+    if d.mode == 'survival' then
+        drawMessage(('Time Survived: %.1f'):format(globalTimer - d.startTime))
+    elseif d.mode == 'orb' then
+        if d.time == 'day' then
+            drawMessage(('time until sunset: %.1f'):format(coordinator.timeUntilSunset()))
+        else
+            local numEnemies = d.scene.typelist.enemy and #d.scene.typelist.enemy or 0
+            drawMessage(('%d enemies remaining'):format(numEnemies))
+        end
     end
 end
 
