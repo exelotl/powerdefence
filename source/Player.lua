@@ -144,7 +144,6 @@ end
 -- or when the keyboard keys are released
 function Player:stopMoving()
     self.moving = false
-    --print('stopped walking')
 end
 
 function Player:takeDamage(amount)
@@ -176,20 +175,26 @@ function Player:prevWeapon()
 end
 
 function Player:startShooting()
-    local gun = self.weapons[self.currentWeapon]
-    if gun then
-        gun:startShooting()
+    if self:isAlive() then
+        local gun = self.weapons[self.currentWeapon]
+        if gun then
+            gun:startShooting()
+        end
     end
 end
 
 function Player:stopShooting()
-    local gun = self.weapons[self.currentWeapon]
-    if gun then gun:stopShooting() end
+    if self:isAlive() then
+        local gun = self.weapons[self.currentWeapon]
+        if gun then gun:stopShooting() end
+    end
 end
 
 function Player:throw()
-    local throw = self.throwables[self.currentThrowable]
-    if throw then throw:throw() end
+    if self:isAlive() then
+        local throw = self.throwables[self.currentThrowable]
+        if throw then throw:throw() end
+    end
 end
 
 return Player
