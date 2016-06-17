@@ -1,14 +1,12 @@
 
 local MenuList = require "MenuList"
 local level = require "level"
-local ForceField = require "ForceField"
 local lighting = require "lighting"
 local HUD = require "HUD"
 local Scene = require "Scene"
 local Player = require "Player"
-local Orb = require "Orb"
 local wave = require "wave"
-local mode = require "mode"
+local coordinator = require "coordinator"
 local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
 local debugWorldDraw = require "external/debugworlddraw"
@@ -21,8 +19,6 @@ local game = {}
 
 player1 = nil
 player2 = nil
-
-orb = nil
 
 
 
@@ -184,29 +180,19 @@ game.playing = {
 
 
         scene = Scene.new()
+        coordinator.startGame(scene, 'orb')
 
-        -- not game over
-        pg.isDoomed = false
-
-        -- set to day time
-        mode.lastSunrise = globalTimer
-        mode.current = 'day'
-        lighting.init()
 
         -- makes sure that the player tags in and the color is set correctly to
         -- reflect the choice from the menu
         player2 = nil
         input.joy2 = nil
 
+
+
         player1 = Player.new(scene, 1, game.menu.globals.player1Color)
+        input.joy1 = nil
 
-        --[[
-        local e = EnemyGrunt.new(scene, 100, 100)
-        e.hp = 9999
-        e.moveForce = 0
-        --]]
-
-        orb = Orb.new(scene, 0, 0)
 
         love.resize(love.graphics.getDimensions())
 
@@ -224,46 +210,7 @@ game.playing = {
         end
 
 
-        if mode.isSunset() and not debugMode then
-            mode.toggle()
-            spawn()
-        end
-
-        if globalTimer > lastSpawnTime + 15 then
-            spawn()
-            if player1:isAlive() then player1.hp = player1.hp + 1 end
-            if player2 and player2:isAlive() then player2.hp = player2.hp + 1 end
-
-            for _, w in ipairs(player1.weapons) do
-                w:reload()
-            end
-
-            if player2 then
-                for _, w in ipairs(player2.weapons) do
-                    w:reload()
-                end
-            end
-            lastSpawnTime = globalTimer
-        end
-
-        -- end of the wave
-
-        --[[
-        if mode.current == 'night' and not scene.typelist.enemy or #scene.typelist.enemy == 0 then
-            for _, e = ipairs(scene.typelist.deadEnemy) do
-                scene:remove(e)
-            end
-        end
-        --]]
-
-        -- game over
-        if (not player1:isAlive() and (not player2 or not player2:isAlive()))
-            or orb.hp <= 0 then
-            if not debugMode then
-                screenShake = screenShake + 100*dt
-                initiateGameOver()
-            end
-        end
+        coordinator.update(dt)
 
         scene:update(dt)
 
@@ -277,11 +224,7 @@ game.playing = {
 
 
         cam:attach()
-            lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
-
-            ForceField:drawTop()
-            scene:draw()
-            ForceField:drawBottom()
+            coordinator.draw()
         cam:detach()
 
 
@@ -302,11 +245,7 @@ game.playing = {
         if paused then
             drawMessage('Paused')
         else
-            if mode.current == 'day' then
-                drawMessage(('time until sunset: %.1f'):format(mode.timeUntilSunset()))
-            else
-                drawMessage(('%d enemies remaining'):format(scene.typelist.enemy and #scene.typelist.enemy or 0))
-            end
+            coordinator.drawMessages()
         end
 
         if debugMode then
@@ -318,21 +257,6 @@ game.playing = {
     end,
 }
 
-
-
--- can be called many times but only initiates game over sequence once
-function initiateGameOver()
-    local pg = game.playing.globals
-    if not pg.isDoomed then
-        pg.isDoomed = true
-        assets.playSfx(assets.sfx.orbDestroy)
-
-        -- delay showing the game over screen
-        flux.to({}, 4, {}):oncomplete(function()
-            game.setState('gameOver')
-        end)
-    end
-end
 
 
 

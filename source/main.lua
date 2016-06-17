@@ -7,7 +7,6 @@ local limitFrameRate = require "limitframerate"
 local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
 local lighting = require "lighting"
-local mode = require "mode"
 local game = require "game"
 
 local piefiller = require "external.piefiller"
@@ -46,6 +45,7 @@ function love.load(arg)
 
 
     game.load()
+    lighting.init()
 
 	pie = piefiller:new()
 end

@@ -10,9 +10,9 @@ place tower)
 require 'external/utils'
 require 'gameConfig'
 local lighting = require "lighting"
-local mode = require "mode"
 local Player = require "Player"
 local game = require "game"
+local coordinator = require "coordinator"
 
 local input = {}
 
@@ -384,7 +384,7 @@ function love.keypressed(key, unicode)
         love.event.quit()
     end
     if key == "f3" then
-        mode.toggle()
+        coordinator.toggleDayNight()
     end
 
     if key == "f4" then
