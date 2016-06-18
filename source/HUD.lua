@@ -86,12 +86,18 @@ function drawWeapons(weapons, currentI, pos)
     end
 end
 
+function drawThrowable(throwable, pos)
+
+    
+end
+
 function hud.draw()
     lg.setColor(255, 255, 255, 255)
 
     if player1:isAlive() then
         drawHearts(player1.hp, player1.color, 'left')
         drawWeapons(player1.weapons, player1.currentWeapon, 'left')
+        drawThrowable(player1.throwables[player1.currentThrowable],'left')
     end
 
     lg.setColor(255, 255, 255, 255)

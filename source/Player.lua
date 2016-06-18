@@ -32,7 +32,7 @@ function Player:init(scene, playerNum, color)
                     weapons.Minigun.new(self),weapons.FlameThrower.new(self)}
 	self.currentWeapon = 1
 
-    self.throwables = {throwable.Grenade.new(self)}
+    self.throwables = {throwable.Grenade.new(self),throwable.Glowstick.new(self)}
     self.currentThrowable = 1
 
 	self.placeables = {}
@@ -173,6 +173,14 @@ function Player:prevWeapon()
         self.currentWeapon = #self.weapons
     else
         self.currentWeapon = self.currentWeapon - 1
+    end
+end
+
+function Player:nextThrowable()
+    if self.currentThrowable == #self.throwables then
+        self.currentThrowable = 1
+    else
+        self.currentThrowable = self.currentThrowable + 1
     end
 end
 
