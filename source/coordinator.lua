@@ -38,8 +38,11 @@ gameData = {
 
 -- used only by survival mode
     slowestSpawnInterval = 0.5, -- largest interval in seconds between spawning
-    currentSpawnInterval = ?, -- the current interval between spawns 
+    currentSpawnInterval = ?, -- the current interval between spawns
+    spawnKillRatio = (spawn interval = spawnKillRatio * kill interval), smaller: more difficult. should be <1
+
     lastSpawnTime = globalTimer value last time an enemy spawned
+    lastSpawnRateUpdateTime = the globalTimer value the last time the spawn rate was updated
     d.enemyDeaths = MovingAverageRate, -- used to balance the spawn rate
 
     spawnPDF = {}, -- enemy type probability density function (should sum to 1)
@@ -103,11 +106,13 @@ function coordinator.startGame(scene, mode)
         -- remember: larger interval => smaller rate
         d.slowestSpawnInterval = 0.5
         d.currentSpawnInterval = d.slowestSpawnInterval
+        d.spawnKillRatio = 0.8 -- spawn interval = spawnKillRatio * kill interval
         d.spawnPDF = {
             EnemyGrunt = 0.8,
             EnemySoldier = 0.2,
         }
         d.lastSpawnTime = globalTimer
+        d.lastSpawnRateUpdateTime = globalTimer
 
         -- used to balance the spawn rate
         d.enemyDeaths = MovingAverageRate.new(10) -- seconds, window size
@@ -164,7 +169,17 @@ function coordinator.update(dt)
         if globalTimer > d.lastSpawnTime + d.currentSpawnInterval then
             spawn()
             d.lastSpawnTime = globalTimer
-            d.currentSpawnInterval = math.min(d.enemyDeaths:getAvgInterval() * 0.8, d.slowestSpawnInterval)
+        end
+
+        if globalTimer > d.lastSpawnRateUpdateTime + 3 then
+            d.currentSpawnInterval = math.min(d.enemyDeaths:getAvgInterval() * d.spawnKillRatio, d.slowestSpawnInterval)
+
+            -- interval always shrinks
+            if d.currentSpawnInterval < d.slowestSpawnInterval then
+                d.slowestSpawnInterval = lerp(d.currentSpawnInterval, d.slowestSpawnInterval, 0.5)
+            end
+
+            d.lastSpawnRateUpdateTime = globalTimer
         end
 
     elseif d.mode == 'orb' then
@@ -256,6 +271,7 @@ end
 function coordinator.drawMessages()
     if d.mode == 'survival' then
         drawMessage(('Time Survived: %.1f'):format(globalTimer - d.startTime))
+        drawMessage(('spawns/sec: %.1f'):format(1 / d.currentSpawnInterval), 40)
     elseif d.mode == 'orb' then
         if d.time == 'day' then
             drawMessage(('time until sunset: %.1f'):format(coordinator.timeUntilSunset()))

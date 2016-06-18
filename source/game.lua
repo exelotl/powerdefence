@@ -178,13 +178,14 @@ game.menu = {
 
 
 
-function drawMessage(string)
+function drawMessage(string, y)
+    y = y or 20
     lg.setColor(255,255,255)
     local sw, sh = lg.getDimensions()
     local scalex = sw/BASE_WIDTH
     lg.push()
     lg.scale(scalex)
-    lg.printf(string, 0, 20, BASE_WIDTH-5, 'right')
+    lg.printf(string, 0, y, BASE_WIDTH-5, 'right')
     lg.pop()
 end
 
