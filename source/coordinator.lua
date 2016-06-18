@@ -149,7 +149,7 @@ end
 
 
 function spawn()
-    assert(d.mode == 'survival')
+    assert(d.mode == 'survival') -- TODO: implement for orb mode
     local enemyType = enemyTypes[pickFromPDF(d.spawnPDF)]
     assert(enemyType)
 
