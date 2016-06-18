@@ -91,16 +91,16 @@ function drawThrowable(throwable, pos)
 
     lg.setColor(200,200,200,255)
     local left = pos == 'left'
-    
+
     local x = cam.scale * 50
-    
+
     x = left and x or lg:getWidth() - x
 
     local y = lg.getHeight() * 13/15
-    
+
     lg.circle('fill',x,y,16)
     lg.draw(assets[throwable.name],x,y,0,2,2,8,8)
-    
+
 end
 
 function hud.draw()

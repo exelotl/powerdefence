@@ -82,7 +82,7 @@ function lighting.renderLights()
                     lg.draw(assets.lights.surround, e.body:getX(), e.body:getY(), 0, scale, scale, 256, 256)
                 end
             end
-            
+
             local allGlowsticks = scene.typelist.glowstick
             if allGlowsticks then
                 for _, e in ipairs(allGlowsticks) do

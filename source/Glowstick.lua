@@ -6,7 +6,7 @@ function Glowstick:init(scene, x, y, angle, throwStrength)
     self.throwStrength = throwStrength
     self.maxfuse = 40
     self.fuse = 30 + 10*math.random()
-    
+
     mincolorvalue = 75
     self.r = mincolorvalue + (255 - mincolorvalue) * math.random()
     self.g = mincolorvalue + (255 - mincolorvalue) * math.random()

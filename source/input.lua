@@ -102,13 +102,13 @@ input.states.playing = {
             player1:prevWeapon()
         end,
 
-        player1Grenade = function()
+        player1Throw = function()
             player1:throw()
         end,
-        player2Grenade = function()
+        player2Throw = function()
             player2:throw()
         end,
-        
+
         player1NextThrowable = function()
             player1:nextThrowable()
         end,
@@ -157,7 +157,7 @@ input.states.playing = {
     joy1Press = {
         y = 'player1NextWeapon',
         x = 'player1PrevWeapon',
-        rightshoulder = 'player1Grenade',
+        rightshoulder = 'player1Throw',
         leftshoulder = 'player1NextThrowable',
     },
     joy1Release = {},
@@ -165,7 +165,7 @@ input.states.playing = {
     joy2Press = {
         y = 'player2NextWeapon',
         x = 'player2PrevWeapon',
-        rightshoulder = 'player2Grenade',
+        rightshoulder = 'player2Throw',
         leftshoulder = 'player2NextThrowable',
     },
     joy2Release = {},
@@ -461,7 +461,7 @@ end
 
 function love.gamepadpressed(j, button)
     --print(button)
-    
+
     if singleGamepadTwoPlayers then
         if not input.joy2 then
             input.joy2 = j

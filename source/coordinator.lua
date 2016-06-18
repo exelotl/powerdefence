@@ -54,7 +54,7 @@ gameData = {
 
 
 function coordinator.toggleDayNight()
-    --assert(d.mode == 'orb')
+    assert(d.mode == 'orb') -- only used in orb mode
 
     if     d.time == 'day'   then d.time = 'night'
     elseif d.time == 'night' then d.time = 'day'  end
