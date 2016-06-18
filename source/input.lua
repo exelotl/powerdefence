@@ -108,7 +108,13 @@ input.states.playing = {
         player2Grenade = function()
             player2:throw()
         end,
-
+        
+        player1NextThrowable = function()
+            player1:nextThrowable()
+        end,
+        player2NextThrowable = function()
+            if player2 then player2:nextThrowable() end
+        end,
 
         player2NextWeapon = function()
             if player2 and player2:isAlive() then player2:nextWeapon() end
@@ -125,7 +131,8 @@ input.states.playing = {
 
 
     kbdPress = {
-        p = 'togglePause'
+        p = 'togglePause',
+        q = 'player1NextThrowable',
     },
     kbdRelease = {},
 
@@ -151,6 +158,7 @@ input.states.playing = {
         y = 'player1NextWeapon',
         x = 'player1PrevWeapon',
         rightshoulder = 'player1Grenade',
+        leftshoulder = 'player1NextThrowable',
     },
     joy1Release = {},
 
@@ -158,6 +166,7 @@ input.states.playing = {
         y = 'player2NextWeapon',
         x = 'player2PrevWeapon',
         rightshoulder = 'player2Grenade',
+        leftshoulder = 'player2NextThrowable',
     },
     joy2Release = {},
 

@@ -1,4 +1,6 @@
+local assets = require "assets"
 local Grenade = require "Grenade"
+local Glowstick = require "Glowstick"
 
 
 local throAttrs = {
@@ -21,6 +23,19 @@ local throAttrs = {
         image = assets.grenade,
 
         ammoType = Grenade,
+        maxAmmo = 50,
+        ammo = 50,
+        sfx = "whoosh",
+
+        throwStrength = 10,
+
+		spawnRadius = 16, -- how far in x and y to spawn away from the holder
+    },
+    Glowstick = {
+        name = "glowstick",
+        image = assets.glowstick,
+
+        ammoType = Glowstick,
         maxAmmo = 50,
         ammo = 50,
         sfx = "whoosh",

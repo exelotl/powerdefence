@@ -129,6 +129,7 @@ function assets.load()
     assets.flame = lg.newImage("assets/flame.png")
     
     assets.grenade = lg.newImage("assets/grenade.png")
+    assets.glowstick = lg.newImage("assets/glowstick.png")
 
     assets.explosion = lg.newImage("assets/explosion.png")
     assets.explosionq = makeQuads(assets.explosion,64,64)
