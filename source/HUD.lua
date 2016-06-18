@@ -87,7 +87,19 @@ function drawWeapons(weapons, currentI, pos)
 end
 
 function drawThrowable(throwable, pos)
+    assert(pos == 'left' or pos == 'right')
 
+    lg.setColor(255,255,255,255)
+    local left = pos == 'left'
+    
+    local x = cam.scale * 50
+    
+    x = left and x or lg:getWidth() - x
+
+    local y = lg.getHeight() * 13/15
+    
+    lg.circle('fill',x,y,16)
+    lg.draw(assets[throwable.name],x,y,0,2,2,8,8)
     
 end
 
@@ -105,6 +117,7 @@ function hud.draw()
     if player2 and player2:isAlive() then
         drawHearts(player2.hp, player2.color, 'right')
         drawWeapons(player2.weapons, player2.currentWeapon, 'right')
+        drawThrowable(player1.throwables[player1.currentThrowable],'right')
     end
 end
 
