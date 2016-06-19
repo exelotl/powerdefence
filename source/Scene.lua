@@ -100,7 +100,7 @@ end
 local nextsortid = 0
 local sortids = setmetatable({}, {__mode='k'})
 -- kinda hacky stuff here
--- if you try to add an entity without a body, it will be assigned an ID
+-- if you try to sort an entity without a body, it will be assigned an ID
 -- that way, we can ensure that entities are always drawn in the same order
 -- otherwise, we sort by the Y position of the entity
 local function compareEntities(e1, e2)

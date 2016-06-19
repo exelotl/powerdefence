@@ -10,9 +10,9 @@ place tower)
 require 'external/utils'
 require 'gameConfig'
 local lighting = require "lighting"
-local mode = require "mode"
 local Player = require "Player"
 local game = require "game"
+local coordinator = require "coordinator"
 
 local input = {}
 
@@ -102,6 +102,19 @@ input.states.playing = {
             player1:prevWeapon()
         end,
 
+        player1Grenade = function()
+            player1:throw()
+        end,
+        player2Grenade = function()
+            player2:throw()
+        end,
+        
+        player1NextThrowable = function()
+            player1:nextThrowable()
+        end,
+        player2NextThrowable = function()
+            if player2 then player2:nextThrowable() end
+        end,
 
         player2NextWeapon = function()
             if player2 and player2:isAlive() then player2:nextWeapon() end
@@ -118,13 +131,15 @@ input.states.playing = {
 
 
     kbdPress = {
-        p = 'togglePause'
+        p = 'togglePause',
+        q = 'player1NextThrowable',
     },
     kbdRelease = {},
 
 
     mousePress = {
         [1] = 'player1StartShooting',
+        [2] = 'player1Grenade'
     },
     mouseRelease = {
         [1] = 'player1StopShooting',
@@ -142,12 +157,16 @@ input.states.playing = {
     joy1Press = {
         y = 'player1NextWeapon',
         x = 'player1PrevWeapon',
+        rightshoulder = 'player1Grenade',
+        leftshoulder = 'player1NextThrowable',
     },
     joy1Release = {},
 
     joy2Press = {
         y = 'player2NextWeapon',
         x = 'player2PrevWeapon',
+        rightshoulder = 'player2Grenade',
+        leftshoulder = 'player2NextThrowable',
     },
     joy2Release = {},
 
@@ -301,7 +320,7 @@ function input.checkJoystickAxes()
         -- aiming
         if not dead[axisConfig2.lookX] or not dead[axisConfig2.lookY] then
             local lookx, looky = axes[axisConfig2.lookY], axes[axisConfig2.lookX]
-            player2.angle = math.atan2(lookx, looky)
+            player2.aimAngle = math.atan2(lookx, looky)
             input.joy2LookMag = lookx^2+looky^2
         end
 
@@ -374,7 +393,7 @@ function love.keypressed(key, unicode)
         love.event.quit()
     end
     if key == "f3" then
-        mode.toggle()
+        coordinator.toggleDayNight()
     end
 
     if key == "f4" then
@@ -441,6 +460,8 @@ end
 
 
 function love.gamepadpressed(j, button)
+    --print(button)
+    
     if singleGamepadTwoPlayers then
         if not input.joy2 then
             input.joy2 = j

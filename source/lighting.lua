@@ -1,15 +1,12 @@
 
 require 'gameConfig'
+local coordinator = require 'coordinator'
 
 local lighting = {}
 
--- 0 => no lighting calculation (day)
--- 255 => full night time
-lighting.amount = 0
 
 function lighting.init()
     lighting.canvas = lg.newCanvas()
-    lighting.amount = 0 -- start in day time
 end
 
 
@@ -21,16 +18,19 @@ function lighting.renderLights()
 
 
             -- orb glow
-            lg.setColor(150, 150, 0)
-            local scale = 1 + math.sin(globalTimer*3)*0.2
-            local orbX, orbY = orb.body:getPosition()
-            lg.draw(assets.lights.surround, orbX, orbY, 0, scale, scale, 256, 256)
+            local orb = coordinator.gameData.orb
+            if orb then
+                lg.setColor(150, 150, 0)
+                local scale = 1 + math.sin(globalTimer*3)*0.2
+                local orbX, orbY = orb.body:getPosition()
+                lg.draw(assets.lights.surround, orbX, orbY, 0, scale, scale, 256, 256)
 
-            -- orb mask
-            lg.setColor(50, 50, 50)
-            lg.draw(assets.orbm, assets.orbq[clamp(7 - orb.hp, 1, 7)],
-                orb.body:getX(), orb.body:getY(), 0, 1, 1, 16, 16)
+                -- orb mask
+                lg.setColor(50, 50, 50)
+                lg.draw(assets.orbm, assets.orbq[clamp(7 - orb.hp, 1, 7)],
+                    orb.body:getX(), orb.body:getY(), 0, 1, 1, 16, 16)
 
+            end
 
             lg.setColor(0, 50, 100)
             local originx, originy = 10, 128
@@ -51,7 +51,7 @@ function lighting.renderLights()
 
             -- player2 torch
             if player2 and player2:isAlive() then
-                angle = player2.angle
+                angle = player2.aimAngle
                 x = player2.body:getX()+10*math.cos(angle)
                 y = player2.body:getY()+10*math.sin(angle)
                 lg.draw(assets.lights.torch, x, y, angle, 0.4, 0.4, originx, originy)
@@ -73,11 +73,21 @@ function lighting.renderLights()
                 end
             end
 
+            -- flames
             local allFlames = scene.types.flame
             if allFlames then
                 for _, e in ipairs(allFlames) do
                     lg.setColor(0, 100, 100)
                     local scale = 0.1 + 0.1*math.random()
+                    lg.draw(assets.lights.surround, e.body:getX(), e.body:getY(), 0, scale, scale, 256, 256)
+                end
+            end
+            
+            local allGlowsticks = scene.types.glowstick
+            if allGlowsticks then
+                for _, e in ipairs(allGlowsticks) do
+                    lg.setColor(255 - e.r, 255 - e.g,255 - e.b)
+                    local scale = e.fuse/e.maxfuse
                     lg.draw(assets.lights.surround, e.body:getX(), e.body:getY(), 0, scale, scale, 256, 256)
                 end
             end
@@ -88,7 +98,7 @@ end
 
 function lighting.applyLights()
     lg.setBlendMode('subtract')
-        lg.setColor(255, 255, 255, lighting.amount)
+        lg.setColor(255, 255, 255, coordinator.gameData.lightingAmount)
         lg.draw(lighting.canvas)
     lg.setBlendMode('alpha')
 end

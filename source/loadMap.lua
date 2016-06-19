@@ -15,7 +15,6 @@ return function(map)
 	for i=0, map.width-1 do
 		for j=0, map.height-1 do
 			local tid = mapData[i + j*map.height + 1]
-			print(i, j, map.height, tid)
 			local quad = assets.tileqs[tid]
 			batch:add(quad, i*map.tilewidth, j*map.tileheight)
 		end

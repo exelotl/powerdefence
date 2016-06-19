@@ -8,14 +8,14 @@ local ANIM_FIRE = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,4
 
 function EnemySoldier:init(scene, x, y)
     Enemy.init(self, scene, x, y, lp.newRectangleShape(13, 26), ANIM_WALK, ANIM_DIE)
-	self.hp = 3
+    self.hp = 3
 end
 
 
 function EnemySoldier:draw()
-	local x, y = self.body:getPosition()
-	local scalex = math.abs(self.moveDirection) > math.pi/2 and 1 or -1
-	lg.draw(assets.soldier, assets.soldierq[self.anim.frame], x, y, 0, scalex, 1, 15, 16)
+    local x, y = self.body:getPosition()
+    local scalex = math.abs(self.moveDirection) > math.pi/2 and 1 or -1
+    lg.draw(assets.soldier, assets.soldierq[self.anim.frame], x, y, 0, scalex, 1, 15, 16)
 end
 
 
@@ -23,9 +23,10 @@ end
 function EnemySoldier:burn()
     self.hp = self.hp - 1
     if self.hp <= 0 then
-		self.type = 'deadEnemy'
-		self.anim:play(ANIM_FIRE)
-		self.scene:removePhysicsFrom(self)
+        self.type = 'deadEnemy'
+		if self.onDeath then self.onDeath() end
+        self.anim:play(ANIM_FIRE)
+        self.scene:removePhysicsFrom(self)
     end
 end
 

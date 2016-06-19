@@ -11,7 +11,8 @@ local wepAttrs = {
 		image = nil,
 		-- offset x and y are for drawing the gun itsself
 		-- shoot offset is along the normal to the shooting angle
-		offset = {x = nil, y = nil, shoot=nil},
+		-- spawn offset is distance in x and y from the holder to spawn the ammunition
+		offset = {x = nil, y = nil, shoot=nil, spawn=16},
 		alwaysBehind = false,
 		animated = false,
 		singleShot = true,
@@ -26,7 +27,7 @@ local wepAttrs = {
 		shake = 1,
 		name = "pistol",
 		image = "pistol",
-		offset = {x=-8, y=1, shoot=0},
+		offset = {x=-8, y=1, shoot=0, spawn=20},
 		maxAmmo = math.huge,
 		ammo = math.huge,
 		sfx = "pistol", -- todo: automatically look up SFX based on name of weapon?
@@ -35,7 +36,7 @@ local wepAttrs = {
 		shake = 1,
 		name = 'machineGun',
 		image = "machineGun",
-		offset = {x=5, y=4, shoot=-1},
+		offset = {x=5, y=4, shoot=-1, spawn=30},
 		singleShot = false,
 		rate = 0.1,
 		maxAmmo = 255,
@@ -45,7 +46,7 @@ local wepAttrs = {
 	RocketLauncher = {
 		name = "rocketLauncher",
 		image = "rocketLauncher",
-		offset = {x=28, y=16, shoot=5},
+		offset = {x=28, y=16, shoot=5, spawn=32},
 		alwaysBehind = true,
 		ammoType = Rocket,
 		maxAmmo = 16,
@@ -56,7 +57,7 @@ local wepAttrs = {
 		shake = 1,
 		name = "laserRifle",
 		image = "laserRifle",
-		offset = {x=3, y=5, shoot=0},
+		offset = {x=3, y=5, shoot=0, spawn=30},
 		animated = true,
 		restingAnim = {1},
 		firingAnim = {1, 2, 3, 4, 5, 6, 7, 8, rate=15},
@@ -70,7 +71,7 @@ local wepAttrs = {
 		shake = 2,
 		name = "minigun",
 		image = "minigun",
-		offset = {x=3, y=8, shoot=0},
+		offset = {x=3, y=8, shoot=0, spawn=44},
 		animated = true,
 		restingAnim = {1},
 		firingAnim = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, rate=25},
@@ -83,7 +84,7 @@ local wepAttrs = {
 	FlameThrower = {
 		name = "flamethrower",
 		image = "flameThrower",
-		offset = {x=12, y=0, shoot=3},
+		offset = {x=12, y=0, shoot=3, spawn=35},
 		singleShot = false,
 		rate = 0.05,
 		maxAmmo = 512,
@@ -139,8 +140,8 @@ function Weapon:update(dt)
             local a = self.holder.aimAngle
             local rightAngle = math.pi/2
             local norm = math.abs(a) > rightAngle and a+rightAngle or a-rightAngle
-            x = x + 16*math.cos(a) + self.offset.shoot*math.cos(norm)
-            y = y + 16*math.sin(a) + self.offset.shoot*math.sin(norm)
+            x = x + self.offset.spawn*math.cos(a) + self.offset.shoot*math.cos(norm)
+            y = y + self.offset.spawn*math.sin(a) + self.offset.shoot*math.sin(norm)
 
             local b = self.ammoType.new(scene, x, y, a)
             self.lastShotTime = globalTimer

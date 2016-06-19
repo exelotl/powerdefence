@@ -1,4 +1,19 @@
 
+-- from: https://github.com/stevedonovan/Microlight
+-- O(n)
+function ifilter(t,pred,...)
+    local res,k = setmetatable({},getmetatable(t)), 1
+    pred = pred or true
+    for i = 1,#t do
+        if pred(t[i],...) then
+            res[k] = t[i]
+            k = k + 1
+        end
+    end
+    return res
+end
+
+
 function clamp(val, lower, upper)
     return math.min(math.max(val, lower), upper)
 end

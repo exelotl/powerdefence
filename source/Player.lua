@@ -1,6 +1,7 @@
 require 'helperMath'
 local Anim = require "Anim"
 local weapons = require "weapons"
+local throwable = require "throwable"
 
 local Player = oo.class()
 
@@ -25,10 +26,18 @@ function Player:init(scene, playerNum, color)
 	self.aimAngle = 0
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
+	self.timeOfDeath = nil -- assigned to globalTimer upon death
     self.weapons = {weapons.Pistol.new(self), weapons.MachineGun.new(self),
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
                     weapons.Minigun.new(self),weapons.FlameThrower.new(self)}
 	self.currentWeapon = 1
+
+    self.throwables = {throwable.Grenade.new(self),throwable.Glowstick.new(self)}
+    self.currentThrowable = 1
+
+	self.placeables = {}
+    self.currentPlaceable = 1
+
 
 	local x = self.playerNum == 1 and -32 or 32
 	local y = 0
@@ -136,7 +145,6 @@ end
 -- or when the keyboard keys are released
 function Player:stopMoving()
     self.moving = false
-    --print('stopped walking')
 end
 
 function Player:takeDamage(amount)
@@ -146,6 +154,7 @@ function Player:takeDamage(amount)
         self.hp = self.hp - amount
         if not self:isAlive() then
             self.type = 'deadPlayer'
+            self.timeOfDeath = globalTimer
             self.scene:removePhysicsFrom(self)
         end
     end
@@ -167,16 +176,35 @@ function Player:prevWeapon()
     end
 end
 
+function Player:nextThrowable()
+    if self.currentThrowable == #self.throwables then
+        self.currentThrowable = 1
+    else
+        self.currentThrowable = self.currentThrowable + 1
+    end
+end
+
 function Player:startShooting()
-    local gun = self.weapons[self.currentWeapon]
-    if gun then
-        gun:startShooting()
+    if self:isAlive() then
+        local gun = self.weapons[self.currentWeapon]
+        if gun then
+            gun:startShooting()
+        end
     end
 end
 
 function Player:stopShooting()
-    local gun = self.weapons[self.currentWeapon]
-    if gun then gun:stopShooting() end
+    if self:isAlive() then
+        local gun = self.weapons[self.currentWeapon]
+        if gun then gun:stopShooting() end
+    end
+end
+
+function Player:throw()
+    if self:isAlive() then
+        local throw = self.throwables[self.currentThrowable]
+        if throw then throw:throw() end
+    end
 end
 
 return Player

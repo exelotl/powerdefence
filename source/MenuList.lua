@@ -4,7 +4,7 @@ function MenuList:init(x, y)
 	self.x, self.y = x, y
 	self.width = 500
 	self.spacing = 75
-	self.items = {}
+	self.items = {} -- text and callback
 	self.hoverPos = 0
 end
 
@@ -15,6 +15,12 @@ end
 
 function MenuList:add(text, callback)
 	table.insert(self.items, {text=text, callback=callback})
+end
+
+-- nil if none selected
+function MenuList:currentItemText()
+    local currentItem = self.items[self.hoverPos]
+    return currentItem and currentItem.text or nil
 end
 
 local prevMouseDown = false

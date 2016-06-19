@@ -1,16 +1,10 @@
 
 local MenuList = require "MenuList"
-local level = require "level"
-local ForceField = require "ForceField"
 local lighting = require "lighting"
 local HUD = require "HUD"
 local Scene = require "Scene"
 local Player = require "Player"
-local Orb = require "Orb"
-local wave = require "wave"
-local mode = require "mode"
-local EnemyGrunt = require "EnemyGrunt"
-local EnemySoldier = require "EnemySoldier"
+local coordinator = require "coordinator"
 local debugWorldDraw = require "external/debugworlddraw"
 
 
@@ -20,8 +14,6 @@ local game = {}
 
 player1 = nil
 player2 = nil
-
-orb = nil
 
 
 -- 'menu' | 'playing' | 'gameOver'
@@ -56,18 +48,39 @@ game.menu = {
         love.mouse.setVisible(true)
         input.currentState = input.states.menu
 
-        g.menuList = MenuList.new(0, 300)
-        g.menuList:add('Start Game', function()
-            game.setState('playing')
+        -- main menu
+        g.mainMenu = MenuList.new(0, 300)
+        g.mainMenu:add('Start Game', function()
+            g.currentMenu = g.gameModeMenu
         end)
-        g.menuList:add('Cycle Player 1 Color', function()
+        g.mainMenu:add('Cycle Player 1 Color', function()
             if g.player1Color == 4 then g.player1Color = 1
             else g.player1Color = g.player1Color + 1 end
         end)
-        g.menuList:add('Cycle Player 2 Color', function()
+        g.mainMenu:add('Cycle Player 2 Color', function()
             if g.player2Color == 4 then g.player2Color = 1
             else g.player2Color = g.player2Color + 1 end
         end)
+        g.mainMenu:add('Exit', function()
+            love.event.quit()
+        end)
+
+        -- game mode selection menu
+        g.gameModeMenu = MenuList.new(0, 300)
+        g.gameModeMenu:add('Orb Mode', function()
+            g.gameMode = 'orb'
+            game.setState('playing')
+        end)
+        g.gameModeMenu:add('Survival Mode', function()
+            g.gameMode = 'survival'
+            game.setState('playing')
+        end)
+        g.gameModeMenu:add('Back', function()
+            g.currentMenu = g.mainMenu
+        end)
+
+
+        g.currentMenu = g.mainMenu
 
         lg.setFont(assets.menufont)
 
@@ -77,7 +90,7 @@ game.menu = {
 
     end,
     update = function(dt)
-        local menuList = game.menu.globals.menuList
+        local menuList = game.menu.globals.currentMenu
 
         menuList:centerH()
         local _, h = lg.getDimensions()
@@ -95,70 +108,73 @@ game.menu = {
         local yscale = lg.getHeight()/1080
         lg.draw(assets.title, 0, 0, 0, xscale,yscale)
 
-        g.menuList:draw()
+        g.currentMenu:draw()
 
-        local width, height = lg.getDimensions()
-        local playerIndent = lg.getWidth()/8
-        local sf = lg.getWidth()/100
+        if g.currentLevel == g.mainMenu then
 
-        -- draw masks around player 1
-        lg.setColor(255,255,255)
-        local mask = assets.playerm[g.player1Color]
-        local quad = assets.playerq[1]
-        lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8+1, 8)
-        lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8, 8+1)
-        lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8-1, 8)
-        lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8, 8-1)
+            local width, height = lg.getDimensions()
+            local playerIndent = lg.getWidth()/8
+            local sf = lg.getWidth()/100
 
-        -- draw player 1
-        lg.draw(assets.player[g.player1Color], assets.playerq[1],
-            playerIndent, height/2, 0, sf, sf, 8, 8)
+            -- draw masks around player 1
+            lg.setColor(255,255,255)
+            local mask = assets.playerm[g.player1Color]
+            local quad = assets.playerq[1]
+            lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8+1, 8)
+            lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8, 8+1)
+            lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8-1, 8)
+            lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8, 8-1)
+
+            -- draw player 1
+            lg.draw(assets.player[g.player1Color], assets.playerq[1],
+                playerIndent, height/2, 0, sf, sf, 8, 8)
 
 
-        -- draw masks around player 2
-        lg.setColor(255,255,255)
-        mask = assets.playerm[g.player2Color]
-        quad = assets.playerq[5]
-        lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8+1, 8)
-        lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8, 8+1)
-        lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8-1, 8)
-        lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8, 8-1)
+            -- draw masks around player 2
+            lg.setColor(255,255,255)
+            mask = assets.playerm[g.player2Color]
+            quad = assets.playerq[5]
+            lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8+1, 8)
+            lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8, 8+1)
+            lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8-1, 8)
+            lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8, 8-1)
 
-        -- draw player2
-        lg.draw(assets.player[g.player2Color], assets.playerq[5],
-            width-playerIndent, height/2, 0, sf, sf, 8, 8)
+            -- draw player2
+            lg.draw(assets.player[g.player2Color], assets.playerq[5],
+                width-playerIndent, height/2, 0, sf, sf, 8, 8)
+
+        elseif g.currentMenu == g.gameModeMenu then
+            local itm = g.gameModeMenu:currentItemText()
+            local txt = nil
+
+            if itm == 'Orb Mode' then
+                txt = 'Protect the orb. Kill all humans!'
+            elseif itm == 'Survival Mode' then
+                txt = 'Survive for as long as possible, no orb to protect'
+            end
+
+            if txt then
+                lg.setColor(150,50,50)
+                local sw, sh = lg.getDimensions()
+                lg.push()
+                lg.printf(txt, 0, sh*0.8, sw, 'center')
+                lg.pop()
+            end
+        end
     end,
 }
 
 
-
-
--- mode module holds day/night status
-
-
-local redSpawner = nil
-local greenSpawner = nil
-local currentLevel = nil
-
-local lastSpawnTime = 0
-function spawn()
-    wave.new(scene, 0.1, 25, 500, EnemySoldier)
-    wave.new(scene, 0.3, 75, 500, EnemyGrunt)
-end
-
-function drawMessage(string)
+function drawMessage(string, y)
+    y = y or 20
     lg.setColor(255,255,255)
     local sw, sh = lg.getDimensions()
     local scalex = sw/BASE_WIDTH
     lg.push()
     lg.scale(scalex)
-    lg.printf(string, 0, 20, BASE_WIDTH-5, 'right')
+    lg.printf(string, 0, y, BASE_WIDTH-5, 'right')
     lg.pop()
 end
-
-
-
-local loadMap = require "loadMap"
 
 
 game.playing = {
@@ -172,16 +188,8 @@ game.playing = {
 
 
         scene = Scene.new()
-		
-		g.map = loadMap(require("assets/maps/map1"))
 
-        -- not game over
-        g.isDoomed = false
-
-        -- set to day time
-        mode.lastSunrise = globalTimer
-        mode.current = 'day'
-        lighting.init()
+        coordinator.startGame(scene, game.menu.globals.gameMode)
 
         -- makes sure that the player tags in and the color is set correctly to
         -- reflect the choice from the menu
@@ -189,14 +197,8 @@ game.playing = {
         input.joy2 = nil
 
         player1 = Player.new(scene, 1, game.menu.globals.player1Color)
+        input.joy1 = nil
 
-        --[[
-        local e = EnemyGrunt.new(scene, 100, 100)
-        e.hp = 9999
-        e.moveForce = 0
-        --]]
-
-        orb = Orb.new(scene, 0, 0)
 
         love.resize(love.graphics.getDimensions())
 
@@ -207,94 +209,18 @@ game.playing = {
 
     end,
     update = function(dt)
-        if paused then return end
 
-        if mode.isSunset() and not debugMode then
-            mode.toggle()
-            spawn()
+        if paused then
+            -- prevent the global timer from increasing
+            globalTimer = globalTimer - dt
+            return
         end
 
-        if globalTimer > lastSpawnTime + 15 then
-            spawn()
-            if player1:isAlive() then player1.hp = player1.hp + 1 end
-            if player2 and player2:isAlive() then player2.hp = player2.hp + 1 end
-
-            for _, w in ipairs(player1.weapons) do
-                w:reload()
-            end
-
-            if player2 then
-                for _, w in ipairs(player2.weapons) do
-                    w:reload()
-                end
-            end
-            lastSpawnTime = globalTimer
-        end
-
-        -- end of the wave
-
-        --[[
-        if mode.current == 'night' and not scene.types.enemy or #scene.types.enemy == 0 then
-            for _, e = ipairs(scene.types.deadEnemy) do
-                scene:remove(e)
-            end
-        end
-        --]]
-
-        -- game over
-        if (not player1:isAlive() and (not player2 or not player2:isAlive()))
-            or orb.hp <= 0 then
-            if not debugMode then
-                initiateGameOver()
-            end
-        end
+        coordinator.update(dt)
 
         scene:update(dt)
 
-        -- camera
-        -- if both alive: lerp between
-        -- if one player dead or not spawned: focus completely on the other
-        -- if all dead or not spawned: look at 0, 0
-        local p1x, p1y = 0, 0
-        if player1:isAlive() then
-            local dist1 = 75
-            p1x, p1y = player1.body:getPosition()
-            if input.lastAim == 'joy' then dist1 = dist1*input.joy1LookMag end
-            p1x = p1x + math.cos(player1.aimAngle) * dist1
-            p1y = p1y + math.sin(player1.aimAngle) * dist1
-        end
-
-		local p2x, p2y = 0, 0
-		if player2 and player2:isAlive() then
-            local dist2 = 75*input.joy2LookMag
-			p2x, p2y = player2.body:getPosition()
-			p2x = p2x + math.cos(player2.angle) * dist2
-			p2y = p2y + math.sin(player2.angle) * dist2
-
-			if not player1:isAlive() then p1x, p1y = p2x, p2y end
-		else
-		    p2x, p2y = p1x, p1y
-		end
-
-		local ratio = 0.5
-		local targetx = lerp(p1x, p2x, ratio)
-		local targety = lerp(p1y, p2y, ratio)
-
-		local lerpAmount = math.min(dt*5, 1)
-		currentCamX = lerp(cam.x, targetx, lerpAmount)
-		currentCamY = lerp(cam.y, targety, lerpAmount)
-		if debugMode then
-            cam.x = currentCamX
-            cam.y = currentCamY
-        else
-            cam.x = currentCamX + math.random(-screenShake, screenShake)
-            cam.y = currentCamY + math.random(-screenShake, screenShake)
-        end
-
-		screenShake = screenShake - dt*screenShake*10
-		if screenShake < 0.1 then
-			screenShake = 0
-		end
+        updateCamera(dt)
 
     end,
 
@@ -305,11 +231,7 @@ game.playing = {
         lg.setColor(255,255,255)
 
         cam:attach()
-			g.map:draw()
-
-            ForceField:drawTop()
-            scene:draw()
-            ForceField:drawBottom()
+            coordinator.draw()
         cam:detach()
 
 
@@ -330,11 +252,7 @@ game.playing = {
         if paused then
             drawMessage('Paused')
         else
-            if mode.current == 'day' then
-                drawMessage(('time until sunset: %.1f'):format(mode.timeUntilSunset()))
-            else
-                drawMessage(('%d enemies remaining'):format(scene.types.enemy and #scene.types.enemy or 0))
-            end
+            coordinator.drawMessages()
         end
 
         if debugMode then
@@ -345,23 +263,6 @@ game.playing = {
         end
     end,
 }
-
-
-
--- can be called many times but only initiates game over sequence once
-function initiateGameOver()
-    local pg = game.playing.globals
-    if not pg.isDoomed then
-        pg.isDoomed = true
-        assets.playSfx(assets.sfx.orbDestroy)
-
-        -- delay showing the game over screen
-        flux.to({}, 4, {}):oncomplete(function()
-            game.setState('gameOver')
-        end)
-    end
-end
-
 
 
 
