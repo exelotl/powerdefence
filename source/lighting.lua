@@ -16,7 +16,6 @@ function lighting.renderLights()
         lg.rectangle('fill', 0, 0, lg.getDimensions())
         cam:attach()
 
-
             -- orb glow
             local orb = coordinator.gameData.orb
             if orb then
@@ -83,11 +82,12 @@ function lighting.renderLights()
                 end
             end
 
+            -- glowsticks
             local allGlowsticks = scene.typelist.glowstick
             if allGlowsticks then
                 for _, e in ipairs(allGlowsticks) do
                     lg.setColor(255 - e.r, 255 - e.g,255 - e.b)
-                    local scale = e.fuse/e.maxfuse
+                    local scale = e.fuse/e.maxfuse * (0.95 + 0.05*math.random())
                     lg.draw(assets.lights.surround, e.body:getX(), e.body:getY(), 0, scale, scale, 256, 256)
                 end
             end

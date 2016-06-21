@@ -139,7 +139,7 @@ input.states.playing = {
 
     mousePress = {
         [1] = 'player1StartShooting',
-        [2] = 'player1Grenade'
+        [2] = 'player1Throw'
     },
     mouseRelease = {
         [1] = 'player1StopShooting',

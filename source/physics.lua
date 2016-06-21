@@ -128,7 +128,8 @@ local collisionCallbacks = {
              bType == 'rocket' or
              bType == 'bullet' or
              bType == 'explosion' or
-             bType == 'grenade')
+             bType == 'grenade' or
+             bType == 'glowstick')
         end,
         callback = function(rocketFix, otherFix, coll)
             local rocket = rocketFix:getUserData().data

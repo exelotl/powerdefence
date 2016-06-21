@@ -113,7 +113,7 @@ game.menu = {
 
         g.currentMenu:draw()
 
-        if g.currentLevel == g.mainMenu then
+        if g.currentMenu == g.mainMenu then
 
             local width, height = lg.getDimensions()
             local playerIndent = lg.getWidth()/8
@@ -180,12 +180,23 @@ game.menu = {
 
 function drawMessage(string, y)
     y = y or 20
-    lg.setColor(255,255,255)
     local sw, sh = lg.getDimensions()
     local scalex = sw/BASE_WIDTH
     lg.push()
     lg.scale(scalex)
     lg.printf(string, 0, y, BASE_WIDTH-5, 'right')
+    lg.pop()
+end
+
+function drawCenterMessage(string)
+    local sw, sh = lg.getDimensions()
+    local scale = sw/BASE_WIDTH
+    lg.push()
+    lg.scale(scale)
+    -- makes the screen width appear to be == BASE_WIDTH
+    -- center the text in the given rectangle, so make the rectangle start at
+    -- x=0 and fill the entire width to center correctly
+    lg.printf(string, 0, (sh/2)/scale, BASE_WIDTH, 'center')
     lg.pop()
 end
 

@@ -127,7 +127,7 @@ function assets.load()
 	assets.bullet = lg.newImage("assets/bullet.png")
     assets.rocket = lg.newImage("assets/rocket.png")
     assets.flame = lg.newImage("assets/flame.png")
-    
+
     assets.grenade = lg.newImage("assets/grenade.png")
     assets.glowstick = lg.newImage("assets/glowstick.png")
 
@@ -171,7 +171,15 @@ function assets.load()
 		laser = makeSfx("assets/sfx/laser.wav", 3),
 		flamethrower = makeSfx("assets/sfx/flame.wav", 3),
         whoosh = makeSfx("assets/sfx/whoosh.wav",1),
+        debugBlip = makeSfx("assets/sfx/debug_blip.ogg", 10),
 	}
+end
+
+-- use the debug blip to make a sound when something happens. Eg I used
+-- it to determine that all the enemy target updates were happening at
+-- once
+function debugBlip()
+    assets.playSfx(assets.sfx.debugBlip)
 end
 
 return assets

@@ -47,6 +47,7 @@ gameData = {
 
     spawnPDF = {}, -- enemy type probability density function (should sum to 1)
     startTime = globalTimer value when the game started
+    gameOverTime = nil until game over, then set to the time of game over
 }
 
 --]]
@@ -119,6 +120,8 @@ function coordinator.startGame(scene, mode)
 
         d.startTime = globalTimer
 
+        d.gameOverTime = nil
+
     elseif mode == 'orb' then
         -- set to day
         d.time = 'day'
@@ -136,19 +139,30 @@ end
 
 -- can be called many times but only initiates game over sequence once
 function coordinator.initiateGameOver()
-    if not d.isDoomed then
-        d.isDoomed = true
-        assets.playSfx(assets.sfx.orbDestroy)
+    assert(d.mode == 'orb' or d.mode == 'survival')
 
-        -- delay showing the game over screen
-        flux.to({}, 4, {}):oncomplete(function()
-            game.setState('gameOver')
-        end)
+    if not d.isDoomed then
+        if d.mode == 'orb' then
+            d.isDoomed = true
+            assets.playSfx(assets.sfx.orbDestroy)
+
+            -- delay showing the game over screen
+            flux.to({}, 4, {}):oncomplete(function()
+                game.setState('gameOver')
+            end)
+        elseif d.mode == 'survival' then
+            d.isDoomed = true
+            -- delay registering clicks as taking back to main menu
+            flux.to({}, 1, {}):oncomplete(function()
+                input.currentState = input.states.gameOverScreen
+            end)
+            d.gameOverTime = globalTimer
+        end
     end
 end
 
 
-function spawn()
+local function spawn()
     assert(d.mode == 'survival') -- TODO: implement for orb mode
     local enemyType = enemyTypes[pickFromPDF(d.spawnPDF)]
     assert(enemyType)
@@ -166,12 +180,14 @@ end
 function coordinator.update(dt)
     if d.mode == 'survival' then
 
-        if globalTimer > d.lastSpawnTime + d.currentSpawnInterval then
+        -- don't spawn new enemies if game over
+        if not d.isDoomed and globalTimer > d.lastSpawnTime + d.currentSpawnInterval then
             spawn()
             d.lastSpawnTime = globalTimer
         end
 
-        if globalTimer > d.lastSpawnRateUpdateTime + 3 then
+        -- don't update the spawn rate if game over
+        if not d.isDoomed and globalTimer > d.lastSpawnRateUpdateTime + 3 then
             d.currentSpawnInterval = math.min(d.enemyDeaths:getAvgInterval() * d.spawnKillRatio, d.slowestSpawnInterval)
 
             -- interval always shrinks
@@ -180,6 +196,10 @@ function coordinator.update(dt)
             end
 
             d.lastSpawnRateUpdateTime = globalTimer
+        end
+
+        if not player1:isAlive() and (not player2 or not player2:isAlive())then
+            coordinator.initiateGameOver()
         end
 
     elseif d.mode == 'orb' then
@@ -219,8 +239,8 @@ function coordinator.update(dt)
         --]]
 
         -- game over
-        if (not player1:isAlive() and (not player2 or not player2:isAlive()))
-            or d.orb.hp <= 0 then
+        local allDead = not player1:isAlive() and (not player2 or not player2:isAlive())
+        if allDead or d.orb.hp <= 0 then
             if not debugMode then
                 screenShake = screenShake + 100*dt
                 coordinator.initiateGameOver()
@@ -259,7 +279,7 @@ end
 
 -- draw things which depend on the current state of the game
 function coordinator.draw()
-    lg.draw(assets.background,-512,-512,0,1,1,0,0,0,0)
+    lg.draw(assets.background, -512, -512)
 
     drawForceFieldTop()
     scene:draw()
@@ -269,9 +289,16 @@ end
 
 
 function coordinator.drawMessages()
+    lg.setColor(200, 200, 200)
     if d.mode == 'survival' then
-        drawMessage(('Time Survived: %.1f'):format(globalTimer - d.startTime))
+        local timeSurvived = d.isDoomed and d.gameOverTime - d.startTime or globalTimer - d.startTime
+        drawMessage(('Time Survived: %.1f'):format(timeSurvived))
         drawMessage(('spawns/sec: %.1f'):format(1 / d.currentSpawnInterval), 40)
+
+        if d.isDoomed then
+            lg.setColor(255,255,255)
+            drawCenterMessage('Game Over')
+        end
     elseif d.mode == 'orb' then
         if d.time == 'day' then
             drawMessage(('time until sunset: %.1f'):format(coordinator.timeUntilSunset()))
@@ -280,6 +307,7 @@ function coordinator.drawMessages()
             drawMessage(('%d enemies remaining'):format(numEnemies))
         end
     end
+
 end
 
 

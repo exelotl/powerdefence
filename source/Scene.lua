@@ -11,6 +11,8 @@ function Scene:init()
 	self.addlist = {}
 	self.removelist = {}
 	self.removePhysicsList = {}
+	self.updateTypeList = {} -- elements: {entity, newType} entities who's type string has changed
+
 	self.typelist = {}      -- map: typestring -> list of entities
 end
 
@@ -26,6 +28,20 @@ function Scene:update(dt)
 			table.insert(self.typelist[e.type], e)
 		end
 		if e.added then e:added() end
+	end
+
+	-- update the typelist
+	for _,item in ipairs(self.updateTypeList) do
+        local e = item.entity
+		if e.type then
+		    -- remove the old type mapping
+			removeFirst(self.typelist[e.type], e)
+
+            -- register the new type
+            e.type = item.newType
+			if not self.typelist[e.type] then self.typelist[e.type] = {} end
+			table.insert(self.typelist[e.type], e)
+		end
 	end
 
 	-- remove physics from all from the remove physics list
@@ -56,12 +72,7 @@ function Scene:update(dt)
 
 		-- remove from the type list
 		if e.type then
-			for i, e2 in ipairs(self.typelist[e.type]) do
-				if e == e2 then
-					table.remove(self.typelist[e.type], i)
-					break
-				end
-			end
+		    removeFirst(self.typelist[e.type], e)
 		end
 
 		-- remove from the physics world
@@ -158,29 +169,46 @@ function Scene:removePhysicsFrom(e)
     e.fixture:setMask(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16)
 end
 
+function Scene:changeTypeString(e, newType)
+    table.insert(self.updateTypeList, {entity=e, newType=newType})
+end
 
-function Scene:getNearest(type, e1)
-	if not (e1.body and self.typelist[type]) then
-		return
-	end
+
+-- return {entity, dx, dy, magsq} for the nearest entity to the given entity. If
+-- none are found returns nil
+function Scene:getNearest(searchTypes, e1)
+	assert(e1 and e1.body)
+
 	local x1, y1 = e1.body:getPosition()
 	local nearest = nil
-	local lowestMag = math.huge
+	local lowestMagSq = math.huge
+	local dx, dy
 
-	for _,e2 in ipairs(self.typelist[type]) do
-		if e2.body and e2 ~= e1 then
-			local x2, y2 = e2.body:getPosition()
-			local dx = x2 - x1
-			local dy = y2 - y1
-			local mag = dx*dx + dy*dy
-			if mag < lowestMag then
-				lowestMag = mag
-				nearest = e2
-			end
-		end
-	end
+	for _,type in ipairs(searchTypes) do
+        -- it doesn't matter if this is nil
+        local searchEs = self.typelist[type]
 
-	return nearest
+        if searchEs then
+            for _,e2 in ipairs(searchEs) do
+                if e2.body and e2 ~= e1 then
+                    local x2, y2 = e2.body:getPosition()
+                    dx = x2 - x1
+                    dy = y2 - y1
+                    local magSq = dx*dx + dy*dy
+                    if magSq < lowestMagSq then
+                        lowestMagSq = magSq
+                        nearest = e2
+                    end
+                end
+            end
+        end
+    end
+
+    if not nearest then
+        return nil
+    else
+        return {entity=nearest, dx=dx, dy=dy, magSq=lowestMagSq}
+    end
 end
 
 return Scene

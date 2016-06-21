@@ -151,17 +151,6 @@ function Weapon:update(dt)
 			if self.sfx and assets.sfx[self.sfx] then
 				assets.playSfx(assets.sfx[self.sfx])
 			end
-
-			if self.ammo <= 0 then
-				self.ammo = 0
-                -- remove the weapon from the holder
-                for i = 1,#self.holder.weapons do
-                    if self.holder.weapons[i] == self then
-                        table.remove(self.holder.weapons, i)
-                        break
-                    end
-                end
-			end
         end
     end
 end

@@ -71,6 +71,11 @@ function Player:update(dt)
             self.weapons[self.currentWeapon]:update(dt)
         end
 
+        if self.weapons[self.currentWeapon].ammo <= 0 then
+            table.remove(self.weapons, self.currentWeapon)
+            self:prevWeapon()
+        end
+
         local x, y = self.body:getPosition()
         -- must overcome walking otherwise can escape map using explosions and stay still
         local force = self.moveForce + 100
@@ -153,9 +158,9 @@ function Player:takeDamage(amount)
 
         self.hp = self.hp - amount
         if not self:isAlive() then
-            self.type = 'deadPlayer'
+            self.scene:changeTypeString(self, 'deadPlayer')
             self.timeOfDeath = globalTimer
-            self.scene:removePhysicsFrom(self)
+            --self.scene:removePhysicsFrom(self)
         end
     end
 end
