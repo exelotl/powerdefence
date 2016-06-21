@@ -63,7 +63,7 @@ function lighting.renderLights()
             end
 
             -- explosions
-            local allExplosions = scene.typelist.explosion
+            local allExplosions = scene.types.explosion
             if allExplosions then
                 for _, e in ipairs(allExplosions) do
                     lg.setColor(50, 50, 50)
@@ -73,7 +73,7 @@ function lighting.renderLights()
             end
 
             -- flames
-            local allFlames = scene.typelist.flame
+            local allFlames = scene.types.flame
             if allFlames then
                 for _, e in ipairs(allFlames) do
                     lg.setColor(0, 100, 100)
@@ -83,7 +83,7 @@ function lighting.renderLights()
             end
 
             -- glowsticks
-            local allGlowsticks = scene.typelist.glowstick
+            local allGlowsticks = scene.types.glowstick
             if allGlowsticks then
                 for _, e in ipairs(allGlowsticks) do
                     lg.setColor(255 - e.r, 255 - e.g,255 - e.b)

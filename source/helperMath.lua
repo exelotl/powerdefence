@@ -26,6 +26,74 @@ function fromPolar(mag, dir)
     return mag*math.cos(dir), mag*math.sin(dir)
 end
 
+
+--[[
+
+- Deals with radians
+- Can deal with angles greater than 2 pi and negative angles
+- positive angles are clockwise from the horizontal (to match love)
+- an angle on a quadrant boundary returns the next boundary going anti-clockwise
+
+Quadrant numbering:
+    |
+  2 | 1
+----+----
+  3 | 4
+    |
+
+Algorithm from: http://stackoverflow.com/a/13975876
+--]]
+function getQuadrant(angle)
+    angle = -angle -- without this: positive angles are anti-clockwise
+    angle = angle % (math.pi*2)
+    angle = math.floor(angle/(math.pi/2))
+    return (angle % 4) + 1
+end
+
+-- returns whether the angle points left or right
+-- straight up: left, straight down: right (see getQuadrant documentation)
+function angleLeftRight(angle)
+    local q = getQuadrant(angle)
+    return (q == 2 or q == 3) and 'left' or 'right'
+end
+
+-- returns whether an angle points up or down
+-- left: down, right: up (see getQuadrant documentation)
+function angleUpDown(angle)
+    local q = getQuadrant(angle)
+    return (q == 1 or q == 2) and 'up' or 'down'
+end
+
+local function testGetQuadrant()
+    local ff = math.pi/4 -- 45 degrees
+
+    assert(getQuadrant(ff) == 1)
+    assert(getQuadrant(-ff) == 4)
+
+    assert(getQuadrant(3*ff) == 2)
+    assert(getQuadrant(-3*ff) == 3)
+
+    assert(getQuadrant(5*ff) == 3)
+    assert(getQuadrant(-5*ff) == 2)
+
+    assert(getQuadrant(7*ff) == 4)
+    assert(getQuadrant(-7*ff) == 1)
+
+    local ra = math.pi/2 -- 90 degrees
+
+    assert(getQuadrant(0) == 1)
+    assert(getQuadrant(ra) == 2)
+    assert(getQuadrant(2*ra) == 3)
+    assert(getQuadrant(3*ra) == 4)
+    assert(getQuadrant(4*ra) == 1)
+
+    assert(getQuadrant(-0) == 1)
+    assert(getQuadrant(-ra) == 4)
+    assert(getQuadrant(-2*ra) == 3)
+    assert(getQuadrant(-3*ra) == 2)
+    assert(getQuadrant(-4*ra) == 1)
+end
+
 -- pick from a probability density function
 -- eg {a = 0.4, b = 0.6} means return a: 40% of the time and b: 60%
 -- probabilities should sum to 1

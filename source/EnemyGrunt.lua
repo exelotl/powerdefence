@@ -13,7 +13,7 @@ end
 
 function EnemyGrunt:draw()
 	local x, y = self.body:getPosition()
-	local scalex = math.abs(self.moveDirection) > math.pi/2 and 1 or -1
+	local scalex = angleLeftRight(self.moveDirection) == 'left' and 1 or -1
 	lg.draw(assets.grunt, assets.gruntq[self.anim.frame], x, y, 0, scalex, 1, 15, 16)
 end
 

@@ -56,7 +56,7 @@ local function makeSfx(str, count)
 	return t
 end
 
-local sfxIndices = {}
+local sfxIndices = setmetatable({}, {__mode='k'})
 
 function assets.playSfx(t)
 	local n = sfxIndices[t]
@@ -69,6 +69,9 @@ end
 function assets.load()
 
 	lg.setDefaultFilter("nearest", "nearest") -- for sharp pixel zooming
+
+	assets.tiles = lg.newImage("assets/tiles.png")
+	assets.tileqs = makeQuads(assets.tiles, 32, 32)
 
 	assets.player = {
 		lg.newImage("assets/player_blue.png"),

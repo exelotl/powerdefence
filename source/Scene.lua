@@ -11,9 +11,9 @@ function Scene:init()
 	self.addlist = {}
 	self.removelist = {}
 	self.removePhysicsList = {}
-	self.updateTypeList = {} -- elements: {entity, newType} entities who's type string has changed
 
-	self.typelist = {}      -- map: typestring -> list of entities
+	self.updateTypes = {} -- elements: {entity, newType} entities who's type string has changed
+	self.types = {}      -- typestring -> list of entities
 end
 
 function Scene:update(dt)
@@ -24,23 +24,23 @@ function Scene:update(dt)
 		table.insert(self.entities, e)
 		if e.type then
 			-- register the entity's type
-			if not self.typelist[e.type] then self.typelist[e.type] = {} end
-			table.insert(self.typelist[e.type], e)
+			if not self.types[e.type] then self.types[e.type] = {} end
+			table.insert(self.types[e.type], e)
 		end
 		if e.added then e:added() end
 	end
 
-	-- update the typelist
-	for _,item in ipairs(self.updateTypeList) do
+	-- update the types
+	for _,item in ipairs(self.updateTypes) do
         local e = item.entity
 		if e.type then
 		    -- remove the old type mapping
-			removeFirst(self.typelist[e.type], e)
+			removeFirst(self.types[e.type], e)
 
             -- register the new type
             e.type = item.newType
-			if not self.typelist[e.type] then self.typelist[e.type] = {} end
-			table.insert(self.typelist[e.type], e)
+			if not self.types[e.type] then self.types[e.type] = {} end
+			table.insert(self.types[e.type], e)
 		end
 	end
 
@@ -72,7 +72,7 @@ function Scene:update(dt)
 
 		-- remove from the type list
 		if e.type then
-		    removeFirst(self.typelist[e.type], e)
+		    removeFirst(self.types[e.type], e)
 		end
 
 		-- remove from the physics world
@@ -93,14 +93,14 @@ function Scene:update(dt)
 		e:update(dt)
 	end
 	-- account for changed types (if for some reason you want to do this)
-	for type,list in pairs(self.typelist) do
+	for type,list in pairs(self.types) do
 		if #list > 0 then
 			for i=#list, 1 -1 do
 				local e = list[i]
 				if e.type ~= type then
 					table.remove(list, i)
 					if e.type then
-						table.insert(self.typelist[e.type], e)
+						table.insert(self.types[e.type], e)
 					end
 				end
 			end
@@ -109,8 +109,11 @@ function Scene:update(dt)
 end
 
 local nextsortid = 0
-local sortids = {}
-
+local sortids = setmetatable({}, {__mode='k'})
+-- kinda hacky stuff here
+-- if you try to sort an entity without a body, it will be assigned an ID
+-- that way, we can ensure that entities are always drawn in the same order
+-- otherwise, we sort by the Y position of the entity
 local function compareEntities(e1, e2)
 	local b1,b2 = e1.body, e2.body
 	if not (b1 and b2) then
@@ -170,7 +173,7 @@ function Scene:removePhysicsFrom(e)
 end
 
 function Scene:changeTypeString(e, newType)
-    table.insert(self.updateTypeList, {entity=e, newType=newType})
+    table.insert(self.updateTypes, {entity=e, newType=newType})
 end
 
 
@@ -186,7 +189,7 @@ function Scene:getNearest(searchTypes, e1)
 
 	for _,type in ipairs(searchTypes) do
         -- it doesn't matter if this is nil
-        local searchEs = self.typelist[type]
+        local searchEs = self.types[type]
 
         if searchEs then
             for _,e2 in ipairs(searchEs) do

@@ -97,11 +97,11 @@ function updateCamera(dt)
 
     if debugMode then
         -- no camera shake
-        cam.x = currentCamX
-        cam.y = currentCamY
+        cam.x = math.floor(currentCamX)
+        cam.y = math.floor(currentCamY)
     else
-        cam.x = currentCamX + math.random(-screenShake, screenShake)
-        cam.y = currentCamY + math.random(-screenShake, screenShake)
+        cam.x = math.floor(currentCamX + math.random(-screenShake, screenShake))
+        cam.y = math.floor(currentCamY + math.random(-screenShake, screenShake))
     end
 
     screenShake = screenShake - dt*screenShake*10

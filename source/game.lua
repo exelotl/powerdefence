@@ -12,11 +12,8 @@ local debugWorldDraw = require "external/debugworlddraw"
 local game = {}
 
 
-
 player1 = nil
 player2 = nil
-
-
 
 
 -- 'menu' | 'playing' | 'gameOver'
@@ -168,16 +165,6 @@ game.menu = {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 function drawMessage(string, y)
     y = y or 20
     local sw, sh = lg.getDimensions()
@@ -201,29 +188,24 @@ function drawCenterMessage(string)
 end
 
 
-
-
-
 game.playing = {
     globals = {},
     load = function()
         game.playing.globals = {} -- reset globals
-        local pg = game.playing.globals
+        local g = game.playing.globals
 
         love.mouse.setVisible(false)
         input.currentState = input.states.playing
 
 
         scene = Scene.new()
-        coordinator.startGame(scene, game.menu.globals.gameMode)
 
+        coordinator.startGame(scene, game.menu.globals.gameMode)
 
         -- makes sure that the player tags in and the color is set correctly to
         -- reflect the choice from the menu
         player2 = nil
         input.joy2 = nil
-
-
 
         player1 = Player.new(scene, 1, game.menu.globals.player1Color)
         input.joy1 = nil
@@ -238,12 +220,12 @@ game.playing = {
 
     end,
     update = function(dt)
+
         if paused then
             -- prevent the global timer from increasing
             globalTimer = globalTimer - dt
             return
         end
-
 
         coordinator.update(dt)
 
@@ -254,9 +236,10 @@ game.playing = {
     end,
 
     draw = function()
+		local g = game.playing.globals
+		
         lg.setBackgroundColor(253,233,137)
         lg.setColor(255,255,255)
-
 
         cam:attach()
             coordinator.draw()
@@ -291,8 +274,6 @@ game.playing = {
         end
     end,
 }
-
-
 
 
 

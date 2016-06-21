@@ -2,6 +2,7 @@ local Orb = require "Orb"
 local Enemy = require "Enemy"
 local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
+local loadMap = require "loadMap"
 require "helperMath"
 local game -- cannot require here since it causes a recursive loop
 
@@ -80,10 +81,6 @@ end
 
 
 
-
-
-
-
 function coordinator.startGame(scene, mode)
     assert(mode == 'survival' or mode == 'orb')
     game = game or require 'game'
@@ -97,7 +94,9 @@ function coordinator.startGame(scene, mode)
     d.scene = scene
     d.mode = mode
 
-    if mode == 'survival' then
+    d.map = loadMap(require("assets/maps/map1"))
+
+	if mode == 'survival' then
         -- set to night
         d.time = 'night'
         d.lightingAmount = 255 -- full lighting pass
@@ -231,8 +230,8 @@ function coordinator.update(dt)
 
 
         --[[
-        if mode.current == 'night' and not scene.typelist.enemy or #scene.typelist.enemy == 0 then
-            for _, e = ipairs(scene.typelist.deadEnemy) do
+        if mode.current == 'night' and not scene.types.enemy or #scene.types.enemy == 0 then
+            for _, e = ipairs(scene.types.deadEnemy) do
                 scene:remove(e)
             end
         end
@@ -248,7 +247,6 @@ function coordinator.update(dt)
         end
     end
 end
-
 
 
 local function drawForceFieldTop()
@@ -279,13 +277,12 @@ end
 
 -- draw things which depend on the current state of the game
 function coordinator.draw()
-    lg.draw(assets.background, -512, -512)
+	d.map:draw()
 
     drawForceFieldTop()
     scene:draw()
     drawForceFieldBottom()
 end
-
 
 
 function coordinator.drawMessages()
@@ -303,7 +300,7 @@ function coordinator.drawMessages()
         if d.time == 'day' then
             drawMessage(('time until sunset: %.1f'):format(coordinator.timeUntilSunset()))
         else
-            local numEnemies = d.scene.typelist.enemy and #d.scene.typelist.enemy or 0
+            local numEnemies = d.scene.types.enemy and #d.scene.types.enemy or 0
             drawMessage(('%d enemies remaining'):format(numEnemies))
         end
     end
@@ -311,7 +308,4 @@ function coordinator.drawMessages()
 end
 
 
-
-
 return coordinator
-

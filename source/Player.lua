@@ -98,22 +98,17 @@ function Player:draw()
     local gun = self.weapons[self.currentWeapon]
 
     if self:isAlive() then
-        local angle = self.aimAngle
-        local scalex = 1
-        if math.abs(angle) > math.pi / 2 then
-            scalex =  -1
-            angle = angle + math.pi
-        end
+        local dir = angleLeftRight(self.aimAngle)
         if self.moving then
-            self.anim:play(scalex == 1 and ANIM_WALK_R or ANIM_WALK_L)
+            self.anim:play(dir == 'right' and ANIM_WALK_R or ANIM_WALK_L)
         else
-            self.anim:play(scalex == 1 and ANIM_IDLE_R or ANIM_IDLE_L)
+            self.anim:play(dir == 'right' and ANIM_IDLE_R or ANIM_IDLE_L)
         end
 
         if gun then
             if gun.alwaysBehind
             then gunInFront = false
-            else gunInFront = 0 <= self.aimAngle and self.aimAngle <= math.pi end
+            else gunInFront = angleUpDown(self.aimAngle) == 'down' end
         end
 
         if gun and not gunInFront then gun:draw() end
