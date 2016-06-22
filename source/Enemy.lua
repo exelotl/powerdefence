@@ -1,4 +1,5 @@
 require 'helperMath'
+local PeriodicEvent = require "PeriodicEvent"
 local Anim = require "Anim"
 
 local Enemy = oo.class()
@@ -29,9 +30,7 @@ function Enemy:init(scene, x, y, shape, defaultAnim, deathAnim)
     -- rate of spawning
 	self.normalPickTargetInterval = 0.5 + math.random()*0.5
 	self.wonderingPickTargetInterval = 2 + math.random()*1 -- when no target
-	self.pickTargetInterval = self.normalPickTargetInterval
-
-	self.lastTargetUpdateTime = globalTimer
+	self.pickTargetEvent = PeriodicEvent.new(self.normalPickTargetInterval)
 end
 
 function Enemy:isAlive()
@@ -45,21 +44,18 @@ function Enemy:pickTarget()
     if res then
         self.target = res.entity
         self.moveDirection = math.atan2(res.dy, res.dx)
-        self.pickTargetInterval = self.normalPickTargetInterval
+        self.pickTargetEvent:setInterval(self.normalPickTargetInterval)
     else
         self.target = nil
         self.moveDirection = math.random()*2*math.pi
-        self.pickTargetInterval = self.wonderingPickTargetInterval
+        self.pickTargetEvent:setInterval(self.wonderingPickTargetInterval)
     end
 end
 
 function Enemy:update(dt)
     if self:isAlive() then
-        if globalTimer > self.lastTargetUpdateTime + self.pickTargetInterval then
-            -- debugBlip()
-
+        if self.pickTargetEvent:isReady() then
             self:pickTarget()
-            self.lastTargetUpdateTime = globalTimer
         end
 
         self.body:applyForce(fromPolar(self.moveForce, self.moveDirection))

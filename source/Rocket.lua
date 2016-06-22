@@ -1,5 +1,6 @@
 local Rocket = oo.class()
 
+local PeriodicEvent = require "PeriodicEvent"
 local explosion = require "Explosion"
 
 function Rocket:init(scene, x, y, angle)
@@ -22,19 +23,18 @@ function Rocket:init(scene, x, y, angle)
     -- multiple bodies in the same update
     self.hasExploded = false
 
-    self.lastOutOfBoundsCheck = 0
+    self.checkOutOfBoundsEvent = PeriodicEvent.new(1)
 end
 
 function Rocket:update(dt)
 
     -- remove rockets that have escaped the map
-    if globalTimer > self.lastOutOfBoundsCheck + 1 then
+    if self.checkOutOfBoundsEvent:isReady() then
         local x, y = self.body:getPosition()
         local mapRadius = 2000
         if x^2+y^2 > mapRadius^2 then
             self.scene:remove(self)
         end
-        self.lastOutOfBoundsCheck = globalTimer
     end
 
 end

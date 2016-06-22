@@ -1,4 +1,5 @@
 local Bullet = oo.class()
+local PeriodicEvent = require "PeriodicEvent"
 
 function Bullet:init(scene, x, y, angle)
 	self.type = "bullet"
@@ -16,20 +17,19 @@ function Bullet:init(scene, x, y, angle)
     self.body:setLinearVelocity(self.speed*math.cos(self.angle),
                                 self.speed*math.sin(self.angle))
 
-    self.lastOutOfBoundsCheck = 0
+    self.checkOutOfBoundsEvent = PeriodicEvent.new(1)
 end
 
 
 function Bullet:update(dt)
 
     -- remove bullets that have escaped the map
-    if globalTimer > self.lastOutOfBoundsCheck + 1 then
+    if self.checkOutOfBoundsEvent:isReady() then
         local x, y = self.body:getPosition()
         local mapRadius = 2000
         if x^2+y^2 > mapRadius^2 then
             self.scene:remove(self)
         end
-        self.lastOutOfBoundsCheck = globalTimer
     end
 
 end

@@ -3,6 +3,7 @@ local Enemy = require "Enemy"
 local EnemyGrunt = require "EnemyGrunt"
 local EnemySoldier = require "EnemySoldier"
 local loadMap = require "loadMap"
+local PeriodicEvent = require "PeriodicEvent"
 require "helperMath"
 local game -- cannot require here since it causes a recursive loop
 
@@ -39,11 +40,11 @@ gameData = {
 
 -- used only by survival mode
     slowestSpawnInterval = 0.5, -- largest interval in seconds between spawning
-    currentSpawnInterval = ?, -- the current interval between spawns
     spawnKillRatio = (spawn interval = spawnKillRatio * kill interval), smaller: more difficult. should be <1
 
-    lastSpawnTime = globalTimer value last time an enemy spawned
-    lastSpawnRateUpdateTime = the globalTimer value the last time the spawn rate was updated
+    spawnEvent
+    spawnRateUpdateEvent
+
     d.enemyDeaths = MovingAverageRate, -- used to balance the spawn rate
 
     spawnPDF = {}, -- enemy type probability density function (should sum to 1)
@@ -105,19 +106,18 @@ function coordinator.startGame(scene, mode)
 
         -- remember: larger interval => smaller rate
         d.slowestSpawnInterval = 0.5
-        d.currentSpawnInterval = d.slowestSpawnInterval
         d.spawnKillRatio = 0.8 -- spawn interval = spawnKillRatio * kill interval
         d.spawnPDF = {
             EnemyGrunt = 0.8,
             EnemySoldier = 0.2,
         }
-        d.lastSpawnTime = globalTimer
-        d.lastSpawnRateUpdateTime = globalTimer
+        d.spawnEvent = PeriodicEvent.new(d.slowestSpawnInterval) -- seconds
+        d.spawnRateUpdateEvent = PeriodicEvent.new(3) -- seconds
 
         -- used to balance the spawn rate
         d.enemyDeaths = MovingAverageRate.new(10) -- seconds, window size
 
-        d.startTime = globalTimer
+        d.startTime = globalTimer -- used to determine the score
 
         d.gameOverTime = nil
 
@@ -128,6 +128,9 @@ function coordinator.startGame(scene, mode)
 
         d.lastSunrise = globalTimer
         d.dayLength = 15 -- seconds
+
+        --TODO
+        --d.spawnEvent = PeriodicEvent.new(15) -- seconds
 
         d.orb = Orb.new(scene, 0, 0)
 
@@ -179,22 +182,28 @@ end
 function coordinator.update(dt)
     if d.mode == 'survival' then
 
-        -- don't spawn new enemies if game over
-        if not d.isDoomed and globalTimer > d.lastSpawnTime + d.currentSpawnInterval then
-            spawn()
-            d.lastSpawnTime = globalTimer
-        end
+        -- don't spawn new enemies or update the spawn rate if game over
+        if not d.isDoomed then
 
-        -- don't update the spawn rate if game over
-        if not d.isDoomed and globalTimer > d.lastSpawnRateUpdateTime + 3 then
-            d.currentSpawnInterval = math.min(d.enemyDeaths:getAvgInterval() * d.spawnKillRatio, d.slowestSpawnInterval)
-
-            -- interval always shrinks
-            if d.currentSpawnInterval < d.slowestSpawnInterval then
-                d.slowestSpawnInterval = lerp(d.currentSpawnInterval, d.slowestSpawnInterval, 0.5)
+            -- spawn
+            if d.spawnEvent:isReady() then
+                spawn()
             end
 
-            d.lastSpawnRateUpdateTime = globalTimer
+            -- update spawn rate
+            if d.spawnRateUpdateEvent:isReady() then
+                local newInterval = math.min(
+                    d.enemyDeaths:getAvgInterval() * d.spawnKillRatio,
+                    d.slowestSpawnInterval)
+
+                d.spawnEvent:setInterval(newInterval)
+
+                -- interval always shrinks
+                if newInterval < d.slowestSpawnInterval then
+                    d.slowestSpawnInterval = lerp(newInterval, d.slowestSpawnInterval, 0.5)
+                end
+            end
+
         end
 
         if not player1:isAlive() and (not player2 or not player2:isAlive())then
@@ -209,8 +218,7 @@ function coordinator.update(dt)
         end
 
 
-        if not d.lastSpawnTime then d.lastSpawnTime = globalTimer end
-        if globalTimer > d.lastSpawnTime + 15 then
+        if d.spawnEvent:isReady() then
             spawn()
 
             if player1:isAlive() then player1.hp = player1.hp + 1 end
@@ -290,7 +298,7 @@ function coordinator.drawMessages()
     if d.mode == 'survival' then
         local timeSurvived = d.isDoomed and d.gameOverTime - d.startTime or globalTimer - d.startTime
         drawMessage(('Time Survived: %.1f'):format(timeSurvived))
-        drawMessage(('spawns/sec: %.1f'):format(1 / d.currentSpawnInterval), 40)
+        drawMessage(('spawns/sec: %.1f'):format(1 / d.spawnEvent.interval), 40)
 
         if d.isDoomed then
             lg.setColor(255,255,255)
