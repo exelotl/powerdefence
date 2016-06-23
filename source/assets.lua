@@ -136,6 +136,8 @@ function assets.load()
 
     assets.explosion = lg.newImage("assets/explosion.png")
     assets.explosionq = makeQuads(assets.explosion,64,64)
+    
+    assets.healthpickup = lg.newImage("assets/healthpack.png")
 
 	assets.grunt = love.graphics.newImage("assets/grunt.png")
 	assets.gruntq = makeQuads(assets.grunt, 32, 32)

@@ -150,6 +150,15 @@ local collisionCallbacks = {
             enemy:burn() -- different death animation from takeDamage
         end
     },
+    healthPlayer = {
+        test = function(aType, bType) return aType == 'healthpickup' and bType == 'player' end,
+        callback = function(hpFix, playerFix, coll)
+            local player = playerFix:getUserData().data
+            player.hp = player.hp + 1
+            local helpik =  hpFix:getUserData().data
+            helpik.scene:remove(helpik)
+        end
+    },
 }
 
 
