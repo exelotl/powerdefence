@@ -2,6 +2,8 @@
 local Bullet = require "Bullet"
 local Rocket = require "Rocket"
 local Flame = require "Flame"
+local Laser = require "Laser"
+local SniperRound = require "SniperRound"
 local Anim = require "Anim"
 
 
@@ -63,8 +65,9 @@ local wepAttrs = {
 		firingAnim = {1, 2, 3, 4, 5, 6, 7, 8, rate=15},
 		singleShot = false,
 		rate = 0.1,
-		maxAmmo = 32,
-		ammo = 32,
+        ammoType =  Laser,
+		maxAmmo = 100,
+		ammo = 100,
 		sfx = "laser",
 	},
 	Minigun = {
@@ -91,7 +94,20 @@ local wepAttrs = {
 		ammo = 512,
 		ammoType = Flame,
 		sfx = "flamethrower",
-	}
+	},
+    SniperRifle = {
+        name = "sniperrifle",
+        image = "sniperRifle",
+        alwaysFront = true,
+        offset = {x=10, y=3, shoot = -3, spawn = 30},
+        singleShot = true,
+        rate = 1,
+        maxAmmo = 20,
+        ammo = 20,
+        ammoType = SniperRound,
+        sfx = "sniper",
+        shake = 5,
+    },
 }
 
 local Weapon = oo.class(wepAttrs.None)

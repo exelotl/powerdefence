@@ -101,7 +101,8 @@ function assets.load()
         rocketLauncher = lg.newImage("assets/weapons/rocketlauncher.png"),
         laserRifle = lg.newImage("assets/weapons/laserrifle.png"),
         minigun = lg.newImage("assets/weapons/minigun.png"),
-        flameThrower = lg.newImage("assets/weapons/flamethrower.png")
+        flameThrower = lg.newImage("assets/weapons/flamethrower.png"),
+        sniperRifle = lg.newImage("assets/weapons/sniper.png"),
     }
 
     assets.weaponsq = {
@@ -115,6 +116,7 @@ function assets.load()
         laserRifle = makeMask(assets.weapons.laserRifle),
         minigun = makeMask(assets.weapons.minigun),
         flameThrower = makeMask(assets.weapons.flameThrower),
+        sniperRifle = makeMask(assets.weapons.sniperRifle),
     }
     -- for animated weapons: the outline is for the first frame only
     assets.weaponso = {
@@ -124,12 +126,15 @@ function assets.load()
         laserRifle = lg.newImage("assets/weapons/laserrifleo.png"),
         minigun = lg.newImage("assets/weapons/miniguno.png"),
         flameThrower = lg.newImage("assets/weapons/flamethrowero.png"),
+        sniperRifle = lg.newImage("assets/weapons/snipero.png"),
     }
 
 
 	assets.bullet = lg.newImage("assets/bullet.png")
     assets.rocket = lg.newImage("assets/rocket.png")
     assets.flame = lg.newImage("assets/flame.png")
+    assets.laser = lg.newImage("assets/laser.png")
+    assets.sniperRound = lg.newImage("assets/SniperRound.png")
 
     assets.grenade = lg.newImage("assets/grenade.png")
     assets.glowstick = lg.newImage("assets/glowstick.png")
@@ -177,6 +182,7 @@ function assets.load()
 		flamethrower = makeSfx("assets/sfx/flame.wav", 3),
         whoosh = makeSfx("assets/sfx/whoosh.wav",1),
         debugBlip = makeSfx("assets/sfx/debug_blip.ogg", 10),
+        sniper = makeSfx("assets/sfx/sniper2.wav",1),
 	}
 end
 
