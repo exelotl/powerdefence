@@ -12,7 +12,8 @@ local wepAttrs = {
         name = "none",
         image = nil,
         -- offset x and y are for drawing the gun itsself
-        -- shoot offset is along the normal to the shooting angle
+        -- shoot offset is along the normal to the shooting angle (assume line
+        --     of fire is horizontal line in image)
         -- spawn offset is distance in x and y from the holder to spawn the ammunition
         offset = {x = nil, y = nil, shoot=nil, spawn=16},
         alwaysBehind = false,
@@ -50,6 +51,17 @@ local wepAttrs = {
         image = "rocketLauncher",
         offset = {x=28, y=16, shoot=5, spawn=32},
         alwaysBehind = true,
+        ammoType = Rocket,
+        maxAmmo = 16,
+        ammo = 16,
+        sfx = "rocketLaunch",
+        shake = 1,
+    },
+    StupidRocketLauncher = {
+        name = "rocketLauncher",
+        image = "stupidRocketLauncher",
+        offset = {x=31, y=49, shoot=39, spawn=32},
+        alwaysFront = true,
         ammoType = Rocket,
         maxAmmo = 16,
         ammo = 16,
@@ -120,13 +132,24 @@ function Weapon:init(holder)
     end
 end
 
+function Weapon:getAngle()
+    local aim = self.holder.aimAngle
+    if angleLeftRight(aim) == 'left' then
+        return aim - self.holder.gunOffsetAngle
+    else
+        return aim + self.holder.gunOffsetAngle
+    end
+end
+
 function Weapon:draw()
     local x, y = self.holder.body:getPosition()
-    local angle = self.holder.aimAngle
+    local angle = self:getAngle()
+
     local image = assets.weapons[self.image]
 
+    -- flip once the _player_ faces left, not the gun
     local scalex = 1
-    if math.abs(angle) > math.pi / 2 then
+    if angleLeftRight(self.holder.aimAngle) == 'left' then
         scalex =  -1
         angle = angle + math.pi
     end
@@ -154,15 +177,18 @@ function Weapon:update(dt)
 
         if fire and self.ammo > 0 then
             local x, y = self.holder.body:getPosition()
-            local a = self.holder.aimAngle
+            local a = self:getAngle()
             local rightAngle = math.pi/2
-            local norm = math.abs(a) > rightAngle and a+rightAngle or a-rightAngle
+            -- flip the normal once the _player_ faces left, not the gun
+            local norm = angleLeftRight(self.holder.aimAngle) == 'left' and a+rightAngle or a-rightAngle
             x = x + self.offset.spawn*math.cos(a) + self.offset.shoot*math.cos(norm)
             y = y + self.offset.spawn*math.sin(a) + self.offset.shoot*math.sin(norm)
 
             local b = self.ammoType.new(scene, x, y, a)
             self.lastShotTime = globalTimer
-            self.ammo = self.ammo - 1
+            if not debugMode then
+                self.ammo = self.ammo - 1
+            end
             screenShake = screenShake + self.shake
 
             if self.sfx and assets.sfx[self.sfx] then

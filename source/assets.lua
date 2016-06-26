@@ -99,6 +99,7 @@ function assets.load()
         pistol = lg.newImage("assets/weapons/pistol.png"),
         machineGun = lg.newImage("assets/weapons/machinegun.png"),
         rocketLauncher = lg.newImage("assets/weapons/rocketlauncher.png"),
+        stupidRocketLauncher = lg.newImage("assets/weapons/stupidrocketlauncher.png"),
         laserRifle = lg.newImage("assets/weapons/laserrifle.png"),
         minigun = lg.newImage("assets/weapons/minigun.png"),
         flameThrower = lg.newImage("assets/weapons/flamethrower.png"),
@@ -113,6 +114,7 @@ function assets.load()
         pistol = makeMask(assets.weapons.pistol),
         machineGun = makeMask(assets.weapons.machineGun),
         rocketLauncher = makeMask(assets.weapons.rocketLauncher),
+        stupidRocketLauncher = makeMask(assets.weapons.rocketLauncher), -- re-use mask for regular launcher
         laserRifle = makeMask(assets.weapons.laserRifle),
         minigun = makeMask(assets.weapons.minigun),
         flameThrower = makeMask(assets.weapons.flameThrower),
@@ -123,6 +125,7 @@ function assets.load()
         pistol = lg.newImage("assets/weapons/pistolo.png"),
         machineGun = lg.newImage("assets/weapons/machineguno.png"),
         rocketLauncher = lg.newImage("assets/weapons/rocketlaunchero.png"),
+        stupidRocketLauncher = lg.newImage("assets/weapons/rocketlaunchero.png"), -- re-use
         laserRifle = lg.newImage("assets/weapons/laserrifleo.png"),
         minigun = lg.newImage("assets/weapons/miniguno.png"),
         flameThrower = lg.newImage("assets/weapons/flamethrowero.png"),

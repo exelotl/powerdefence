@@ -24,6 +24,7 @@ function Player:init(scene, playerNum, color)
 	self.moveDirection = 0
 	self.moving = false
 	self.aimAngle = 0
+	self.gunOffsetAngle = 0
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
 	self.timeOfDeath = nil -- assigned to globalTimer upon death
@@ -31,6 +32,7 @@ function Player:init(scene, playerNum, color)
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
                     weapons.Minigun.new(self),weapons.FlameThrower.new(self),
                     weapons.SniperRifle.new(self),
+                    weapons.StupidRocketLauncher.new(self),
                     }
 	self.currentWeapon = 1
 
@@ -67,6 +69,8 @@ function Player:update(dt)
         -- comes in rather than here
         if input.lastAim == 'mouse' then
             player1:aimAtMouse()
+        else
+            player1.gunOffsetAngle = 0
         end
 
         if self.weapons[self.currentWeapon] then
@@ -136,11 +140,24 @@ end
 
 
 function Player:aimAtMouse()
+	assert(input.lastAim == 'mouse')
+
 	local x, y = self.body:getPosition()
     local mx, my = cam:worldCoords(input.mousex, input.mousey)
 	local dx = mx - x
 	local dy = my - y
+
 	self.aimAngle = math.atan2(dy, dx)
+
+    -- include extra angle so that the line of fire from the gun lines up with the reticule
+    local gun = self.weapons[self.currentWeapon]
+    self.gunOffsetAngle = 0
+    if gun and gun.offset.shoot ~= 0 then
+        local distance = math.sqrt(dx^2 + dy^2)
+        if distance ~= 0 then
+            self.gunOffsetAngle = math.asin(gun.offset.shoot/distance)
+        end
+    end
 end
 
 -- when the gamepad axis goes from not in the dead zone to inside the dead zone.
