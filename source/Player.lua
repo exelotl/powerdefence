@@ -24,7 +24,7 @@ function Player:init(scene, playerNum, color)
 	self.moveDirection = 0
 	self.moving = false
 	self.aimAngle = 0
-	self.gunOffsetAngle = 0
+	self.gunOffsetAngle = 0 -- extra angle added to the player angle so the gun lines up with what is aimed at
 	self.playerNum = playerNum -- 1 or 2
 	self.hp = 5
 	self.timeOfDeath = nil -- assigned to globalTimer upon death
@@ -154,7 +154,7 @@ function Player:aimAtMouse()
     self.gunOffsetAngle = 0
     if gun and gun.offset.shoot ~= 0 then
         local distance = math.sqrt(dx^2 + dy^2)
-        if distance ~= 0 then
+        if distance ~= 0 and distance > gun.offset.shoot then
             self.gunOffsetAngle = math.asin(gun.offset.shoot/distance)
         end
     end
