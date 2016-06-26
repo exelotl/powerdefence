@@ -23,23 +23,28 @@ local explosionForce = 200
 
 local collisionCallbacks = {
     bulletPlayer = {
-        test = function(aType, bType) return aType == 'bullet' and bType == 'player' end,
+        test = function(aType, bType) return (aType == 'bullet' or aType == 'laser') and bType == 'player' end,
         callback = function(bulletFix, playerFix, coll)
             local player = playerFix:getUserData().data
-            player:takeDamage()
+            local bullet = bulletFix:getUserData().data
+            
+            if bullet.damage then player:takeDamage(bullet.damage)
+            else player:takeDamage() end
 
             if player:isAlive() then
                 impulseBetween(bulletFix:getBody(), player.body, bulletForce, false, true)
             end
         end
     },
-
     bulletEnemy = {
-        test = function(aType, bType) return aType == 'bullet' and bType == 'enemy' end,
+        test = function(aType, bType) return (aType == 'bullet' or aType == 'laser')  and bType == 'enemy' end,
         callback = function(bulletFix, enemyFix, coll)
             local enemy = enemyFix:getUserData().data
-            enemy:takeDamage()
-
+            local bullet = bulletFix:getUserData().data
+            
+            if bullet.damage then enemy:takeDamage(bullet.damage)
+            else enemy:takeDamage() end
+            
             -- if they are dead let them fall straight down
             if enemy:isAlive() then
                 impulseBetween(bulletFix:getBody(), enemy.body, bulletForce, false, true)
@@ -50,7 +55,10 @@ local collisionCallbacks = {
         test = function(aType, bType) return aType == 'bullet' and bType == 'orb' end,
         callback = function(bulletFix, orbFix, coll)
             local orb = orbFix:getUserData().data
-            orb:takeDamage()
+            local bullet = bulletFix:getUserData().data
+            
+            if bullet.damage then orb:takeDamage(bullet.damage)
+            else orb:takeDamage() end
 
             impulseBetween(bulletFix:getBody(), orb.body, bulletForce, false, true)
         end
@@ -150,6 +158,15 @@ local collisionCallbacks = {
             enemy:burn() -- different death animation from takeDamage
         end
     },
+    healthPlayer = {
+        test = function(aType, bType) return aType == 'healthpickup' and bType == 'player' end,
+        callback = function(hpFix, playerFix, coll)
+            local player = playerFix:getUserData().data
+            player.hp = player.hp + 1
+            local helpik =  hpFix:getUserData().data
+            helpik.scene:remove(helpik)
+        end
+    },
 }
 
 
@@ -174,6 +191,8 @@ function beginContact(a, b, coll)
     if bType == 'bullet' then bulletCleanup(b) end
     if aType == 'rocket' then bulletCleanup(a) end
     if bType == 'rocket' then bulletCleanup(b) end
+    if aType == 'laser' then bulletCleanup(a) end
+    if bType == 'laser' then bulletCleanup(b) end
 end
 
 

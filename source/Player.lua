@@ -29,7 +29,9 @@ function Player:init(scene, playerNum, color)
 	self.timeOfDeath = nil -- assigned to globalTimer upon death
     self.weapons = {weapons.Pistol.new(self), weapons.MachineGun.new(self),
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
-                    weapons.Minigun.new(self),weapons.FlameThrower.new(self)}
+                    weapons.Minigun.new(self),weapons.FlameThrower.new(self),
+                    weapons.SniperRifle.new(self),
+                    }
 	self.currentWeapon = 1
 
     self.throwables = {throwable.Grenade.new(self),throwable.Glowstick.new(self)}
@@ -106,8 +108,8 @@ function Player:draw()
         end
 
         if gun then
-            if gun.alwaysBehind
-            then gunInFront = false
+            if gun.alwaysBehind then gunInFront = false
+            elseif gun.alwaysFront then gunInFront = true
             else gunInFront = angleUpDown(self.aimAngle) == 'down' end
         end
 

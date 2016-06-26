@@ -1,5 +1,6 @@
 require 'helperMath'
 local PeriodicEvent = require "PeriodicEvent"
+local HealthPickup = require "HealthPickup"
 local Anim = require "Anim"
 
 local Enemy = oo.class()
@@ -23,6 +24,10 @@ function Enemy:init(scene, x, y, shape, defaultAnim, deathAnim)
 	self.deathAnim = deathAnim
 	self.anim = Anim.new(defaultAnim)
 	self.depthOffset = 8
+    self.drop = nil
+    if math.random() < 0.05 then
+        self.drop = HealthPickup
+    end
 	self.onDeath = nil -- a callback function (optional)
 
 	-- updating the target is expensive
@@ -59,6 +64,12 @@ function Enemy:update(dt)
         end
 
         self.body:applyForce(fromPolar(self.moveForce, self.moveDirection))
+    else
+        if self.drop then
+            local x, y = self.body:getPosition()
+            self.drop.new(scene,x,y)
+            self.drop = nil
+        end
     end
 
 	self.anim:update(dt)
