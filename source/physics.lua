@@ -27,7 +27,7 @@ local collisionCallbacks = {
         callback = function(bulletFix, playerFix, coll)
             local player = playerFix:getUserData().data
             local bullet = bulletFix:getUserData().data
-            
+
             if bullet.damage then player:takeDamage(bullet.damage)
             else player:takeDamage() end
 
@@ -41,10 +41,10 @@ local collisionCallbacks = {
         callback = function(bulletFix, enemyFix, coll)
             local enemy = enemyFix:getUserData().data
             local bullet = bulletFix:getUserData().data
-            
+
             if bullet.damage then enemy:takeDamage(bullet.damage)
             else enemy:takeDamage() end
-            
+
             -- if they are dead let them fall straight down
             if enemy:isAlive() then
                 impulseBetween(bulletFix:getBody(), enemy.body, bulletForce, false, true)
@@ -56,7 +56,7 @@ local collisionCallbacks = {
         callback = function(bulletFix, orbFix, coll)
             local orb = orbFix:getUserData().data
             local bullet = bulletFix:getUserData().data
-            
+
             if bullet.damage then orb:takeDamage(bullet.damage)
             else orb:takeDamage() end
 
@@ -159,8 +159,9 @@ local collisionCallbacks = {
         end
     },
     healthPlayer = {
-        test = function(aType, bType) return aType == 'healthpickup' and bType == 'player' end,
+        test = function(aType, bType) return aType == 'healthPickup' and bType == 'player' end,
         callback = function(hpFix, playerFix, coll)
+            --TODO: play a sound here?
             local player = playerFix:getUserData().data
             player.hp = player.hp + 1
             local helpik =  hpFix:getUserData().data
@@ -189,8 +190,10 @@ function beginContact(a, b, coll)
 
     if aType == 'bullet' then bulletCleanup(a) end
     if bType == 'bullet' then bulletCleanup(b) end
+
     if aType == 'rocket' then bulletCleanup(a) end
     if bType == 'rocket' then bulletCleanup(b) end
+
     if aType == 'laser' then bulletCleanup(a) end
     if bType == 'laser' then bulletCleanup(b) end
 end

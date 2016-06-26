@@ -3,8 +3,8 @@ local Laser = oo.class()
 local PeriodicEvent = require "PeriodicEvent"
 
 function Laser:init(scene, x, y, angle)
-	self.type = "laser"
-	scene:add(self)
+    self.type = "laser"
+    scene:add(self)
     self.angle = angle
     self.speed = 800
 
@@ -12,7 +12,7 @@ function Laser:init(scene, x, y, angle)
     self.body:setBullet(true)
     self.shape = lp.newCircleShape(4)
     self.fixture = lp.newFixture(self.body, self.shape)
-	self.fixture:setUserData({dataType='laser', data=self})
+    self.fixture:setUserData({dataType='laser', data=self})
 
     self.body:setAngle(self.angle)
     self.body:setLinearVelocity(self.speed*math.cos(self.angle),

@@ -64,6 +64,6 @@ defaultAxisConfig2 = {
 }
 
 
-axisConfig1 = benAxisConfig1
-axisConfig2 = benAxisConfig2
+axisConfig1 = defaultAxisConfig1
+axisConfig2 = defaultAxisConfig2
 

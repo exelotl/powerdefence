@@ -91,7 +91,7 @@ function lighting.renderLights()
                     lg.draw(assets.lights.surround, e.body:getX(), e.body:getY(), 0, scale, scale, 256, 256)
                 end
             end
-            
+
             local allLasers = scene.types.laser
             if allLasers then
                 for _, e in ipairs(allLasers) do
