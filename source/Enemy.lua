@@ -73,7 +73,7 @@ function Enemy:takeDamage(amount)
     local amount = amount or 1
     self.hp = self.hp - amount
     if self.hp <= 0 then
-		self.type = 'deadEnemy'
+        self.scene:changeTypeString(self, 'deadEnemy')
 		if self.onDeath then self.onDeath() end
 		self.anim:play(self.deathAnim)
 		self.scene:removePhysicsFrom(self)

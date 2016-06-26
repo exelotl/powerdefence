@@ -17,8 +17,7 @@ end
 --]]
 
 function PeriodicEvent:init(interval)
-    assert(interval)
-    self.interval = interval
+    self.interval = interval or math.huge
     self.lastFired = globalTimer
 end
 

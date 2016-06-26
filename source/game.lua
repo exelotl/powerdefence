@@ -16,7 +16,7 @@ player1 = nil
 player2 = nil
 
 
--- 'menu' | 'playing' | 'gameOver'
+-- 'menu' | 'playing' | 'gameOver' | 'win'
 game.state = 'menu'
 
 
@@ -295,6 +295,28 @@ game.gameOver = {
         local xscale = lg.getWidth()/1920
         local yscale = lg.getHeight()/1080
         lg.draw(assets.gameOver, 0, 0, 0, xscale,yscale)
+    end,
+}
+
+game.win = {
+    load = function()
+        -- delay registering clicks as taking back to main menu
+        flux.to({}, 1, {}):oncomplete(function()
+            input.currentState = input.states.gameOverScreen
+        end)
+    end,
+    update = function(dt)
+
+    end,
+
+    draw = function()
+        lg.setBackgroundColor(50,50,50)
+        lg.setColor(255,255,255)
+
+        local xscale = lg.getWidth()/1920
+        local yscale = lg.getHeight()/1080
+        lg.draw(assets.gameOver, 0, 0, 0, xscale,yscale)
+        drawCenterMessage('You Win!')
     end,
 }
 

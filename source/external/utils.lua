@@ -1,11 +1,17 @@
 
 
 function findFirst(t, elem)
-    for i, v in ipairs(t) do
-        if v == elem then return i end
+    if t ~= nil then
+        for i, v in ipairs(t) do
+            if v == elem then return i end
+        end
     end
-    print('didnt find: ' .. t)
+    print('LOG: findFirst didn\'t find anything')
     return -1
+end
+
+function contains(t, elem)
+    return findFirst(t, elem) ~= -1
 end
 
 function removeFirst(t, elem)

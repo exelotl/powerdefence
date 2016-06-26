@@ -95,7 +95,7 @@ local function testGetQuadrant()
 end
 
 -- pick from a probability density function
--- eg {a = 0.4, b = 0.6} means return a: 40% of the time and b: 60%
+-- eg {a = 0.4, b = 0.6} means return 'a': 40% of the time and 'b': 60%
 -- probabilities should sum to 1
 -- return nil if pdf empty or sum(pdf) < 1
 -- returns a string: if the PDF refers to variable names, use:

@@ -36,12 +36,13 @@ function Scene:update(dt)
 		if e.type then
 		    -- remove the old type mapping
 			removeFirst(self.types[e.type], e)
-
-            -- register the new type
-            e.type = item.newType
-			if not self.types[e.type] then self.types[e.type] = {} end
-			table.insert(self.types[e.type], e)
 		end
+
+        -- register the new type
+        e.type = item.newType
+        if not self.types[e.type] then self.types[e.type] = {} end
+
+        table.insert(self.types[e.type], e)
 	end
 
 	-- remove physics from all from the remove physics list
@@ -72,6 +73,8 @@ function Scene:update(dt)
 
 		-- remove from the type list
 		if e.type then
+		    assert(self.types[e.type])
+		    assert(contains(self.types[e.type], e))
 		    removeFirst(self.types[e.type], e)
 		end
 
