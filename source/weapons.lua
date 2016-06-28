@@ -121,6 +121,18 @@ local wepAttrs = {
         sfx = "sniper",
         shake = 10,
     },
+    uzi = {
+        name = "uzi",
+        image = "uzi",
+        offset = {x=-3, y=2, shoot=1, spawn=20},
+        singleShot = false,
+        rate = 0.05,
+        maxAmmo = 512,
+        ammo = 512,
+        ammoType = Bullet,
+        sfx = "uzi",
+        shake = 0.5
+    },
 }
 
 local Weapon = oo.class(wepAttrs.None)

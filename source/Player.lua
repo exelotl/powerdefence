@@ -32,6 +32,7 @@ function Player:init(scene, playerNum, color)
                     weapons.RocketLauncher.new(self), weapons.LaserRifle.new(self),
                     weapons.Minigun.new(self),weapons.FlameThrower.new(self),
                     weapons.SniperRifle.new(self),
+                    weapons.uzi.new(self),
                     weapons.StupidRocketLauncher.new(self),
                     }
 	self.currentWeapon = 1

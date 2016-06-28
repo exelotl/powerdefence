@@ -104,6 +104,7 @@ function assets.load()
         minigun = lg.newImage("assets/weapons/minigun.png"),
         flameThrower = lg.newImage("assets/weapons/flamethrower.png"),
         sniperRifle = lg.newImage("assets/weapons/sniper.png"),
+        uzi = lg.newImage("assets/weapons/uzi.png"),
     }
 
     assets.weaponsq = {
@@ -119,6 +120,7 @@ function assets.load()
         minigun = makeMask(assets.weapons.minigun),
         flameThrower = makeMask(assets.weapons.flameThrower),
         sniperRifle = makeMask(assets.weapons.sniperRifle),
+        uzi = makeMask(assets.weapons.uzi),
     }
     -- for animated weapons: the outline is for the first frame only
     assets.weaponso = {
@@ -130,6 +132,7 @@ function assets.load()
         minigun = lg.newImage("assets/weapons/miniguno.png"),
         flameThrower = lg.newImage("assets/weapons/flamethrowero.png"),
         sniperRifle = lg.newImage("assets/weapons/snipero.png"),
+        uzi = lg.newImage("assets/weapons/uzio.png"),
     }
 
 
@@ -186,6 +189,7 @@ function assets.load()
         whoosh = makeSfx("assets/sfx/whoosh.wav",1),
         debugBlip = makeSfx("assets/sfx/debug_blip.ogg", 10),
         sniper = makeSfx("assets/sfx/sniper2.wav",1),
+        uzi = makeSfx("assets/sfx/uzi.wav",1),
     }
 end
 
