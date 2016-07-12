@@ -23,7 +23,7 @@ end
 function EnemySoldier:burn()
     self.hp = self.hp - 1
     if self.hp <= 0 then
-        self.type = 'deadEnemy'
+        self.scene:changeTypeString(self, 'deadEnemy')
 		if self.onDeath then self.onDeath() end
         self.anim:play(ANIM_FIRE)
         self.scene:removePhysicsFrom(self)

@@ -1,10 +1,10 @@
-
 local Bullet = require "Bullet"
 local Rocket = require "Rocket"
 local Flame = require "Flame"
 local Laser = require "Laser"
 local SniperRound = require "SniperRound"
 local Anim = require "Anim"
+local MuzzleFlare = require "MuzzleFlare"
 
 
 local wepAttrs = {
@@ -29,22 +29,24 @@ local wepAttrs = {
     Pistol = {
         name = "pistol",
         image = "pistol",
-        offset = {x=-8, y=1, shoot=0, spawn=20},
+        offset = {x=-8, y=1, shoot=0, spawn=18},
         maxAmmo = math.huge,
         ammo = math.huge,
         sfx = "pistol", -- todo: automatically look up SFX based on name of weapon?
         shake = 1,
+        flareScale = 0.5,
     },
     MachineGun = {
         name = 'machineGun',
         image = "machineGun",
-        offset = {x=5, y=4, shoot=-1, spawn=30},
+        offset = {x=5, y=4, shoot=-1, spawn=27},
         singleShot = false,
         rate = 0.1,
         maxAmmo = 255,
         ammo = 255,
         sfx = "machineGun",
         shake = 1,
+        flareScale = 1,
     },
     RocketLauncher = {
         name = "rocketLauncher",
@@ -96,6 +98,7 @@ local wepAttrs = {
         ammo = 512,
         sfx = "minigun",
         shake = 2,
+        flareScale = 2,
     },
     FlameThrower = {
         name = "flamethrower",
@@ -107,6 +110,7 @@ local wepAttrs = {
         ammo = 512,
         ammoType = Flame,
         sfx = "flamethrower",
+        
     },
     SniperRifle = {
         name = "sniperrifle",
@@ -120,6 +124,7 @@ local wepAttrs = {
         ammoType = SniperRound,
         sfx = "sniper",
         shake = 10,
+        flareScale = 1.5,
     },
     uzi = {
         name = "uzi",
@@ -131,7 +136,8 @@ local wepAttrs = {
         ammo = 512,
         ammoType = Bullet,
         sfx = "uzi",
-        shake = 0.5
+        shake = 0.5,
+        flareScale = 0.5,
     },
 }
 
@@ -195,13 +201,17 @@ function Weapon:update(dt)
             local norm = angleLeftRight(self.holder.aimAngle) == 'left' and a+rightAngle or a-rightAngle
             x = x + self.offset.spawn*math.cos(a) + self.offset.shoot*math.cos(norm)
             y = y + self.offset.spawn*math.sin(a) + self.offset.shoot*math.sin(norm)
-
+            
             local b = self.ammoType.new(scene, x, y, a)
             self.lastShotTime = globalTimer
             if not debugMode then
                 self.ammo = self.ammo - 1
             end
             screenShake = screenShake + self.shake
+            
+            if self.flareScale then
+                MuzzleFlare.new(scene,x,y,a,self.flareScale,0.05)
+            end
 
             if self.sfx and assets.sfx[self.sfx] then
                 assets.playSfx(assets.sfx[self.sfx])

@@ -141,6 +141,8 @@ function assets.load()
     assets.flame = lg.newImage("assets/flame.png")
     assets.laser = lg.newImage("assets/laser.png")
     assets.sniperRound = lg.newImage("assets/sniperRound.png")
+    
+    assets.muzzleFlare = lg.newImage("assets/muzzleflare.png")
 
     assets.grenade = lg.newImage("assets/grenade.png")
     assets.glowstick = lg.newImage("assets/glowstick.png")

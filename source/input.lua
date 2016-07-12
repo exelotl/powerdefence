@@ -159,6 +159,10 @@ input.states.playing = {
         x = 'player1PrevWeapon',
         rightshoulder = 'player1Throw',
         leftshoulder = 'player1NextThrowable',
+        --dpup
+        --dpdown
+        --dpright
+        --dpleft
     },
     joy1Release = {},
 
@@ -167,6 +171,10 @@ input.states.playing = {
         x = 'player2PrevWeapon',
         rightshoulder = 'player2Throw',
         leftshoulder = 'player2NextThrowable',
+        --dpup
+        --dpdown
+        --dpright
+        --dpleft
     },
     joy2Release = {},
 
