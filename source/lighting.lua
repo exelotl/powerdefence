@@ -100,13 +100,14 @@ function lighting.renderLights()
                     lg.draw(assets.lights.surround, e.body:getX(), e.body:getY(), 0, scale, scale, 256, 256)
                 end
             end
-            
+
+            -- muzzle flares
             local allFlares = scene.types.muzzleFlare
             if allFlares then
                 for _, e in ipairs(allFlares) do
                     lg.setColor(50, 50, 50)
-                    local scale = 0.25
-                    lg.draw(assets.lights.surround, e.body:getX(), e.body:getY(), 0, scale * e.scale, scale * e.scale, 256, 256)
+                    local scale = 0.25*e.scale * (0.8 + 0.4*math.random())
+                    lg.draw(assets.lights.surround, e.x, e.y, 0, scale, scale, 256, 256)
                 end
             end
 

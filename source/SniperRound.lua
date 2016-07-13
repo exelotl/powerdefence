@@ -17,7 +17,7 @@ function SniperRound:init(scene, x, y, angle)
     self.body:setAngle(self.angle)
     self.body:setLinearVelocity(self.speed*math.cos(self.angle),
                                 self.speed*math.sin(self.angle))
-    self.body:setMass(100)
+    self.body:setMass(5)
 
     self.checkOutOfBoundsEvent = PeriodicEvent.new(1)
 end

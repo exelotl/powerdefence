@@ -110,7 +110,7 @@ local wepAttrs = {
         ammo = 512,
         ammoType = Flame,
         sfx = "flamethrower",
-        
+
     },
     SniperRifle = {
         name = "sniperrifle",
@@ -129,7 +129,7 @@ local wepAttrs = {
     uzi = {
         name = "uzi",
         image = "uzi",
-        offset = {x=-3, y=2, shoot=1, spawn=20},
+        offset = {x=-3, y=2, shoot=0, spawn=20},
         singleShot = false,
         rate = 0.05,
         maxAmmo = 512,
@@ -201,14 +201,14 @@ function Weapon:update(dt)
             local norm = angleLeftRight(self.holder.aimAngle) == 'left' and a+rightAngle or a-rightAngle
             x = x + self.offset.spawn*math.cos(a) + self.offset.shoot*math.cos(norm)
             y = y + self.offset.spawn*math.sin(a) + self.offset.shoot*math.sin(norm)
-            
+
             local b = self.ammoType.new(scene, x, y, a)
             self.lastShotTime = globalTimer
             if not debugMode then
                 self.ammo = self.ammo - 1
             end
             screenShake = screenShake + self.shake
-            
+
             if self.flareScale then
                 MuzzleFlare.new(scene,x,y,a,self.flareScale,0.05)
             end

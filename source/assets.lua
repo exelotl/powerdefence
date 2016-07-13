@@ -104,7 +104,7 @@ function assets.load()
         minigun = lg.newImage("assets/weapons/minigun.png"),
         flameThrower = lg.newImage("assets/weapons/flamethrower.png"),
         sniperRifle = lg.newImage("assets/weapons/sniper.png"),
-        uzi = lg.newImage("assets/weapons/uzi.png"),
+        uzi = lg.newImage("assets/weapons/UZI.png"),
     }
 
     assets.weaponsq = {
@@ -132,7 +132,7 @@ function assets.load()
         minigun = lg.newImage("assets/weapons/miniguno.png"),
         flameThrower = lg.newImage("assets/weapons/flamethrowero.png"),
         sniperRifle = lg.newImage("assets/weapons/snipero.png"),
-        uzi = lg.newImage("assets/weapons/uzio.png"),
+        uzi = lg.newImage("assets/weapons/UZIo.png"),
     }
 
 

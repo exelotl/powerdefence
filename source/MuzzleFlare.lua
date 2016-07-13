@@ -3,16 +3,13 @@ local MF = oo.class()
 
 function MF:init(scene, x, y, angle, scale, duration)
     self.duration = duration
-    self.initx = x
-    self.inity = y
+    self.x = x
+    self.y = y
     self.type = "muzzleFlare"
     self.scale = scale
     self.angle = angle
-	scene:add(self)
-end
 
-function MF:added()
-    self.body = lp.newBody(scene.world, self.initx, self.inity, 'static')
+	scene:add(self)
 end
 
 function MF:update(dt)
@@ -23,7 +20,8 @@ function MF:update(dt)
 end
 
 function MF:draw()
-    lg.draw(assets.muzzleFlare, self.body:getX(), self.body:getY(), self.angle, self.scale, self.scale, 0, 3 * self.scale)
+    -- offset is independent of scale
+    lg.draw(assets.muzzleFlare, self.x, self.y, self.angle, self.scale, self.scale, 0, 3)
 end
 
 
