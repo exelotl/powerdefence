@@ -1,5 +1,5 @@
 local Enemy = require "Enemy"
-
+local WeaponPickup = require "WeaponPickup"
 local EnemySoldier = oo.class(Enemy)
 
 local ANIM_WALK = {1,2,3,4,5,6, rate = 15}
@@ -9,6 +9,7 @@ local ANIM_FIRE = {20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,4
 function EnemySoldier:init(scene, x, y)
     Enemy.init(self, scene, x, y, lp.newRectangleShape(13, 26), ANIM_WALK, ANIM_DIE)
     self.hp = 3
+    self.drop = WeaponPickup
 end
 
 

@@ -24,7 +24,7 @@ local wepAttrs = {
         ammoType = Bullet,
         maxAmmo = math.huge,
         ammo = math.huge,
-        shake = 0
+        shake = 0,
     },
     Pistol = {
         name = "pistol",

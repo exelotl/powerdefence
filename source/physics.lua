@@ -158,14 +158,13 @@ local collisionCallbacks = {
             enemy:burn() -- different death animation from takeDamage
         end
     },
-    healthPlayer = {
-        test = function(aType, bType) return aType == 'healthPickup' and bType == 'player' end,
-        callback = function(hpFix, playerFix, coll)
+    pickupPlayer = {
+        test = function(aType, bType) return aType == 'pickup' and bType == 'player' end,
+        callback = function(pickupFix, playerFix, coll)
             --TODO: play a sound here?
             local player = playerFix:getUserData().data
-            player.hp = player.hp + 1
-            local helpik =  hpFix:getUserData().data
-            helpik.scene:remove(helpik)
+            local helpik =  pickupFix:getUserData().data
+            helpik:pickup(player)
         end
     },
 }
@@ -187,15 +186,17 @@ function beginContact(a, b, coll)
         elseif cb.test(bType, aType) then cb.callback(b, a, coll)
         end
     end
-
-    if aType == 'bullet' then bulletCleanup(a) end
-    if bType == 'bullet' then bulletCleanup(b) end
-
-    if aType == 'rocket' then bulletCleanup(a) end
-    if bType == 'rocket' then bulletCleanup(b) end
-
-    if aType == 'laser' then bulletCleanup(a) end
-    if bType == 'laser' then bulletCleanup(b) end
+    
+    if not (bType == 'pickup') then
+        if aType == 'bullet' then bulletCleanup(a) end
+        if aType == 'rocket' then bulletCleanup(a) end
+        if aType == 'laser' then bulletCleanup(a) end
+    end
+    if not (aType == 'pickup') then
+        if bType == 'bullet' then bulletCleanup(b) end
+        if bType == 'rocket' then bulletCleanup(b) end
+        if bType == 'laser' then bulletCleanup(b) end
+    end
 end
 
 
