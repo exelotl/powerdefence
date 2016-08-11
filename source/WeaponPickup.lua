@@ -37,6 +37,16 @@ function WP:draw()
 end
 
 function WP:pickup(player)
+    local exists = false
+    for i, w in ipairs(player.weapons) do
+        if w.name == self.weapon.name then
+            w:reload()
+            exists = true
+        end
+    end
+    if not exists then
+        table.insert(player.weapons,self.weapon.new(player))
+    end
     scene:remove(self)
 end
 
