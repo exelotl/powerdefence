@@ -186,16 +186,13 @@ function beginContact(a, b, coll)
         elseif cb.test(bType, aType) then cb.callback(b, a, coll)
         end
     end
-    
+
+    local toClean = {bullet=true, rocket=true, laser=true}
     if not (bType == 'pickup') then
-        if aType == 'bullet' then bulletCleanup(a) end
-        if aType == 'rocket' then bulletCleanup(a) end
-        if aType == 'laser' then bulletCleanup(a) end
+        if toClean[aType] then bulletCleanup(a) end
     end
     if not (aType == 'pickup') then
-        if bType == 'bullet' then bulletCleanup(b) end
-        if bType == 'rocket' then bulletCleanup(b) end
-        if bType == 'laser' then bulletCleanup(b) end
+        if toClean[bType] then bulletCleanup(b) end
     end
 end
 
