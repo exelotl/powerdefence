@@ -1,7 +1,7 @@
 
 
 -- 0-255
-ambientDarkness = 240
+ambientDarkness = 200
 
 -- whether the sole gamepad should be assigned to player 2
 -- true  => player1:keyboard/mouse                player2:gamepad_1

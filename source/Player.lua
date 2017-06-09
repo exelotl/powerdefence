@@ -29,14 +29,14 @@ function Player:init(scene, playerNum, color)
 	self.hp = 5
 	self.timeOfDeath = nil -- assigned to globalTimer upon death
     self.weapons = {weapons.Pistol.new(self),
-                    --weapons.MachineGun.new(self),
-                    --weapons.RocketLauncher.new(self),
-                    --weapons.LaserRifle.new(self),
-                    --weapons.Minigun.new(self),
-                    --weapons.FlameThrower.new(self),
-                    --weapons.SniperRifle.new(self),
-                    --weapons.uzi.new(self),
-                    --weapons.StupidRocketLauncher.new(self),
+                    weapons.MachineGun.new(self),
+                    weapons.RocketLauncher.new(self),
+                    weapons.LaserRifle.new(self),
+                    weapons.Minigun.new(self),
+                    weapons.FlameThrower.new(self),
+                    weapons.SniperRifle.new(self),
+                    weapons.uzi.new(self),
+                    weapons.StupidRocketLauncher.new(self),
                     }
 	self.currentWeapon = 1
 
