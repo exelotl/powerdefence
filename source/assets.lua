@@ -11,25 +11,23 @@ local function makeQuads(img, quadw, quadh)
     return t
 end
 
-local function makeMask(img)
-    local srcPixels = img:getData()
-    local maskPixels = li.newImageData(srcPixels:getDimensions())
+local function makeMask(imgData)
+    local maskPixels = li.newImageData(imgData:getDimensions())
     maskPixels:mapPixel(function(x,y,r,g,b,a)
-        r,g,b,a = srcPixels:getPixel(x,y)
+        r,g,b,a = imgData:getPixel(x,y)
         return 255, 255, 255, (a>0 and 255 or 0)
     end)
     return lg.newImage(maskPixels)
 end
 
-local function makeOutline(img)
-    local srcPixels = img:getData()
-    local w,h = srcPixels:getDimensions()
+local function makeOutline(imgData)
+    local w,h = imgData:getDimensions()
     local maskPixels = li.newImageData(w+2,h+2)
     local function tryGetPixel(x,y)
         if x < 0 or x >= w or y < 0 or y >= h then
             return 0
         end
-        local r,g,b,a = srcPixels:getPixel(x, y)
+        local r,g,b,a = imgData:getPixel(x, y)
         return a>0 and 1 or 0
     end
     maskPixels:mapPixel(function(x,y,r,g,b,a)
@@ -51,7 +49,7 @@ end
 local function makeSfx(str, count)
     local t = {}
     for i=1, count do
-        t[i] = la.newSource(str)
+        t[i] = la.newSource(str, 'static')
     end
     return t
 end
@@ -73,21 +71,23 @@ function assets.load()
     assets.tiles = lg.newImage("assets/tiles.png")
     assets.tileqs = makeQuads(assets.tiles, 32, 32)
 
-    assets.player = {
-        lg.newImage("assets/player_blue.png"),
-        lg.newImage("assets/player_green.png"),
-        lg.newImage("assets/player_pink.png"),
-        lg.newImage("assets/player_yellow.png")
+    assets.player_data = {
+        li.newImageData("assets/player_blue.png"),
+        li.newImageData("assets/player_green.png"),
+        li.newImageData("assets/player_pink.png"),
+        li.newImageData("assets/player_yellow.png")
     }
+    assets.player = {}
     -- generate quads and masks:
-    assets.playerq = makeQuads(assets.player[1], 16, 16)
+    assets.playerq = makeQuads(assets.player_data[1], 16, 16)
     assets.playerm = {}
-    for i,v in ipairs(assets.player) do
+    for i,v in ipairs(assets.player_data) do
         assets.playerm[i] = makeMask(v)
+        assets.player[i] = lg.newImage(v)
     end
 
     assets.playero = {}
-    for i,v in ipairs(assets.player) do
+    for i,v in ipairs(assets.player_data) do
         assets.playero[i] = makeOutline(v)
     end
 
@@ -95,32 +95,37 @@ function assets.load()
     assets.heartq = makeQuads(assets.hearts,32,32)
     assets.reticule = lg.newImage('assets/reticule.png')
 
-    assets.weapons = {
-        pistol = lg.newImage("assets/weapons/pistol.png"),
-        machineGun = lg.newImage("assets/weapons/machinegun.png"),
-        rocketLauncher = lg.newImage("assets/weapons/rocketlauncher.png"),
-        stupidRocketLauncher = lg.newImage("assets/weapons/stupidrocketlauncher.png"),
-        laserRifle = lg.newImage("assets/weapons/laserrifle.png"),
-        minigun = lg.newImage("assets/weapons/minigun.png"),
-        flameThrower = lg.newImage("assets/weapons/flamethrower.png"),
-        sniperRifle = lg.newImage("assets/weapons/sniper.png"),
-        uzi = lg.newImage("assets/weapons/UZI.png"),
+    assets.weapon_data = {
+        pistol = li.newImageData("assets/weapons/pistol.png"),
+        machineGun = li.newImageData("assets/weapons/machinegun.png"),
+        rocketLauncher = li.newImageData("assets/weapons/rocketlauncher.png"),
+        stupidRocketLauncher = li.newImageData("assets/weapons/stupidrocketlauncher.png"),
+        laserRifle = li.newImageData("assets/weapons/laserrifle.png"),
+        minigun = li.newImageData("assets/weapons/minigun.png"),
+        flameThrower = li.newImageData("assets/weapons/flamethrower.png"),
+        sniperRifle = li.newImageData("assets/weapons/sniper.png"),
+        uzi = li.newImageData("assets/weapons/UZI.png"),
     }
+
+    assets.weapons = {}
+    for name, data in pairs(assets.weapon_data) do
+        assets.weapons[name] = lg.newImage(data)
+    end
 
     assets.weaponsq = {
         laserRifle = makeQuads(assets.weapons.laserRifle, 32, 13),
         minigun = makeQuads(assets.weapons.minigun, 46, 16),
     }
     assets.weaponsm = {
-        pistol = makeMask(assets.weapons.pistol),
-        machineGun = makeMask(assets.weapons.machineGun),
-        rocketLauncher = makeMask(assets.weapons.rocketLauncher),
-        stupidRocketLauncher = makeMask(assets.weapons.rocketLauncher), -- re-use mask for regular launcher
-        laserRifle = makeMask(assets.weapons.laserRifle),
-        minigun = makeMask(assets.weapons.minigun),
-        flameThrower = makeMask(assets.weapons.flameThrower),
-        sniperRifle = makeMask(assets.weapons.sniperRifle),
-        uzi = makeMask(assets.weapons.uzi),
+        pistol = makeMask(assets.weapon_data.pistol),
+        machineGun = makeMask(assets.weapon_data.machineGun),
+        rocketLauncher = makeMask(assets.weapon_data.rocketLauncher),
+        stupidRocketLauncher = makeMask(assets.weapon_data.rocketLauncher), -- re-use mask for regular launcher
+        laserRifle = makeMask(assets.weapon_data.laserRifle),
+        minigun = makeMask(assets.weapon_data.minigun),
+        flameThrower = makeMask(assets.weapon_data.flameThrower),
+        sniperRifle = makeMask(assets.weapon_data.sniperRifle),
+        uzi = makeMask(assets.weapon_data.uzi),
     }
     -- for animated weapons: the outline is for the first frame only
     assets.weaponso = {
@@ -163,14 +168,15 @@ function assets.load()
         torch = lg.newImage('assets/torch_white.png')
     }
 
-    assets.background = love.graphics.newImage("assets/placeholders/floor.png")
-    assets.fft = love.graphics.newImage("assets/placeholders/forcefieldtop.png")
-    assets.ffb = love.graphics.newImage("assets/placeholders/forcefieldbottom.png")
-    assets.fft2 = love.graphics.newImage("assets/placeholders/forcefieldtop2.png")
-    assets.ffb2 = love.graphics.newImage("assets/placeholders/forcefieldbottom2.png")
-    assets.orb = love.graphics.newImage("assets/orb.png")
-    assets.orbq = makeQuads(assets.orb, 32, 32)
-    assets.orbm = makeMask(assets.orb)
+    assets.background = lg.newImage("assets/placeholders/floor.png")
+    assets.fft = lg.newImage("assets/placeholders/forcefieldtop.png")
+    assets.ffb = lg.newImage("assets/placeholders/forcefieldbottom.png")
+    assets.fft2 = lg.newImage("assets/placeholders/forcefieldtop2.png")
+    assets.ffb2 = lg.newImage("assets/placeholders/forcefieldbottom2.png")
+    local orbData = li.newImageData("assets/orb.png")
+    assets.orb = lg.newImage(orbData)
+    assets.orbq = makeQuads(orbData, 32, 32)
+    assets.orbm = makeMask(orbData)
 
     assets.title = lg.newImage("assets/title.png")
 
