@@ -10,30 +10,30 @@ local function drawFixture(fixture)
 	local shapeType = shape:getType()
 
 	if (fixture:isSensor()) then
-		love.graphics.setColor(0,0,255,96)
+		love.graphics.setColor(0,0,1,0.4)
 	else
-		love.graphics.setColor(rng:random(32,255),rng:random(32,255),rng:random(32,255),96)
+		love.graphics.setColor(rng:random(32,255)/255.0, rng:random(32,255)/255.0, rng:random(32,255)/255.0, 96/255.0)
 	end
 
 	if (shapeType == "circle") then
 		local x,y = shape:getPoint()
 		local radius = shape:getRadius()
 		love.graphics.circle("fill",x,y,radius,30)
-		love.graphics.setColor(0,0,0,255)
+		love.graphics.setColor(0,0,0,1)
 		love.graphics.circle("line",x,y,radius,30)
 		local eyeRadius = radius/4
-		love.graphics.setColor(0,0,0,255)
+		love.graphics.setColor(0,0,0,1)
 		love.graphics.circle("fill",0,-radius+eyeRadius,eyeRadius,10)
 	elseif (shapeType == "polygon") then
 		local points = {shape:getPoints()}
 		love.graphics.polygon("fill",points)
-		love.graphics.setColor(0,0,0,255)
+		love.graphics.setColor(0,0,0,1)
 		love.graphics.polygon("line",points)
 	elseif (shapeType == "edge") then
-		love.graphics.setColor(0,0,0,255)
+		love.graphics.setColor(0,0,0,1)
 		love.graphics.line(shape:getPoints())
 	elseif (shapeType == "chain") then
-		love.graphics.setColor(255,0,0,255)
+		love.graphics.setColor(255,0,0,1)
 		love.graphics.line(shape:getPoints())
 	end
 
@@ -45,7 +45,7 @@ local function drawFixture(fixture)
     --vy = vy*math.sin(-angle)
     local fx,fy = body:getLinearVelocity()
 
-	love.graphics.setColor(255,255,0,255)
+	love.graphics.setColor(1,1,0,1)
 	love.graphics.rotate(-angle)
     love.graphics.line(0, 0, vx*sf, vy*sf)
 end
@@ -82,7 +82,7 @@ local function debugWorldDraw(world,topLeft_x,topLeft_y,width,height)
 		drawBody(body)
 	end
 
-	love.graphics.setColor(0,255,0,255)
+	love.graphics.setColor(0,1,0,1)
 	love.graphics.setLineWidth(3)
 	love.graphics.setPointSize(3)
 	local joints = world:getJointList()
@@ -100,7 +100,7 @@ local function debugWorldDraw(world,topLeft_x,topLeft_y,width,height)
 		end
 	end
 
-	love.graphics.setColor(255,0,0,255)
+	love.graphics.setColor(1,0,0,1)
 	love.graphics.setPointSize(3)
 	local contacts = world:getContactList()
 	for i=1,#contacts do

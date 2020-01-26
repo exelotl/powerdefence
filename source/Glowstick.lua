@@ -7,10 +7,10 @@ function Glowstick:init(scene, x, y, angle, throwStrength)
     self.maxfuse = 40
     self.fuse = 30 + 10*math.random()
 
-    mincolorvalue = 75
-    self.r = mincolorvalue + (255 - mincolorvalue) * math.random()
-    self.g = mincolorvalue + (255 - mincolorvalue) * math.random()
-    self.b = mincolorvalue + (255 - mincolorvalue) * math.random()
+    mincolorvalue = 0.3
+    self.r = mincolorvalue + (1 - mincolorvalue) * math.random()
+    self.g = mincolorvalue + (1 - mincolorvalue) * math.random()
+    self.b = mincolorvalue + (1 - mincolorvalue) * math.random()
 
     self.body = lp.newBody(scene.world, x, y, 'dynamic')
 
@@ -37,9 +37,9 @@ function Glowstick:update(dt)
 end
 
 function Glowstick:draw()
-    lg.setColor(self.r,self.g,self.b,255)
+    lg.setColor(self.r,self.g,self.b,1.0)
     lg.draw(assets.glowstick, self.body:getX(), self.body:getY(), self.body:getAngle(), 0.5, 0.5,8,8)
-    lg.setColor(255,255,255,255)
+    lg.setColor(1.0,1.0,1.0,1.0)
 end
 
 

@@ -62,7 +62,7 @@ function coordinator.toggleDayNight()
     if     d.time == 'day'   then d.time = 'night'
     elseif d.time == 'night' then d.time = 'day'  end
 
-    flux.to(coordinator.gameData, 5, {lightingAmount = d.time == 'day' and 0 or 255})
+    flux.to(coordinator.gameData, 5, {lightingAmount = d.time == 'day' and 0 or 1})
 
     if d.time == 'day' then
         d.lastSunrise = globalTimer
@@ -106,7 +106,7 @@ function coordinator.startGame(scene, mode)
 	if mode == 'survival' then
         -- set to night
         d.time = 'night'
-        d.lightingAmount = 255 -- full lighting pass
+        d.lightingAmount = 1.0 -- full lighting pass
 
         d.isDoomed = false
 
@@ -130,7 +130,7 @@ function coordinator.startGame(scene, mode)
     elseif mode == 'orb' then
         -- set to day
         d.time = 'day'
-        d.lightingAmount = 0 -- no lighting pass
+        d.lightingAmount = 0.0 -- no lighting pass
 
         d.lastSunrise = globalTimer
         d.dayLength = 10 -- seconds
@@ -442,26 +442,26 @@ end
 
 local function drawForceFieldTop()
     if d.time == 'day' then
-        local ratio = math.sin(globalTimer)*255 + 255
-        lg.setColor(255,255,255,ratio)
-        lg.draw(assets.fft,-512,-512,0)
+        local ratio = math.sin(globalTimer) + 1.0
+        lg.setColor(1.0, 1.0, 1.0, ratio)
+        lg.draw(assets.fft, -512, -512,0)
 
-        lg.setColor(255,255,255,255-ratio)
-        lg.draw(assets.fft2,-512,-512,0)
+        lg.setColor(1.0, 1.0, 1.0, 1.0 - ratio)
+        lg.draw(assets.fft2, -512, -512, 0)
 
-        lg.setColor(255,255,255,255)
+        lg.setColor(1.0, 1.0, 1.0, 1.0)
     end
 end
 local function drawForceFieldBottom()
     if d.time == 'day' then
-        local ratio = math.sin(globalTimer)*255 + 255
-        lg.setColor(255,255,255,ratio)
-        lg.draw(assets.ffb,-512,-512,0)
+        local ratio = math.sin(globalTimer) + 1.0
+        lg.setColor(1.0, 1.0, 1.0, ratio)
+        lg.draw(assets.ffb, -512, -512, 0)
 
-        lg.setColor(255,255,255,255-ratio)
-        lg.draw(assets.ffb2,-512,-512,0)
+        lg.setColor(1.0, 1.0, 1.0, 1.0 - ratio)
+        lg.draw(assets.ffb2, -512, -512, 0)
 
-        lg.setColor(255,255,255,255)
+        lg.setColor(1.0, 1.0, 1.0, 1.0)
     end
 end
 
@@ -477,14 +477,14 @@ end
 
 
 function coordinator.drawMessages()
-    lg.setColor(200, 200, 200)
+    lg.setColor(0.8, 0.8, 0.8)
     if d.mode == 'survival' then
         local timeSurvived = d.isDoomed and d.gameOverTime - d.startTime or globalTimer - d.startTime
         drawMessage(('Time Survived: %.1f'):format(timeSurvived))
         drawMessage(('spawns/sec: %.1f'):format(1 / d.spawnEvent.interval), 40)
 
         if d.isDoomed then
-            lg.setColor(255,255,255)
+            lg.setColor(1.0, 1.0, 1.0)
             drawCenterMessage('Game Over')
         end
     elseif d.mode == 'orb' then

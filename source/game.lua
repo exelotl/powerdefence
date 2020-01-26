@@ -101,8 +101,8 @@ game.menu = {
     draw = function()
         local g = game.menu.globals
 
-        lg.setBackgroundColor(50,50,50)
-        lg.setColor(255,255,255)
+        lg.setBackgroundColor(0.2,0.2,0.2)
+        lg.setColor(1.0,1.0,1.0)
 
         local xscale = lg.getWidth()/1920
         local yscale = lg.getHeight()/1080
@@ -117,7 +117,7 @@ game.menu = {
             local sf = lg.getWidth()/100
 
             -- draw masks around player 1
-            lg.setColor(255,255,255)
+            lg.setColor(1.0,1.0,1.0)
             local mask = assets.playerm[g.player1Color]
             local quad = assets.playerq[1]
             lg.draw(mask, quad, playerIndent, height/2, 0, sf, sf, 8+1, 8)
@@ -131,7 +131,7 @@ game.menu = {
 
 
             -- draw masks around player 2
-            lg.setColor(255,255,255)
+            lg.setColor(1.0,1.0,1.0)
             mask = assets.playerm[g.player2Color]
             quad = assets.playerq[5]
             lg.draw(mask, quad, width-playerIndent, height/2, 0, sf, sf, 8+1, 8)
@@ -154,7 +154,7 @@ game.menu = {
             end
 
             if txt then
-                lg.setColor(150,50,50)
+                lg.setColor(0.6,0.2,0.2)
                 local sw, sh = lg.getDimensions()
                 lg.push()
                 lg.printf(txt, 0, sh*0.8, sw, 'center')
@@ -238,8 +238,8 @@ game.playing = {
     draw = function()
 		local g = game.playing.globals
 		
-        lg.setBackgroundColor(253,233,137)
-        lg.setColor(255,255,255)
+        lg.setBackgroundColor(253/255.0, 233/255.0, 137/255.0)
+        lg.setColor(1.0,1.0,1.0)
 
         cam:attach()
             coordinator.draw()
@@ -254,10 +254,10 @@ game.playing = {
 
 
         if input.lastAim == 'mouse' and player1:isAlive() then
-            lg.setColor(255,255,255)
+            lg.setColor(1.0,1.0,1.0)
             lg.draw(assets.reticule, input.mousex, input.mousey, 0, cam.scale*0.6, cam.scale*0.6, 7, 7)
         end
-        lg.setColor(255,255,255)
+        lg.setColor(1.0,1.0,1.0)
 
 
         if paused then
@@ -289,8 +289,8 @@ game.gameOver = {
     end,
 
     draw = function()
-        lg.setBackgroundColor(50,50,50)
-        lg.setColor(255,255,255)
+        lg.setBackgroundColor(0.2,0.2,0.2)
+        lg.setColor(1.0,1.0,1.0)
 
         local xscale = lg.getWidth()/1920
         local yscale = lg.getHeight()/1080
@@ -310,8 +310,8 @@ game.win = {
     end,
 
     draw = function()
-        lg.setBackgroundColor(50,50,50)
-        lg.setColor(255,255,255)
+        lg.setBackgroundColor(0.2,0.2,0.2)
+        lg.setColor(1.0,1.0,1.0)
 
         local xscale = lg.getWidth()/1920
         local yscale = lg.getHeight()/1080

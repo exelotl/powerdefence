@@ -43,11 +43,11 @@ function MenuList:update(dt)
 end
 
 function MenuList:draw()
-	love.graphics.setBackgroundColor(30, 0, 0)
+	love.graphics.setBackgroundColor(0.1, 0, 0)
 
 
 	if self.hoverPos > 0 then
-		love.graphics.setColor(255,255,255,80)
+		love.graphics.setColor(1.0,1.0,1.0,0.3)
 		love.graphics.rectangle(
 			"fill",
 			self.x,
@@ -56,7 +56,7 @@ function MenuList:draw()
 			self.spacing)
 	end
 
-	love.graphics.setColor(255,255,255)
+	love.graphics.setColor(1.0,1.0,1.0)
 	for i, item in ipairs(self.items) do
 		love.graphics.printf(item.text, self.x+8, self.y + (i-1)*self.spacing + 10, self.width, 'center')
 	end

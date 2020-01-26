@@ -19,9 +19,6 @@ local function hsvToRgb(h, s, v)
     else r=v g=p b=q
     end
 
-    r=r*255
-    g=g*255
-    b=b*255
     return { r,g,b }
 end
 local function copy(t)
@@ -36,7 +33,7 @@ local function copy(t)
 end
 function setColor(...)
 	local args = {...}
-	love.graphics.setColor(args[1] or 255,args[2] or 255,args[3] or 255,args[4] or 255)
+	love.graphics.setColor(args[1] or 1,args[2] or 1,args[3] or 1,args[4] or 1)
 end
 local color_data = {}
 local colors = {}

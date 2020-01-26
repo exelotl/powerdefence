@@ -50,9 +50,9 @@ function drawWeapons(weapons, currentI, pos)
 
         -- draw outline depending on remaining ammo
         if i == currentI then
-            lg.setColor(255,255,255,150)
+            lg.setColor(1.0,1.0,1.0,0.6)
         else
-            lg.setColor(150,150,150,150)
+            lg.setColor(0.6,0.6,0.6,0.6)
         end
 
         local ratio = math.max(math.min(weapon.ammo / weapon.maxAmmo, 1), 0)
@@ -72,9 +72,9 @@ function drawWeapons(weapons, currentI, pos)
 
         -- draw weapon
         if i == currentI then
-            lg.setColor(255,255,255,255)
+            lg.setColor(1.0,1.0,1.0,1.0)
         else
-            lg.setColor(150,150,150,150)
+            lg.setColor(0.6,0.6,0.6,0.6)
         end
 
         if weapon.animated then
@@ -89,7 +89,7 @@ end
 function drawThrowable(throwable, pos)
     assert(pos == 'left' or pos == 'right')
 
-    lg.setColor(200,200,200,255)
+    lg.setColor(0.8,0.8,0.8,1.0)
     local left = pos == 'left'
 
     local x = cam.scale * 50
@@ -104,7 +104,7 @@ function drawThrowable(throwable, pos)
 end
 
 function hud.draw()
-    lg.setColor(255, 255, 255, 255)
+    lg.setColor(1.0, 1.0, 1.0, 1.0)
 
     if player1:isAlive() then
         drawHearts(player1.hp, player1.color, 'left')
@@ -112,7 +112,7 @@ function hud.draw()
         drawThrowable(player1.throwables[player1.currentThrowable],'left')
     end
 
-    lg.setColor(255, 255, 255, 255)
+    lg.setColor(1.0, 1.0, 1.0, 1.0)
 
     if player2 and player2:isAlive() then
         drawHearts(player2.hp, player2.color, 'right')
